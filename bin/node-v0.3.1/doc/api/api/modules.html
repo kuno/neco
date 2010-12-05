@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>modules - Node.js Manual &amp; Documentation</title>
+  <link rel="stylesheet" href="assets/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="assets/sh.css" type="text/css" media="all"/>
+  <script type="text/javascript" src="assets/jquery.js"></script>
+</head>
+<body>
+  <div id="container">
+    <header>
+      <h1>Node.js Manual &amp; Documentation</h1>
+      <div id="gtoc">
+        <p><a href="index.html">Index</a> | <a href="all.html">View on single page</a></p>
+      </div>
+      <hr />
+    </header>
+    <h2 id="standard_Modules">Standard Modules</h2>
+
+<p>Node comes with a number of modules that are compiled in to the process,
+most of which are documented below.  The most common way to use these modules
+is with <code>require('name')</code> and then assigning the return value to a local
+variable with the same name as the module.</p>
+
+<p>Example:</p>
+
+<pre><code>var util = require('util');</code></pre>
+
+<p>It is possible to extend node with other modules.  See <code>'Modules'</code></p>
+
+<h2 id="modules">Modules</h2>
+
+<p>Node uses the CommonJS module system.</p>
+
+<p>Node has a simple module loading system.  In Node, files and modules are in
+one-to-one correspondence.  As an example, <code>foo.js</code> loads the module
+<code>circle.js</code> in the same directory.</p>
+
+<p>The contents of <code>foo.js</code>:</p>
+
+<pre><code>var circle = require('./circle');
+console.log( 'The area of a circle of radius 4 is '
+           + circle.area(4));</code></pre>
+
+<p>The contents of <code>circle.js</code>:</p>
+
+<pre><code>var PI = 3.14;
+
+exports.area = function (r) {
+  return PI * r * r;
+};
+
+exports.circumference = function (r) {
+  return 2 * PI * r;
+};</code></pre>
+
+<p>The module <code>circle.js</code> has exported the functions <code>area()</code> and
+<code>circumference()</code>.  To export an object, add to the special <code>exports</code>
+object.  (Alternatively, one can use <code>this</code> instead of <code>exports</code>.) Variables
+local to the module will be private. In this example the variable <code>PI</code> is
+private to <code>circle.js</code>. The function <code>puts()</code> comes from the module <code>'util'</code>,
+which is a built-in module. Modules which are not prefixed by <code>'./'</code> are
+built-in module--more about this later.</p>
+
+<h3 id="module_Resolving">Module Resolving</h3>
+
+<p>A module prefixed with <code>'./'</code> is relative to the file calling <code>require()</code>.
+That is, <code>circle.js</code> must be in the same directory as <code>foo.js</code> for
+<code>require('./circle')</code> to find it.</p>
+
+<p>Without the leading <code>'./'</code>, like <code>require('assert')</code> the module is searched
+for in the <code>require.paths</code> array. <code>require.paths</code> on my system looks like
+this: </p>
+
+<p><code>[ '/home/ryan/.node_modules' ]</code></p>
+
+<p>That is, when <code>require('foo')</code> is called Node looks for:</p>
+
+<ul><li>1: <code>/home/ryan/.node_modules/foo</code></li><li>2: <code>/home/ryan/.node_modules/foo.js</code></li><li>3: <code>/home/ryan/.node_modules/foo.node</code></li><li>4: <code>/home/ryan/.node_modules/foo/index.js</code></li><li>5: <code>/home/ryan/.node_modules/foo/index.node</code></li></ul>
+
+<p>interrupting once a file is found. Files ending in <code>'.node'</code> are binary Addon
+Modules; see 'Addons' below. <code>'index.js'</code> allows one to package a module as
+a directory.</p>
+
+<p><code>require.paths</code> can be modified at runtime by simply unshifting new
+paths onto it, or at startup with the <code>NODE_PATH</code> environmental
+variable (which should be a list of paths, colon separated).
+Additionally node will search for directories called <code>node_modules</code> starting
+at the current directory (of the module calling <code>require</code>) and upwards
+towards the root of the package tree.
+This feature makes it easy to have different module versions for different
+environments. Imagine the situation where you have a devopment environment
+and a production environment each with a different version of the <code>foo</code>
+module: <code>projects/x/development/node_modules/foo</code> and
+<code>projects/x/production/node_modules/foo</code>.</p>
+
+<p>The second time <code>require('foo')</code> is called, it is not loaded again from
+disk. It looks in the <code>require.cache</code> object to see if it has been loaded
+before.</p>
+
+<p>To get the exact filename that will be loaded when <code>require()</code> is called, use
+the <code>require.resolve()</code> function.</p>
+  </div>
+  <script type="text/javascript" src="assets/sh_main.js"></script>
+  <script type="text/javascript" src="assets/sh_javascript.min.js"></script>
+  <script type="text/javascript" src="assets/core.js"></script>
+</body>
+</html>
