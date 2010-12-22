@@ -1,6 +1,17 @@
 #!/usr/bin/env sh
 
-distdir=$1
+ver=$1
+distdir=$2
+
+if [ ! -d /tmp/neco.tmp ]; then
+  mkdir -p /tmp/neco.tmp
+fi
+
+cd /tmp/neco.tmp || return 1
+
+wget http://nodejs.org/dist/node-v$ver.tar.gz && tar zxvf node-v$ver.tar.gz
+
+cd node-v$ver || return 1
 
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix

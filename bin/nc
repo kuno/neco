@@ -1,22 +1,7 @@
 #!/usr/bin/env sh
 
-if [ ! -d /tmp/neco.tmp ]; then
-  mkdir -p /tmp/neco.tmp
-fi
 
-LATEST=$(node ../lib/latest.js)
+install.sh $1 /home/kuno/utopia/.neco/test2 || return 1
 
-STABLE=$(node ../lib/stable.js)
-
-echo $LATEST
-
-cd /tmp/neco.tmp 
-
-wget $STABLE && tar zxvf node-v0.2.5.tar.gz
-
-cd node-v0.2.5 || return 1
-
-/home/kuno/harbour/neco/bin/install.sh /home/kuno/utopia/.neco/test1
-
-export PATH=/home/kuno/utopia/.neco/test1/usr/bin:$PATH
+export PATH=/home/kuno/utopia/.neco/test2/usr/bin:$PATH
 
