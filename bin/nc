@@ -1,7 +1,2 @@
-#!/usr/bin/env sh
-
-
-install.sh $1 /home/kuno/utopia/.neco/test2 || return 1
-
-export PATH=/home/kuno/utopia/.neco/test2/usr/bin:$PATH
+#!/usr/bin/env node
 
