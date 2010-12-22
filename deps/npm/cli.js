@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+;(function () { // wrapper in case we're in module_context mode
 // don't assume that npm is installed in any particular spot, since this
 // might conceivably be a bootstrap attempt.
 var log = require("./lib/utils/log")
@@ -28,6 +28,19 @@ log.verbose(argv, "cli")
 
 while (arg = argv.shift()) {
   if (!key && (arg.match(/^-+[h?]$/i) || arg.match(/^-+help$/i))) arg = "--usage"
+  if (!key && arg.match(/^-d+$/i)) {
+    // -d --loglevel info
+    // -dd --loglevel verbose
+    // -ddd --loglevel silly
+    key = "loglevel"
+    switch (arg.length) {
+      case 2: arg = "info"
+        break
+      case 3: arg = "verbose"
+        break
+      default: arg = "silly"
+    }
+  }
   if (!command && (npm.commands.hasOwnProperty(arg))) {
     if (key) {
       conf[key] = true
@@ -51,8 +64,8 @@ npm.argv = arglist
 var vindex = arglist.indexOf("-v")
   , printVersion = vindex !== -1 || conf.version
 if (printVersion) {
-  sys.puts(npm.version)
-  process.exit(0)
+  console.log(npm.version)
+  return
 } else log("npm@"+npm.version, "using")
 log("node@"+process.version, "using")
 
@@ -81,3 +94,4 @@ npm.load(conf, function (er) {
   if (er) return errorHandler(er)
   npm.commands[command](arglist, errorHandler)
 })
+})()

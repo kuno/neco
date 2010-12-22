@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 
 ver=$1
+link=$2
 distdir=$2
+
 
 if [ ! -d /tmp/neco.tmp ]; then
   mkdir -p /tmp/neco.tmp
@@ -9,7 +11,7 @@ fi
 
 cd /tmp/neco.tmp || return 1
 
-wget http://nodejs.org/dist/node-v$ver.tar.gz && tar zxvf node-v$ver.tar.gz
+wget $link && tar zxvf node-v$ver.tar.gz
 
 cd node-v$ver || return 1
 

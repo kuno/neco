@@ -31,7 +31,9 @@ try {
   npm.version = j.version
   npm.nodeVersionRequired = j.engines.node
 } catch (ex) {
-  log(ex, "error reading version")
+  try {
+    log(ex, "error reading version")
+  } catch (er) {}
   npm.version = ex
 }
 
@@ -39,12 +41,12 @@ var commandCache = {}
   // short names for common things
   , aliases = { "rm" : "uninstall"
               , "r" : "uninstall"
+              , "un" : "uninstall"
               , "rb" : "rebuild"
               , "bn" : "bundle"
               , "list" : "ls"
               , "ln" : "link"
               , "i" : "install"
-              , "u" : "update"
               , "up" : "update"
               , "c" : "config"
               }
@@ -79,18 +81,32 @@ var commandCache = {}
               , "init"
               , "completion"
               , "deprecate"
+              , "version"
+              , "edit"
+              , "explore"
+              , "docs"
+              , "faq"
               ]
-  , fullList = npm.fullList = cmdList.concat(aliasNames)
+  , plumbing = [ "build"
+               , "update-dependents"
+               ]
+  , fullList = npm.fullList = cmdList.concat(aliasNames).filter(function (c) {
+      return plumbing.indexOf(c) === -1
+    })
   , abbrevs = abbrev(fullList)
 
-Object.keys(abbrevs).forEach(function (c) {
+Object.keys(abbrevs).concat(plumbing).forEach(function (c) {
   Object.defineProperty(npm.commands, c, { get : function () {
+    if (!loaded) throw new Error(
+      "Call npm.load(conf, cb) before using this command.\n"+
+      "See the README.md or cli.js for example usage.")
     var a = npm.deref(c)
     if (commandCache[a]) return commandCache[a]
     return commandCache[a] = require(__dirname+"/lib/"+a)
   }, enumerable: fullList.indexOf(c) !== -1 })
 })
 npm.deref = function (c) {
+  if (plumbing.indexOf(c) !== -1) return c
   var a = abbrevs[c]
   if (aliases[a]) a = aliases[a]
   return a
