@@ -6,7 +6,7 @@ insall = require('../lib/install.js');
 
 var date = new Date();
 
-var cmd_list = ['install', 'act', 'delete', 'deact'];
+var cmd_list = ['new', 'act', 'delete', 'deact'];
 
 var cmd = process.argv[2];
 
