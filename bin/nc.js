@@ -2,7 +2,7 @@
 
 var fs = require('fs'),
 path = require('path'),
-insall = require('../lib/install.js');
+init = require('../lib/init.js');
 
 var date = new Date();
 
@@ -11,7 +11,7 @@ var cmd_list = ['new', 'act', 'delete', 'deact'];
 var cmd = process.argv[2];
 
 if (cmd_list.indexOf(cmd)) {
-  console.log('Command avialable: install, act, delete, deact');
+  console.log('Command avialable: new, act, delete, deact');
 } else {
   if (cmd === 'install') {
     console.log('install node');
