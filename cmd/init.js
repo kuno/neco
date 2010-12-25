@@ -1,25 +1,18 @@
-#!/usr/bin/env node
+var fs = require('fs'),
+path = require(('path'),
+getLink = require('../lib/utils.js').getLink,
+NodeInstallScript = '../shell/intsall_node.sh',
+NPMInstallScript  = '../shell/install_npm.sh',
+link, target, id;
 
-var fs = require('fs');
-var target = process.argv[1];
+id = process.argv[2];
+target = process.argv[3];
+link = getLink(target);
 
-fs.readFile('../data/dist.json', 'utf8', function(err, data) {
-  if (err) {throw err;}
-  var dist = JSON.parse(data);
-
-  if (!dist) {
-    console.log('err');
-  } else {
-    if (target === 'stable') {
-      var ver = dist.stable;
-    } else if (target === 'latest') {
-  } else {
-    dist.history.forEach(function(release) {
-      if (release.version === dist.latest) {
-        console.log(release.link);
-      }
-    })
-  }
+if (!link) {
+  console.log('Err: Desired link not found.');
+} else {
+  console.log('Found!');
 }
-});
+
 

@@ -2,16 +2,15 @@
 
 var fs = require('fs'),
 path = require('path'),
-init = require('../lib/init.js');
+init = require('../cmd/init.js'),
+cmd_list = require('../include/default.js').cmd_list;
 
 var date = new Date();
-
-var cmd_list = ['new', 'act', 'delete', 'deact'];
 
 var cmd = process.argv[2];
 
 if (cmd_list.indexOf(cmd)) {
-  console.log('Command avialable: new, act, delete, deact');
+  console.log('Command avialable: init, activate, delete');
 } else {
   if (cmd === 'install') {
     console.log('install node');
