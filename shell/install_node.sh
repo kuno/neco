@@ -2,17 +2,17 @@
 
 ver=$1
 link=$2
-distdir=$2
+distdir=$3
 
+echo $ver
+echo $link
+echo $distdir
 
-if [ ! -d /tmp/neco.tmp ]; then
-  mkdir -p /tmp/neco.tmp
-fi
+mkdir -p $distdir/source
 
-cd /tmp/neco.tmp || return 1
+cd $distdir/source || return 1
 
 wget $link && tar zxvf node-v$ver.tar.gz
-
 cd node-v$ver || return 1
 
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
@@ -23,10 +23,10 @@ if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   done
   sed -i "s|cmd_R = 'python |cmd_R = 'python2 |" wscript
 
-  ./configure --prefix=/usr/ || return 1
+  ./configure --prefix=/ecosystem/ || return 1
   sed -i "s|python |python2 |" Makefile  
 else
-  ./configure --prefix=/usr/ || return 1 
+  ./configure --prefix=/ecosystem/ || return 1 
 fi
 
 make || return 1
@@ -35,10 +35,10 @@ echo "Dist Dir is"
 
 echo $distdir
 
-mkdir -p $distdir/usr/{bin,lib,include,share,man}
+mkdir -p $distdir/ecosystem/{bin,etc,lib,include,share,man}
 
 tools/waf-light install --destdir=$distdir
 
-install -D -m644 LICENSE $distdir/usr/share/licenses/node/LICENSE
-install -D -m644 ChangeLog $distdir/usr/share/node/ChangeLog
-install -D -m644 README $distdir/usr/share/node/README
+install -D -m644 LICENSE $distdir/ecosystem/share/licenses/node/LICENSE
+install -D -m644 ChangeLog $distdir/ecosystem/share/node/ChangeLog
+install -D -m644 README $distdir/ecosystem/share/node/README

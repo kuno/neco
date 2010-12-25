@@ -2,56 +2,116 @@ var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
 getRelease = require('../lib/utils.js').getRelease,
-NodeInstallScript = '../shell/intsall_node.sh',
+NodeInstallScript = '../shell/install_node.sh',
 NPMInstallScript  = '../shell/install_npm.sh',
-release, target, id, NECO_ROOT, TARGET_DIR, 
-installNode, installNPM;
+ActivateInstallScript = '../shell/install_activate.sh';
 
-id = process.argv[2];
-target = process.argv[3];
-console.log(typeof getRelease);
-release = getRelease(target);
-
-if (!release) {
-  console.log('Err: Desired release ' + target + ' not found.');
-} else {
-  console.log(link);
-  NECO_ROOT = path.join(process.env.NECO_ROOT, '.neco') || path.join(process.env.WORKON_HOME, '.neco');
-  TARGET_DIR = NECO_ROOT + id.toString();
-
-  path.exists(NECO_ROOT, function(exists) {
+function installNode(root, id, release, callback) {
+  var err, install, targetDir = path.join(root, id);
+  path.exists(root, function(exists) {
     if (!exists) {
-      fs.mkdirSync(NECO_ROOT);
+      fs.mkdirSync(root, mode=0777);
     }
-    installNode = spawn(NodeInstallScript, [release.version, TARGET_DIR]);
-    installNode.stdout.on('data', function(data) {
-      console.log('Installing node stdout: ' + data);
+    install = spawn(NodeInstallScript, [release.version, release.link, targetDir]);
+    install.stdout.on('data', function(data) {
+      console.log('Insalling node ' + data);
     });
-    installNode.stderr.on('data', function(data) {
+    install.stderr.on('data', function(data) {
       console.log('Installing node stderr: ' + data);
     });
-    installNode.on('exit', function(code) {
+    install.on('exit', function(code) {
       if (code !== 0) {
-        console.log('Installing node exit wich code ' + code);
+        err = new Error('Installing node exit wich code ' + code);
+        callback(err, root, id, release);
       } else {
-        console.log('installing node done!');
-        insallNPM = spawn(NPMInstallScript, [TARGET_DIR]);
-        installNPM.stdout.on('data', function(data) {
-          console.log('Installing NPM stdout: ' + data);
-        });
-        insallNPM.stderr.on('data', function(data) {
-          console.log('Installing NPM stderr: ' + data);
-        });
-        installNPM.on('exit', function(code) {
-          if (code !== 0) {
-            console.log('Installing NPM exit with code ' + code);
-          } else {
-            console.log('Installing NPM done!');
-          }
-        });
+        callback(err, root, id, release);
       }
     });
   });
 }
 
+function installNPM(root, id, release, callback) {
+  var err, install, targetDir = path.join(root, id);
+  install = spawn(NPMInstallScript, [targetDir]);
+  install.stdout.on('data', function(data) {
+    console.log('Installing NPM stdout: ' + data);
+  });
+  install.stderr.on('data', function(data) {
+    console.log('Installing NPM stderr: ' + data);
+  });
+  install.on('exit', function(code) {
+    if (code !== 0) {
+      err = new Error('Installing NPM exit with code ' + code);
+      callback(err, root, id, release);
+    } else {
+      callback(err, root, id, release);
+    }
+  });
+}
 
+function installActivate(root, id, release, callback) {
+  var err, install, targetDir = path.join(root, id);
+
+  install = spawn(ActivateInstallScript, [targetDir]);
+  install.stdout.on('data', function(data) {
+    console.log('Installing Activate stdout: ' + data);
+  });
+  install.stderr.on('data', function(data) {
+    console.log('Installing Activate stderr: ' + data);
+  });
+  install.on('exit', function(code) {
+    if (code !== 0) {
+      err = new Error('Installing Activate exit with code ' + code);
+      callback(err, root, id, release);
+    } else {
+      callback(err, root, id, release);
+    }
+  });
+}
+
+function makeRecord(root, id, release) {
+  var date, records, ecosystem, ecosystems, newEcosystem;
+  date = new Date();
+  records = path.join(root, 'ecosystems.json');
+
+  path.exists(records, function(exists) {
+    if (!exists) {
+      ecosystems = [];
+    }
+    else {
+      ecosystems = JSON.parse(fs.readFileSync(records, 'utf8'));
+    }
+
+    installDate = date.toUTCString(date.getTime());
+    newEcosystem = {id:id, installDate:installDate,
+    nodeVer: release.version};
+
+    ecosystems = JSON.stringify(ecosystems.concat(newEcosystem));
+    console.log(ecosystems);
+    // Write into records file
+    fs.writeFile(records, ecosystems, 'utf8', function(err) {
+      if (err) {throw err;}
+      console.log('Saved new ecosystem to records file!');
+    });
+  });
+}
+
+exports.install = function(id, target) {
+  var root, release = getRelease(target);   
+  if (!release) {
+    console.log('Err: Desired release ' + target + ' not found.');
+  } else {
+    root = path.join(process.env.NECO_ROOT, '.neco') || path.join(process.env.WORKON_HOME, '.neco');
+
+    installNode(root, id, release, function(err, root, id, release) {
+      if (err) {throw err;}
+      installNPM(root, id, release, function(err, root, id, release) {
+        if (err) {throw err;}
+        installActivate(root, id, release, function(err, root, id, release) {
+          if (err) {throw err;} 
+          makeRecord(root, id, release);
+        });
+      });
+    });
+  }
+};
