@@ -27,7 +27,12 @@ deactivate () {
         unset _OLD_NECO_PS1
     fi
 
+    if [ -e $HOME/.npmrc.neco.bak ]; then
+        mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
+    fi
+
     unset NODE_ECOSYSTEM
+    unset NODE_VERSION
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
         unset -f deactivate
@@ -37,8 +42,10 @@ deactivate () {
 # unset irrelavent variables
 deactivate nondestructive
 
-NODE_ECOSYSTEM="/home/kuno/utopia/.neco/test0"
+NODE_ECOSYSTEM="/home/kuno/utopia/.neco/test1"
+NODE_VERSION="0.2.5"
 export NODE_ECOSYSTEM
+export NODE_VERSION
 
 _OLD_NECO_PATH="$PATH"
 PATH="$NODE_ECOSYSTEM/ecosystem/bin:$PATH"
@@ -52,6 +59,16 @@ export PATH
 #    unset PYTHONHOME
 #fi
 
+if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
+  mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
+  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
+  rm -rf $HOME/.npmrc || return 1
+  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+else
+  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+fi
+
 if [ -z "$NODE_ECOSYSTEM_DISABLE_PROMPT" ] ; then
     _OLD_NECO_PS1="$PS1"
     if [ "`basename \"$NODE_ECOSYSTEM\"`" = "__" ] ; then
@@ -59,7 +76,7 @@ if [ -z "$NODE_ECOSYSTEM_DISABLE_PROMPT" ] ; then
         # see http://www.zetadev.com/software/aspen/
         PS1="[`basename \`dirname \"$NODE_ECOSYSTEM\"\``] $PS1"
     else
-        PS1="(`basename \"$NODE_ECOSYSTEM\"`)$PS1"
+        PS1="(`basename \"$NODE_ECOSYSTEM\"` on v$NODE_VERSION)$PS1"
     fi
     export PS1
 fi

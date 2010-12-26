@@ -1,0 +1,3 @@
+binroot = /home/kuno/utopia/.neco/test1/ecosystem/bin
+manroot =  /home/kuno/utopia/.neco/test1/ecosystem/share/man
+root = /home/kuno/utopia/.neco/test1/ecosystem/lib/node

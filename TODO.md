@@ -3,3 +3,6 @@
 * how to translate between NPMs?
 * directly follow the NECO_ROOT VAR?
 * avoid repeatlly download same release version.
+
+###2010-12-27###
+* detecate first time running

@@ -52,7 +52,7 @@ function installNPM(root, id, release, callback) {
 function installActivate(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
 
-  install = spawn(ActivateInstallScript, [targetDir]);
+  install = spawn(ActivateInstallScript, [targetDir, release.version]);
   install.stdout.on('data', function(data) {
     console.log('Installing Activate stdout: ' + data);
   });
@@ -70,33 +70,34 @@ function installActivate(root, id, release, callback) {
 }
 
 function makeRecord(root, id, release) {
-  var date, records, ecosystem, ecosystems, newEcosystem;
+  var date, record, createdDate, recordFile, ecosystems, newEcosystem;
   date = new Date();
-  records = path.join(root, 'ecosystems.json');
+  recordFile = path.join(root, 'record.json');
 
-  path.exists(records, function(exists) {
+  path.exists(recordFile, function(exists) {
     if (!exists) {
+      record = {};
       ecosystems = [];
     }
     else {
-      ecosystems = JSON.parse(fs.readFileSync(records, 'utf8'));
+      record = JSON.parse(fs.readFileSync(recordFile, 'utf8'));
+      ecosystems = record.ecosystems;
     }
 
-    installDate = date.toUTCString(date.getTime());
-    newEcosystem = {id:id, installDate:installDate,
-    nodeVer: release.version};
+    createdDate = date.toUTCString(date.getTime());
+    newEcosystem = {id:id, cd:createdDate,nv: release.version};
+    record.ecosystems = ecosystems.concat(newEcosystem);
+    record = JSON.stringify(record);
 
-    ecosystems = JSON.stringify(ecosystems.concat(newEcosystem));
-    console.log(ecosystems);
     // Write into records file
-    fs.writeFile(records, ecosystems, 'utf8', function(err) {
+    fs.writeFile(recordFile, record, 'utf8', function(err) {
       if (err) {throw err;}
-      console.log('Saved new ecosystem to records file!');
+      console.log('Saved new ecosystem to record file!');
     });
   });
 }
 
-exports.install = function(id, target) {
+exports.create = function(id, target) {
   var root, release = getRelease(target);   
   if (!release) {
     console.log('Err: Desired release ' + target + ' not found.');
