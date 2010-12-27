@@ -9,6 +9,7 @@
 * everything is a steam?
 
 ###2010-12-28###
+* why there is a mystris unstable dir?
 * resolve the path problem
 * clean npm dir
 * check node version before intstall npm
