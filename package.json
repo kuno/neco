@@ -9,7 +9,7 @@
     "repository":
     {
       "type":"git",
-      "url":""
+      "url":"https://github.com/kuno/neco"
     },
     "bugs":
     {
@@ -30,7 +30,7 @@
       [
       {
         "type":"MIT",
-        "url":""
+        "url":"https://github.com/kuno/neco/blob/master/LICENCE"
       }
   ]
 }
