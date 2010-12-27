@@ -7,3 +7,6 @@
 ###2010-12-27###
 * detecate first time running
 * everything is a steam?
+
+###2010-12-28###
+* clean npm dir
