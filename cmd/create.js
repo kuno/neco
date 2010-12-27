@@ -1,10 +1,11 @@
 var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
-getRelease = require('../lib/utils.js').getRelease,
-NodeInstallScript = '../shell/install_node.sh',
-NPMInstallScript  = '../shell/install_npm.sh',
-ActivateInstallScript = '../shell/install_activate.sh';
+getRelease = require('../lib/utils.js').getRelease;
+
+var NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
+NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
+ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
 
 function installNode(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
