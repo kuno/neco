@@ -3,7 +3,8 @@ path = require('path'),
 spawn = require('child_process').spawn,
 getRelease = require('../lib/utils.js').getRelease;
 
-var NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
+var   packageDir = path.join(__dirname, '..'),   
+NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
 NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
 ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
 
@@ -33,7 +34,7 @@ function installNode(root, id, release, callback) {
 
 function installNPM(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
-  install = spawn(NPMInstallScript, [targetDir]);
+  install = spawn(NPMInstallScript, [packageDir, targetDir]);
   install.stdout.on('data', function(data) {
     console.log('Installing NPM stdout: ' + data);
   });
@@ -52,8 +53,7 @@ function installNPM(root, id, release, callback) {
 
 function installActivate(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
-
-  install = spawn(ActivateInstallScript, [targetDir, release.version]);
+  install = spawn(ActivateInstallScript, [packageDir, targetDir, release.version]);
   install.stdout.on('data', function(data) {
     console.log('Installing Activate stdout: ' + data);
   });

@@ -12,3 +12,4 @@
 * resolve the path problem
 * clean npm dir
 * check node version before intstall npm
+* use color npm module from https://github.com/Marak/colors.js
