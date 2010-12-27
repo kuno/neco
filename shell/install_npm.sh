@@ -21,7 +21,7 @@ node $packageDir/deps/npm/cli.js config set manroot $distdir/ecosystem/share/man
 node $packageDir/deps/npm/cli.js install npm || return 1
 
 sed -i -e "s/^root.*/root\ =\ $replace\/ecosystem\/lib\/node/g" $packageDir/sample/npmrc || return 1
-sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $pa/sample/npmrc || return 1
+sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $packageDir/sample/npmrc || return 1
 sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $packageDir/sample/npmrc || return 1
 
 # Global npm config
