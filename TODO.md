@@ -6,3 +6,4 @@
 
 ###2010-12-27###
 * detecate first time running
+* everything is a steam?
