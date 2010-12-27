@@ -9,5 +9,6 @@
 * everything is a steam?
 
 ###2010-12-28###
+* resolve the path problem
 * clean npm dir
 * check node version before intstall npm
