@@ -4,7 +4,7 @@ ver=$1
 link=$2
 distdir=$3
 
-echo $distdir
+#echo $distdir
 
 if [ ! -d $distdir/../source ]; then
   mkdir -p $distdir/../source && cd $distdir/../source

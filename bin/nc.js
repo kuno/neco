@@ -16,8 +16,6 @@ inception = require('../lib/utils.js').inception;
 
 var id, target, cmd = process.argv[2]; 
 
-console.log(__dirname)
-
 if (isCMDValid(cmd) === false) {
   console.log('Command avialable: create, list, activate, deactvate');
 } else {
@@ -69,8 +67,10 @@ if (isCMDValid(cmd) === false) {
           } else {
             id = process.argv[3];
 
-            if (isActive(id) === 'true') {
-              console.log('The node ecosystem with id '+id+'is already active.');
+            if (isActive(id) === true) {
+              console.log('The node ecosystem with id '+id+' is already active.');
+            } else if (isIDExsit(id) == false {
+              console.log('The node ecosystem with id '+id+' is not exists.');
             } else {
               activate(id);
             }
@@ -91,6 +91,8 @@ if (isCMDValid(cmd) === false) {
             id = process.argv[3];
             if (isActive(id) === false) {
               console.log('The node ecosystem with id '+id+' is not active.');
+            } else if (isIDExsit(id) == false {
+              console.log('The node ecosystem with id '+id+' is not exists.');
             } else {
               deactivate(id);
             }
@@ -100,13 +102,13 @@ if (isCMDValid(cmd) === false) {
     });
   }
 
-    // Subcommand destory
-    else if (cmd === 'destory') {
-      virgin(function() {
-        inception(cmd, function(exists) {
-          if (exists) {
-          }
-        });
+  // Subcommand destory
+  else if (cmd === 'destory') {
+    virgin(function() {
+      inception(cmd, function(exists) {
+        if (exists) {
+        }
       });
-    }
+    });
   }
+}
