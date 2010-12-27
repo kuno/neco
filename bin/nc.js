@@ -69,7 +69,7 @@ if (isCMDValid(cmd) === false) {
 
             if (isActive(id) === true) {
               console.log('The node ecosystem with id '+id+' is already active.');
-            } else if (isIDExsit(id) == false {
+            } else if (isIDExsit(id) == false) {
               console.log('The node ecosystem with id '+id+' is not exists.');
             } else {
               activate(id);
@@ -78,7 +78,7 @@ if (isCMDValid(cmd) === false) {
         }
       });
     });
-  } 
+  }
 
   // Subcommand deactvate
   else if (cmd === 'deactivate') {
@@ -91,14 +91,14 @@ if (isCMDValid(cmd) === false) {
             id = process.argv[3];
             if (isActive(id) === false) {
               console.log('The node ecosystem with id '+id+' is not active.');
-            } else if (isIDExsit(id) == false {
+            } else if (isIDExsit(id) == false) {
               console.log('The node ecosystem with id '+id+' is not exists.');
             } else {
               deactivate(id);
             }
           }
         }
-      })
+      });
     });
   }
 
