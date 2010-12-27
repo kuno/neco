@@ -16,6 +16,8 @@ inception = require('../lib/utils.js').inception;
 
 var id, target, cmd = process.argv[2]; 
 
+console.log(__dirname)
+
 if (isCMDValid(cmd) === false) {
   console.log('Command avialable: create, list, activate, deactvate');
 } else {
