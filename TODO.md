@@ -10,3 +10,4 @@
 
 ###2010-12-28###
 * clean npm dir
+* check node version before intstall npm
