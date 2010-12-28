@@ -1,13 +1,17 @@
 var fs = require('fs'),
 path = require('path'),
-spawn = require('child_process').spawn,
-log = require('../lib/logger.js').log,
+spawn = require('child_process').spawn;
+
+var log = require('../lib/console.js').log,
 getRelease = require('../lib/utils.js').getRelease,
 getSuitedNPM = require('../lib/utils.js').getSuitedNPM;
+
 var   packageDir = path.join(__dirname, '..'),   
 NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
 NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
 ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
+
+var message, warning, error;
 
 function installNode(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
@@ -17,12 +21,12 @@ function installNode(root, id, release, callback) {
     }
     install = spawn(NodeInstallScript, [release.version, release.link, targetDir]);
     install.stdout.on('data', function(data) {
-      console.log('Insalling node ' + data);
+      log('stdout',data);
     });
     install.stderr.on('data', function(data) {
-      console.log('Installing node stderr: ' + data);
+      log('stdout',data);
     });
-    install.on('exit', function(code) {
+    install.on('stdout', function(code) {
       if (code !== 0) {
         err = new Error('Installing node exit wich code ' + code);
         callback(err, root, id, release);
@@ -37,10 +41,10 @@ function installNPM(root, id, release, npmVer, callback) {
   var err, install, targetDir = path.join(root, id);
   install = spawn(NPMInstallScript, [packageDir, targetDir, npmVer]);
   install.stdout.on('data', function(data) {
-    console.log('Installing NPM stdout: ' + data);
+    log('messae', data);
   });
   install.stderr.on('data', function(data) {
-    console.log('Installing NPM stderr: ' + data);
+    console.log('message', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {
@@ -56,10 +60,10 @@ function installActivate(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
   install = spawn(ActivateInstallScript, [packageDir, targetDir, release.version]);
   install.stdout.on('data', function(data) {
-    console.log('Installing Activate stdout: ' + data);
+    console.log('message', data);
   });
   install.stderr.on('data', function(data) {
-    console.log('Installing Activate stderr: ' + data);
+    console.log('message', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {
@@ -72,7 +76,8 @@ function installActivate(root, id, release, callback) {
 }
 
 function makeRecord(root, id, release, npmVer) {
-  var date, record, createdDate, recordFile, ecosystems, newEcosystem;
+  var date, record, createdDate, recordFile, 
+      ecosystems, newEcosystem;
   date = new Date();
   recordFile = path.join(root, 'record.json');
 
@@ -94,7 +99,8 @@ function makeRecord(root, id, release, npmVer) {
     // Write into records file
     fs.writeFile(recordFile, record, 'utf8', function(err) {
       if (err) {throw err;}
-      console.log('Saved new ecosystem to record file!');
+      messge = 'Sucessfully create new node ecosystem!';
+      log('message', message);
     });
   });
 }
@@ -105,7 +111,8 @@ exports.run = function(id, target) {
   npmVer = getSuitedNPM(release.version);
 
   if (!release) {
-    console.log('Err: Desired release ' + target + ' not found.');
+    error = 'Err: Desired release ' + target + ' not found.';
+    log('error', error);
   } else {
     root = path.join(process.env.NECO_ROOT, '.neco') || path.join(process.env.WORKON_HOME, '.neco');
 
