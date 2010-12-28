@@ -51,7 +51,7 @@ function editRecord(id) {
   });
 }
 
-exports.destory = function(id) {
+exports.run = function(id) {
   removeDir(id, function(err) {
     if (err) {throw err;}
     editRecord(id);

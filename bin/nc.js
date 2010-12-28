@@ -1,36 +1,42 @@
 #!/usr/bin/env node
 
-var list = require('../cmd/list.js').list,   
-create = require('../cmd/create.js').create,
-activate = require('../cmd/activate.js').activate,
-deactivate = require('../cmd/deactivate.js').deactivate;
+var list = require('../cmd/list.js'),
+    help = require('../cmd/help.js'),
+    create = require('../cmd/create.js'),
+    activate = require('../cmd/activate.js'),
+    deactivate = require('../cmd/deactivate.js');
+
+var log = require('../lib/logger.js').log;
 
 var isIDUnique = require('../lib/checker.js').isIDUnique,
-isIDExsit = require('../lib/checker.js').isIDExsit,
-isIDValid = require('../lib/checker.js').isIDValid,
-isCMDValid = require('../lib/checker.js').isCMDValid,
-isActive = require('../lib/checker.js').isActive;
+    isIDExsit = require('../lib/checker.js').isIDExsit,
+    isIDValid = require('../lib/checker.js').isIDValid,
+    isCMDValid = require('../lib/checker.js').isCMDValid,
+    isActive = require('../lib/checker.js').isActive;
 
 var virgin = require('../lib/utils.js').virgin,
-inception = require('../lib/utils.js').inception;
+    inception = require('../lib/utils.js').inception;
 
-var id, target, cmd = process.argv[2]; 
+var id, target, cmd = process.argv[2];
+var infor, example;
 
 if (isCMDValid(cmd) === false) {
-  console.log('Command avialable: create, list, activate, deactvate');
+  infor = 'Available commands:\nhelp, create, list, activate, deactivate';
 } else {
   // Subcommand create
   if (cmd === 'create') {
     virgin(function() {
       inception(cmd, function(exists) {
         if (process.argv.length < 4) {
-          console.log('Please specific an id and the version node, if you will.');
+          infor = 'Missing id, please specific at least one ID( and the version of node, if you will).';
+          example = 'nc create <NECO-ID> [NODE-VERSION]';
+          log('message', infor, example, cmd);
         } else {
           id = process.argv[3];
           target = process.argv[4] || 'stable';
 
           if (!exists) {
-            create(id, target);
+            create.run(id, target);
           } else {
             if (isIDValid(id) === false) {
               console.log('The given id '+id+' is reconserved word in neco.');
@@ -38,7 +44,7 @@ if (isCMDValid(cmd) === false) {
             } else if (isIDUnique(id) === false) {
               console.log('The given id '+id+' has already been used.'); 
             } else {
-              create(id, target);
+              create.run(id, target);
             }
           }
         }
@@ -51,10 +57,15 @@ if (isCMDValid(cmd) === false) {
     virgin(function() {
       inception(cmd, function(exists) {
         if (exists) {
-          list();
+          list.run();
         }
       });
     });
+  }
+
+  // Subcommand help
+  else if (cmd === 'list') {
+    help.run();
   }
 
   // Subcommand activate
@@ -72,7 +83,7 @@ if (isCMDValid(cmd) === false) {
             } else if (isIDExsit(id) == false) {
               console.log('The node ecosystem with id '+id+' is not exists.');
             } else {
-              activate(id);
+              activate.run(id);
             }
           }
         }
@@ -94,7 +105,7 @@ if (isCMDValid(cmd) === false) {
             } else if (isIDExsit(id) == false) {
               console.log('The node ecosystem with id '+id+' is not exists.');
             } else {
-              deactivate(id);
+              deactivate.run(id);
             }
           }
         }
@@ -111,4 +122,5 @@ if (isCMDValid(cmd) === false) {
       });
     });
   }
+
 }

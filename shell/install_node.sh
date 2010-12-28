@@ -6,7 +6,7 @@ distdir=$3
 
 #echo $distdir
 
-if [ ! -d $distdir/../source ]; then
+if [ ! -d $distdir/../source ] && [ ! -L $distdir/../source ]; then
   mkdir -p $distdir/../source && cd $distdir/../source
 else
   cd $distdir/../source

@@ -1,8 +1,9 @@
 var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
-getRelease = require('../lib/utils.js').getRelease;
-
+log = require('../lib/logger.js').log,
+getRelease = require('../lib/utils.js').getRelease,
+getSuitedNPM = require('../lib/utils.js').getSuitedNPM;
 var   packageDir = path.join(__dirname, '..'),   
 NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
 NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
@@ -32,9 +33,9 @@ function installNode(root, id, release, callback) {
   });
 }
 
-function installNPM(root, id, release, callback) {
+function installNPM(root, id, release, npmVer, callback) {
   var err, install, targetDir = path.join(root, id);
-  install = spawn(NPMInstallScript, [packageDir, targetDir]);
+  install = spawn(NPMInstallScript, [packageDir, targetDir, npmVer]);
   install.stdout.on('data', function(data) {
     console.log('Installing NPM stdout: ' + data);
   });
@@ -70,7 +71,7 @@ function installActivate(root, id, release, callback) {
   });
 }
 
-function makeRecord(root, id, release) {
+function makeRecord(root, id, release, npmVer) {
   var date, record, createdDate, recordFile, ecosystems, newEcosystem;
   date = new Date();
   recordFile = path.join(root, 'record.json');
@@ -86,7 +87,7 @@ function makeRecord(root, id, release) {
     }
 
     createdDate = date.toUTCString(date.getTime());
-    newEcosystem = {id:id, cd:createdDate,nv: release.version};
+    newEcosystem = {id:id, cd:createdDate,nv: release.version, npm:npmVer};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
 
@@ -98,8 +99,11 @@ function makeRecord(root, id, release) {
   });
 }
 
-exports.create = function(id, target) {
-  var root, release = getRelease(target);   
+exports.run = function(id, target) {
+  var root, npmVer, release;
+  release = getRelease(target);
+  npmVer = getSuitedNPM(release.version);
+
   if (!release) {
     console.log('Err: Desired release ' + target + ' not found.');
   } else {
@@ -107,13 +111,22 @@ exports.create = function(id, target) {
 
     installNode(root, id, release, function(err, root, id, release) {
       if (err) {throw err;}
-      installNPM(root, id, release, function(err, root, id, release) {
-        if (err) {throw err;}
-        installActivate(root, id, release, function(err, root, id, release) {
-          if (err) {throw err;} 
-          makeRecord(root, id, release);
+
+      // The intalled node version suited the minial version of npm
+      if (npmVer) {
+        installNPM(root, id, release, npmVer, function(err, root, id, release) {
+          if (err) {throw err;}
+          installActivate(root, id, release, function(err, root, id, release) {
+            if (err) {throw err;} 
+            makeRecord(root, id, release, npmVer);
+          });
         });
-      });
+      } else {
+        installActivate(root, id, release, function(err, root, id, release) {
+          if (err) {throw err;}
+          makeRecord(root, id, release, npmVer);
+        });
+      }
     });
   }
 };
