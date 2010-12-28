@@ -18,5 +18,5 @@
 ###0.0.1-alpha###
 * check node version before install npm
 * add help subcommand
-* add colors to cosole.log output.
+* add ansi-color to cosole.log output.
 * test, test, test!
