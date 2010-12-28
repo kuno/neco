@@ -76,10 +76,9 @@ function getFilteredData (staleness, args, cb) {
     Object.keys(processedData).forEach(function (name) {
       var d = processedData[name]
         , pass = true
-        , test = [name].concat(npm.config.get("description")
-                               ? d.description : [])
+        , test = [name].concat(d.words)
+                       .concat(d.description)
                        .concat(d.keywords)
-                       .concat(d.words)
       for (var i = 0, l = args.length; i < l; i ++) {
         pass = false
         for (var ii = 0, ll = test.length; ii < ll; ii ++) {
@@ -116,12 +115,11 @@ function getWords (pkg, version) {
     if (v.installed) d.words.push("installed")
     if (v.remote) d.words.push("remote")
     if (v.tags.length) d.words.push.apply(d.words, v.tags)
-    if (v.active) d.words.push("active")
   }
   if (!kw) kw = []
   if (!Array.isArray(kw)) kw = kw.split(/\s+/)
   d.keywords = kw
-  d.description = npm.config.get("description") && desc || ""
+  d.description = desc || ""
   return d
 }
 function getMergedData (staleness, cb) {
@@ -178,10 +176,7 @@ function prettify (data, args) {
   maxNameLen += 2
 
   // turn each line obj into a single line, only as much ws as necessary.
-  try {
-    var stdio = process.binding("stdio")
-      , cols = stdio.isatty(stdio.stdoutFD) ? stdio.getColumns() : Infinity
-  }
+  try { var cols = process.binding("stdio").getColumns() }
   catch (ex) { cols = Infinity }
   pretty = pretty.map(function (line) {
     var addSpace = maxNameLen - line.name.length

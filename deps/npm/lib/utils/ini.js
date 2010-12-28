@@ -40,9 +40,8 @@ var fs = require("./graceful-fs")
   , ini = require("./ini-parser")
   , base64 = require("./base64")
   , ProtoList = require("./proto-list")
-  , defaultConfig
+  , defaultConfig = require("./default-config")
   , configList = new ProtoList()
-  , parseArgs = require("./parse-args")
   , TRANS =
     { "default" : 4
     , "global" : 3
@@ -52,11 +51,9 @@ var fs = require("./graceful-fs")
     }
 
 exports.configList = configList
-configList.push({loglevel:"info"})
+
+configList.push(defaultConfig)
 function resolveConfigs (cli, cb) {
-  defaultConfig = defaultConfig || require("./default-config")
-  configList.pop()
-  configList.push(defaultConfig)
   var cl = configList
     , dc = cl.pop()
   if (!cb) cb = cli, cli = {}
@@ -102,8 +99,7 @@ function parseEnv (env) {
   return conf
 }
 function unParseField (f, k) {
-  // type can be an array or single thing.
-  var isPath = -1 !== [].concat(parseArgs.types[k]).indexOf(path)
+  var isPath = k.match(/root$/i)
   if (isPath) {
     if (process.env.HOME.substr(-1) === "/") {
       process.env.HOME = process.env.HOME(0, process.env.HOME.length-1)
@@ -115,9 +111,7 @@ function unParseField (f, k) {
   return f
 }
 function parseField (f, k) {
-  if (typeof f !== "string" && !(f instanceof String)) return f
-  // type can be an array or single thing.
-  var isPath = -1 !== [].concat(parseArgs.types[k]).indexOf(path)
+  var isPath = k.match(/root$/i)
   f = (""+f).trim()
   if (f === "") f = true
   if (isPath) {
@@ -271,12 +265,9 @@ function rmConfigfile (configfile, cb) {
   })
 }
 function snapshot (which) {
-  var x = (!which) ? configList.snapshot
-        : configList.list[TRANS[which]] ? configList.list[TRANS[which]]
-        : undefined
-  if (!x) return
-  Object.keys(x).forEach(function (k) { if (k.match(/^_/)) delete x[k] })
-  return x
+  return (!which) ? configList.snapshot
+       : configList.list[TRANS[which]] ? configList.list[TRANS[which]]
+       : undefined
 }
 function get (key, which) {
   return (!key) ? snapshot(which)

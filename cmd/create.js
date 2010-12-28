@@ -41,7 +41,7 @@ function installNPM(root, id, release, npmVer, callback) {
   var err, install, targetDir = path.join(root, id);
   install = spawn(NPMInstallScript, [packageDir, targetDir, npmVer]);
   install.stdout.on('data', function(data) {
-    log('messae', data);
+    log('Install npm messae', data);
   });
   install.stderr.on('data', function(data) {
     console.log('message', data);
@@ -108,12 +108,12 @@ function makeRecord(root, id, release, npmVer) {
 exports.run = function(id, target) {
   var root, npmVer, release;
   release = getRelease(target);
-  npmVer = getSuitedNPM(release.version);
 
   if (!release) {
     error = 'Err: Desired release ' + target + ' not found.';
     log('error', error);
   } else {
+    npmVer = getSuitedNPM(release.version);  
     root = path.join(process.env.NECO_ROOT, '.neco') || path.join(process.env.WORKON_HOME, '.neco');
 
     installNode(root, id, release, function(err, root, id, release) {

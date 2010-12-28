@@ -4,12 +4,15 @@ var log = require("../utils/log")
   , path = require("path")
 
 module.exports = mkdir
-function mkdir (ensure, cb) {
+function mkdir (ensure, chmod, cb) {
   ensure = ensure.replace(/\/+$/, '')
   if (ensure.charAt(0) !== "/") ensure = path.join(process.cwd(), ensure)
   var dirs = ensure.split("/")
     , walker = []
-    , chmod = 0755
+  if (arguments.length < 3) {
+    cb = chmod
+    chmod = 0755
+  }
   walker.push(dirs.shift()) // gobble the "/" first
   ;(function S (d) {
     if (d === undefined) return cb()

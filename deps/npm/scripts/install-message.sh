@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "x$npm_config_loglevel" = "xsilent" ]; then
   exit

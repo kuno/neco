@@ -24,9 +24,9 @@ node ../bin/nc.js help
 
 node ../bin/nc.js list
 
-node ../bin/nc.js create new
+#node ../bin/nc.js create new
 
-#node ../bin/nc.js create test0
+node ../bin/nc.js create test0
 
 #node ../bin/nc.js create test1 stable
 

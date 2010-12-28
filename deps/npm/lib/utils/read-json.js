@@ -210,8 +210,7 @@ function testEngine (json) {
       var e = json.engines[i].trim()
       if (e.substr(0, 4) === "node") {
         json.engines.node = e.substr(4)
-      } else if (e.substr(0, 3) === "npm") {
-        json.engines.npm = e.substr(3)
+        break
       }
     }
   }
@@ -220,11 +219,8 @@ function testEngine (json) {
     log.warn( json.engines.node
             , "not a valid range.  Please see `npm help json`" )
   }
-
-  json._engineSupported = semver.satisfies(nodeVer, json.engines.node||"null")
-  if (json.engines.hasOwnProperty("npm") && json._engineSupported) {
-    json._engineSupported = semver.satisfies(npm.version, json.engines.npm)
-  }
+  json._nodeSupported = semver.satisfies( nodeVer
+                                        , json.engines.node || "undefined" )
   return json
 }
 

@@ -29,7 +29,6 @@ var readInstalled = require("./utils/read-installed")
   , lifecycle = require("./utils/lifecycle")
   , asyncMap = require("./utils/async-map")
   , output = require("./utils/output")
-  , readJson = require("./utils/read-json")
 
 function outdated (args, silent, cb) {
   if (typeof silent === "function") cb = silent, silent = false
@@ -59,22 +58,17 @@ function findUpdates (args, cb) {
       log.verbose(pkg, "find updates")
       registry.get(pkg, function (er, data) {
         if (er) return log.verbose(pkg, "not in registry", cb)
-        try {
-          Object.keys(data.versions).forEach(function (v) {
-            readJson.processJson(data.versions[v])
-          })
-        } catch (er) { return cb(er) }
         var latest = data["dist-tags"] && data["dist-tags"][tag]
           , have = Object.keys(inst[pkg]).sort(semver.sort)
           , minHave = have[0]
           , available = Object.keys(data.versions).filter(function (v) {
-              var s = data.versions[v]._engineSupported
+              var s = data.versions[v]._nodeSupported
               if (!s) delete data.versions[v]
               return s
             }).sort(semver.sort)
           , highest = available[ available.length - 1 ]
         if (!data.versions[latest]) latest = highest
-        log.verbose(latest||"none", pkg+"@latest")
+        log.verbose(latest, pkg+"@latest")
         log.verbose(minHave, pkg+" min installed")
         log.verbose(semver.gt(latest, minHave), pkg+" latest > minHave")
         // check if we have the latest already

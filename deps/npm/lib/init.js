@@ -60,25 +60,13 @@ function init_ (data, folder, cb) {
       })
     }, [])
     ( prompt
-    , ["Project homepage: ", data.homepage || data.url || "none"]
+    , ["Project homepage: ", data.homepage || data.url || "(none)"]
     , function (u) {
-        if (u === "none") return
+        if (u === "(none)") return
         data.homepage = u
         delete data.url
       }
     )
-    ( defaultRepo, [folder, data], function (r) { data.repository = r } )
-    (function (cb) {
-      prompt("Project git repository: "
-             , data.repository && data.repository.url || "none"
-             , function (er, r) {
-               if (er) return cb(er)
-               if (r !== "none") {
-                 data.repository = (data.repository || {}).url = r
-               }
-               cb()
-             })
-    }, [])
     ( prompt
     , ["Author name: ", data.author && data.author.name]
     , function (n) {
@@ -87,23 +75,23 @@ function init_ (data, folder, cb) {
       }
     )
     ( prompt
-    , ["Author email: ", data.author && data.author.email || "none"]
+    , ["Author email: ", data.author && data.author.email || "(none)"]
     , function (n) {
-        if (n === "none") return
+        if (n === "(none)") return
         (data.author = data.author || {}).email = n
       }
     )
     ( prompt
-    , ["Author url: ", data.author && data.author.url || "none"]
+    , ["Author url: ", data.author && data.author.url || "(none)"]
     , function (n) {
-        if (n === "none") return
+        if (n === "(none)") return
         (data.author = data.author || {}).url = n
       }
     )
     ( prompt
-    , ["Main module/entry point: ", data.main || "none"]
+    , ["Main module/entry point: ", data.main || "(none)"]
     , function (m) {
-        if (m === "none") {
+        if (m === "(none)") {
           delete data.main
           return
         }
@@ -116,7 +104,7 @@ function init_ (data, folder, cb) {
       }
     , []
     , function (l) {
-        if (l === "none") {
+        if (l === "(none)") {
           if (data.directories && data.directories.lib) {
             delete data.directories.lib
           }
@@ -126,9 +114,9 @@ function init_ (data, folder, cb) {
       }
     )
     ( prompt
-    , ["Test command: ", data.scripts && data.scripts.test || "none"]
+    , ["Test command: ", data.scripts && data.scripts.test || "(none)"]
     , function (t) {
-        if (t === "none") return
+        if (t === "(none)") return
         (data.scripts = data.scripts || {}).test = t
       }
     )
@@ -218,24 +206,6 @@ function defaultVersion (folder, data, cb) {
     out = (out || "").trim()
     if (semver.valid(out)) return cb(null, out)
     return cb(null, "0.0.0")
-  })
-}
-
-function defaultRepo (folder, data, cb) {
-  if (data.repository) return cb(null, data.repository)
-  process.chdir(folder)
-  exec("git", ["remote", "-v"], process.env, false, function (er, code, out) {
-    out = (out || "")
-      .trim()
-      .split("\n").filter(function (line) {
-        return line.search(/^origin/) !== -1
-      })[0]
-    if (!out) return cb(null, {})
-    repo = {
-      type: "git"
-      , url: out.split(/\s/)[1].replace("git@github.com:", "git://github.com/")
-    }
-    return cb(null, repo)
   })
 }
 

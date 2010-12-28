@@ -104,7 +104,7 @@ function fetchAndWrite (remote, fd, headers, maxRedirects, redirects, cb) {
         var i = 0
         fs.write(fd, chunk, i, chunk.length, null, function R (er, written) {
           if (er) {
-            response.destroy(er)
+            response.end()
             return cb(er)
           }
           i += written

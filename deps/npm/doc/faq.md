@@ -49,7 +49,7 @@ upcoming version:
 
 <https://github.com/isaacs/npm/issues/issue/294>
 
-## What is a `package`?
+## What is a `package`
 
 A package is:
 
@@ -111,10 +111,6 @@ lot of use cases, and is very easy to maintain.
 
 `npm link`
 
-## The package registry website.  What is that exactly?
-
-See `npm help registry` for more info.
-
 ## What's up with the insecure channel warnings?
 
 As of this writing, node has problems uploading files over HTTPS.  That
@@ -154,7 +150,3 @@ Discuss it on the mailing list, or post an issue.
 
 * <npm-@googlegroups.com>
 * <http://github.com/isaacs/npm/issues>
-
-## Why does npm hate me?
-
-npm is not capable of hatred.  It loves everyone, especially you.

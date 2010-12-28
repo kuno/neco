@@ -6,38 +6,16 @@ var path = require("path")
   , find = require("./find")
   , asyncMap = require("./async-map")
   , npm = require("../../npm")
-  , fs = require("./graceful-fs")
 
 function loadPackageDefaults (pkg, cb) {
-  readDefaultDirs(pkg, function (er) {
-    if (er) return cb(er)
-    asyncMap
-      ( [pkg]
-      , function (pkg, cb) { log.verbose(pkg._id, "loadDefaults", cb) }
-      , readDefaultModules
-      , readDefaultBins
-      , readDefaultMans
-      , function (er) { cb(er, pkg) }
-      )
-  })
-}
-
-function readDefaultDirs (pkg, cb) {
-  var dirs = pkg.directories = pkg.directories || {}
-    , pkgDir = path.join(npm.dir, pkg.name, pkg.version, "package")
-    , defaults =
-      { lib : "./lib"
-      , bin : "./bin"
-      , man : "./man"
-      , doc : "./doc"
-      }
-  asyncMap(Object.keys(defaults), function (d, cb) {
-    if (dirs[d]) return cb()
-    fs.stat(path.join(pkgDir, defaults[d]), function (er, s) {
-      if (s && s.isDirectory()) dirs[d] = defaults[d]
-      cb()
-    })
-  }, cb)
+  asyncMap
+    ( [pkg]
+    , function (pkg, cb) { log.verbose(pkg._id, "loadDefaults", cb) }
+    , readDefaultModules
+    , readDefaultBins
+    , readDefaultMans
+    , function (er) { cb(er, pkg) }
+    )
 }
 
 function readDefaultMans (pkg, cb) {
@@ -72,13 +50,13 @@ function readDefaultModules (pkg, cb) {
       // filename = path.basename(filename, path.extname(filename))
       var key = filename.substr(libDir.length + 1)
         , val = filename.substr(pkgDir.length + 1)
-      key = key.replace(/\.node$/, ".js")
+      key = path.join(path.dirname(key), path.basename(key, path.extname(key)))
       log.silly(key+"="+val, "module")
       if (key.length && val.length) pkg.modules[key] = val
     })
     // require("foo/foo") is dumb, and happens a lot.
     if (!pkg.main && !pkg.modules.index && pkg.modules[pkg.name]) {
-      pkg.modules["index.js"] = pkg.modules[pkg.name]
+      pkg.modules.index = pkg.modules[pkg.name]
     }
     log.silly(pkg.modules, pkg._id+".modules")
     return cb(null, pkg)

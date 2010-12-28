@@ -41,14 +41,14 @@ function get_ (uri, timeout, cache, stat, data, nofollow, cb) {
   }
   GET(uri, etag, nofollow, function (er, remoteData, raw, response) {
     if (response) {
-      log.silly([response.statusCode, response.headers], "get cb")
+      log.verbose([response.statusCode, response.headers], "get cb")
       if (response.statusCode === 304 && etag) {
         remoteData = data
         log.verbose("from cache", "etag")
       }
     }
     data = remoteData
-    if (er) return cb(er, data, raw, response)
+    if (er) return cb(er, data)
     // just give the write the old college try.  if it fails, whatever.
     fs.writeFile(cache, JSON.stringify(data), function () {})
     delete data._etag
