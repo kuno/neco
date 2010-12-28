@@ -26,7 +26,8 @@ function installNode(root, id, release, callback) {
     install.stderr.on('data', function(data) {
       log('stdout',data);
     });
-    install.on('stdout', function(code) {
+
+    install.on('exit', function(code) {
       if (code !== 0) {
         err = new Error('Installing node exit wich code ' + code);
         callback(err, root, id, release);
@@ -77,7 +78,7 @@ function installActivate(root, id, release, callback) {
 
 function makeRecord(root, id, release, npmVer) {
   var date, record, createdDate, recordFile, 
-      ecosystems, newEcosystem;
+  ecosystems, newEcosystem;
   date = new Date();
   recordFile = path.join(root, 'record.json');
 
@@ -118,8 +119,7 @@ exports.run = function(id, target) {
 
     installNode(root, id, release, function(err, root, id, release) {
       if (err) {throw err;}
-
-      // The intalled node version suited the minial version of npm
+       console.log('why do not install npm?');
       if (npmVer) {
         installNPM(root, id, release, npmVer, function(err, root, id, release) {
           if (err) {throw err;}
@@ -134,6 +134,6 @@ exports.run = function(id, target) {
           makeRecord(root, id, release, npmVer);
         });
       }
-    });
+    }); 
   }
 };

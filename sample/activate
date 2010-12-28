@@ -42,8 +42,8 @@ deactivate () {
 # unset irrelavent variables
 deactivate nondestructive
 
-NODE_ECOSYSTEM="/tmp/neco/test/.neco/test0"
-NODE_VERSION="0.2.5"
+NODE_ECOSYSTEM="/tmp/neco/test/.neco/test3"
+NODE_VERSION="0.2.0"
 export NODE_ECOSYSTEM
 export NODE_VERSION
 
