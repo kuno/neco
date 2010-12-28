@@ -41,10 +41,10 @@ function installNPM(root, id, release, npmVer, callback) {
   var err, install, targetDir = path.join(root, id);
   install = spawn(NPMInstallScript, [packageDir, targetDir, npmVer]);
   install.stdout.on('data', function(data) {
-    log('Install npm messae', data);
+    log('stdout', data);
   });
   install.stderr.on('data', function(data) {
-    console.log('message', data);
+    log('stdout', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {
@@ -60,7 +60,7 @@ function installActivate(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
   install = spawn(ActivateInstallScript, [packageDir, targetDir, release.version]);
   install.stdout.on('data', function(data) {
-    console.log('message', data);
+    log('message', data);
   });
   install.stderr.on('data', function(data) {
     console.log('message', data);
