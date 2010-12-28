@@ -20,6 +20,7 @@ var EventEmitter = require("events").EventEmitter
   , path = require("path")
   , mkdir = require("./lib/utils/mkdir-p")
   , abbrev = require("./lib/utils/abbrev")
+  , which = require("./lib/utils/which")
 
 npm.commands = {}
 npm.ELIFECYCLE = {}
@@ -86,6 +87,10 @@ var commandCache = {}
               , "explore"
               , "docs"
               , "faq"
+              , "run-script"
+              , "set"
+              , "get"
+              , "xmas"
               ]
   , plumbing = [ "build"
                , "update-dependents"
@@ -118,9 +123,15 @@ npm.load = function (conf, cb_) {
   if (loaded) return cb()
   loaded = true
   log.waitForConfig()
-  ini.resolveConfigs(conf, function (er) {
-    if (er) return cb(er)
-    mkdir(npm.tmp, cb)
+  which(process.argv[0], function (er, node) {
+    if (!er && node !== process.execPath) {
+      log.verbose("node symlink", node)
+      process.execPath = node
+    }
+    ini.resolveConfigs(conf, function (er) {
+      if (er) return cb(er)
+      mkdir(npm.tmp, cb)
+    })
   })
 }
 

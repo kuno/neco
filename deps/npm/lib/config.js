@@ -26,8 +26,9 @@ var ini = require("./utils/ini")
   , npm = require("../npm")
   , exec = require("./utils/exec")
   , fs = require("./utils/graceful-fs")
-  , dc = require("./utils/default-config")
+  , dc
   , output = require("./utils/output")
+  , parseArgs = require("./utils/parse-args")
 
 // npm config set key value
 // npm config get key
@@ -52,6 +53,7 @@ function edit (cb) {
     if (er) return cb(er)
     fs.readFile(f, "utf8", function (er, data) {
       if (er) data = ""
+      dc = dc || require("./utils/default-config")
       data = [ ";;;;"
              , "; npm "+(ini.get("global") ? "globalconfig" : "userconfig")+" file"
              , "; this is a simple ini-formatted file"
@@ -112,7 +114,10 @@ function set (key, val, cb) {
 function get (key, cb) {
   var outfd = npm.config.get("outfd")
   if (!key) return list(cb)
-  if (key.charAt(0) === "_") return cb(new Error("---sekretz---"))
+  if (key.charAt(0) === "_"
+      || parseArgs.types[key] !== parseArgs.types[key]) {
+    return cb(new Error("---sekretz---"))
+  }
   output.write(outfd, npm.config.get(key), cb)
 }
 
@@ -121,6 +126,9 @@ function list (cb) {
     , outfd = npm.config.get("outfd")
   ini.keys.sort(function (a,b) { return a > b ? 1 : -1 })
     .forEach(function (i) {
+      if (parseArgs.types[i] !== parseArgs.types[i]) {
+        return
+      }
       var val = (i.charAt(0) === "_")
           ? "---sekretz---"
           : JSON.stringify(ini.get(i))

@@ -145,9 +145,13 @@ function readAll (folders, cb) {
       "The build command should only be used on folders inside the\n"+
       "npm folder.  Are you quite sure you know what you're doing?"))
     readJson(path.join(folder, "package", "package.json"), function (er, d) {
+      if (er) {
+        log.error(folder, "Error building")
+        return cb()
+      }
       // FIXME: in 0.3.0, remove this, and make it the default
       // behavior in read-json.js
-      if (!er && d.main && d.modules && d.modules.index) delete d.main
+      if (!er && d.main && d.modules && d.modules["index.js"]) delete d.main
       loadPackageDefaults(d, cb)
     })
   }, cb)
@@ -265,11 +269,7 @@ function linkMans (pkg, cb) {
   exec("manpath", [], null, false, function (er, code, stdout, stderr) {
     var manpath = er ? [] : stdout.trim().split(":")
     if (manpath.indexOf(manroot) === -1) {
-      log.warn( "It seems " + manroot + " might not be visible to man\n"
-              + "For greater justice, please add it to your man path\n"
-              + "See: `man man`"
-              , pkg._id + " linkMans"
-              )
+      log.warn("man pages installing to " + manroot + ", outside MANPATH")
     }
     asyncMap(man, function (man, cb) {
       var parseMan = man.match(/(.*)\.([0-9]+)(\.gz)?$/)
@@ -298,13 +298,18 @@ function linkMans (pkg, cb) {
 function linkModules (pkg, target, cb) {
   log.silly(pkg.modules, "linkModules")
   log.verbose(target, "linkModules")
+  if (target === npm.root
+      && !target.match(/node_modules$/)
+      && -1 === require.paths.indexOf(target)) {
+    log.warn("modules installing to "+target+", outside NODE_PATH")
+  }
   var mod = pkg.modules
 
   // FIXME: remove in 0.3.0, and uncomment this functionality in
   // lib/utils/read-json.js
   if (pkg.main) {
     if (!pkg.modules) pkg.modules = mod = {}
-    mod.index = pkg.main
+    mod["index.js"] = pkg.main
     delete pkg.main
   }
 
@@ -318,7 +323,28 @@ function linkModules (pkg, target, cb) {
       , path.join(versionDir, "node_modules")
       , cb
       )
-  }, cb)
+  }, function (er) {
+    if (er) return cb(er)
+    if (!mod || mod.hasOwnProperty("package.json.js")) return cb()
+    mkdir(target, function (er) {
+      if (er) return cb(er)
+      pkg._npmConfig = npm.config.get()
+      pkg._npmPaths = { root : npm.root
+                      , dir : npm.dir
+                      , cache : npm.cache
+                      , tmp : npm.tmp
+                      , package : pkgDir
+                      , modules : target
+                      , dependencies : path.join(versionDir, "node_modules")
+                      }
+      var pkgCode = "module.exports = "
+                  + JSON.stringify(pkg, null, 2)
+                  + "\n"
+      delete pkg._npmConfig
+      delete pkg._npmPaths
+      fs.writeFile(path.join(target,"package.json.js"), pkgCode, "utf8", cb)
+    })
+  })
 }
 
 function linkBins (pkg, binroot, versioned, cb) {
@@ -382,5 +408,3 @@ function finishBuild (args, cb) {
     return [ log, "Success: "+(pkg.name + "@"+pkg.version), "build" ]
   })).concat(cb))
 }
-
-

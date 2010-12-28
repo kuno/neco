@@ -135,10 +135,18 @@ function ls_ (req, depth, cb) {
   if (typeof cb !== "function") cb = depth, depth = 1
   mkdir(npm.cache, function (er) {
     if (er) return log.er(cb, "no cache dir")(er)
-    find(path.join(npm.cache, req), null, depth, function (er, files) {
+    function dirFilter (f, type) {
+      return type !== "dir" ||
+        ( f && f !== npm.cache + "/" + req
+         && f !== npm.cache + "/" + req + "/" )
+    }
+    find(path.join(npm.cache, req), dirFilter, depth, function (er, files) {
       if (er) return cb(er)
       return cb(null, files.map(function (f) {
-        return f.substr(npm.cache.length + 1)
+        f = f.substr(npm.cache.length + 1)
+        f = f.substr((f === req ? path.dirname(req) : req).length)
+             .replace(/^\//, '')
+        return f
       }))
     })
   })
@@ -252,7 +260,10 @@ function addLocalTarball (p, cb) {
     to.on("error", errHandler)
     to.on("close", function () {
       if (errState) return
-      addTmpTarball(tmp, cb)
+      fs.chmod(tmp, 0644, function (er) {
+        if (er) return cb(er)
+        addTmpTarball(tmp, cb)
+      })
     })
     sys.pump(from, to)
   })
@@ -382,9 +393,14 @@ function packTar (targetTarball, folder, cb) {
         var target = fs.createWriteStream(targetTarball)
           , unPacked = false
           , args = [ "-cvf", "-", "--exclude", ".git", "-X", ignore]
+          , tarEnv = {}
+        for (var i in process.env) {
+          tarEnv = process.env
+        }
+        tarEnv.COPY_EXTENDED_ATTRIBUTES_DISABLE = 1
         if (include) args.push("-T", include)
         args.push(addFolder)
-        var tar = spawn(npm.config.get("tar"), args, null, false, parent)
+        var tar = spawn(npm.config.get("tar"), args, tarEnv, false, parent)
           , gzip = spawn( npm.config.get("gzipbin"), ["--stdout"]
                         , null, false, parent )
           , errState
@@ -392,9 +408,14 @@ function packTar (targetTarball, folder, cb) {
           if (errState) return
           if (er) return cb(errState = er)
         })
-        sys.pump(gzip.stdout, target, function (er, ok) {
+        sys.pump(gzip.stdout, target)
+        target.on("close", function (er, ok) {
           if (errState) return
-          return cb(errState = er)
+          if (er) return cb(errState = er)
+          fs.chmod(targetTarball, 0644, function (er) {
+            if (errState) return
+            return cb(errState = er)
+          })
         })
       })
     })
