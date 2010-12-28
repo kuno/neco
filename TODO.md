@@ -14,3 +14,9 @@
 * clean npm dir
 * check node version before intstall npm
 * use color npm module from https://github.com/Marak/colors.js
+
+###0.0.1-alpha###
+* check node version before install npm
+* add help subcommand
+* add colors to cosole.log output.
+* test, test, test!
