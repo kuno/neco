@@ -54,85 +54,86 @@ if (isCMDValid(cmd) === false) {
               }
             }
           }
-        });
+        }
       });
-    }
-
-    // Subcommand list
-    else if (cmd === 'list') {
-      virgin(function() {
-        inception(cmd, function(exists) {
-          if (exists) {
-            list.run();
-          }
-        });
-      });
-    }
-
-    // Subcommand help
-    else if (cmd === 'list') {
-      help.run();
-    }
-
-    // Subcommand activate
-    else if (cmd === 'activate') {
-      virgin(function() {
-        inception(cmd, function(exists) {
-          if (exists) {
-            if (process.argv.length < 4) {
-              message = 'Please specify the id of the ecosystem you want to activate.';
-              log('message', message);
-            } else {
-              id = process.argv[3];
-
-              if (isActive(id) === true) {
-                warning = 'The node ecosystem with id '+id+' is already active.';
-                log('warning', warning);
-              } else if (isIDExsit(id) == false) {
-                warning = 'The node ecosystem with id '+id+' is not exists.';
-                log('warning', warning);
-              } else {
-                activate.run(id);
-              }
-            }
-          }
-        });
-      });
-    }
-
-    // Subcommand deactvate
-    else if (cmd === 'deactivate') {
-      virgin(function() {
-        inception(cmd, function(exists) {
-          if (exists) {
-            if (process.argv.length < 4) {
-              message = 'Please specify the id of the ecosystem you want to activate.';
-              log('message', message);
-            } else {
-              id = process.argv[3];
-              if (isActive(id) === false) {
-                warning = 'The node ecosystem with id '+id+' is not active.';
-                log('warning', warning);
-              } else if (isIDExsit(id) == false) {
-                warning = 'The node ecosystem with id '+id+' is not exists.';
-                log('warning', warning);
-              } else {
-                deactivate.run(id);
-              }
-            }
-          }
-        });
-      });
-    }
-
-    // Subcommand destory
-    else if (cmd === 'destory') {
-      virgin(function() {
-        inception(cmd, function(exists) {
-          if (exists) {
-          }
-        });
-      });
-    }
-
+    });
   }
+
+  // Subcommand list
+  else if (cmd === 'list') {
+    virgin(function() {
+      inception(cmd, function(exists) {
+        if (exists) {
+          list.run();
+        }
+      });
+    });
+  }
+
+  // Subcommand help
+  else if (cmd === 'list') {
+    help.run();
+  }
+
+  // Subcommand activate
+  else if (cmd === 'activate') {
+    virgin(function() {
+      inception(cmd, function(exists) {
+        if (exists) {
+          if (process.argv.length < 4) {
+            message = 'Please specify the id of the ecosystem you want to activate.';
+            log('message', message);
+          } else {
+            id = process.argv[3];
+
+            if (isActive(id) === true) {
+              warning = 'The node ecosystem with id '+id+' is already active.';
+              log('warning', warning);
+            } else if (isIDExsit(id) == false) {
+              warning = 'The node ecosystem with id '+id+' is not exists.';
+              log('warning', warning);
+            } else {
+              activate.run(id);
+            }
+          }
+        }
+      });
+    });
+  }
+
+  // Subcommand deactvate
+  else if (cmd === 'deactivate') {
+    virgin(function() {
+      inception(cmd, function(exists) {
+        if (exists) {
+          if (process.argv.length < 4) {
+            message = 'Please specify the id of the ecosystem you want to activate.';
+            log('message', message);
+          } else {
+            id = process.argv[3];
+            if (isActive(id) === false) {
+              warning = 'The node ecosystem with id '+id+' is not active.';
+              log('warning', warning);
+            } else if (isIDExsit(id) == false) {
+              warning = 'The node ecosystem with id '+id+' is not exists.';
+              log('warning', warning);
+            } else {
+              deactivate.run(id);
+            }
+          }
+        }
+      });
+    });
+  }
+
+  // Subcommand destory
+  else if (cmd === 'destory') {
+    virgin(function() {
+      inception(cmd, function(exists) {
+        if (exists) {
+        }
+      });
+    });
+  }
+
+}
