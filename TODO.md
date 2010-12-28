@@ -20,3 +20,6 @@
 * add help subcommand
 * add ansi-color to cosole.log output.
 * test, test, test!
+
+###0.0.1-beta###
+* global config object
