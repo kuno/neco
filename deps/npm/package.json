@@ -38,7 +38,7 @@
   { "mail" : "npm-@googlegroups.com"
   , "web" : "http://github.com/isaacs/npm/issues"
   }
-, "directories" : { "doc" : "./doc", "man" : "./man1", "lib" : "./lib" }
+, "directories" : { "lib" : "./lib" }
 , "bin" : { "npm" : "./cli.js" }
 , "main" : "npm"
 , "engines" : { "node" : ">=0.2.3" }
