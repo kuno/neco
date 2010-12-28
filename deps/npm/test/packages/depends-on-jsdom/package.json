@@ -1,4 +1,0 @@
-{ "name" : "depends-on-jsdom"
-, "version" : "1.0.0"
-, "dependencies" : { "jsdom" : "*" }
-}

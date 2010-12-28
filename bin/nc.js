@@ -6,7 +6,7 @@ var list = require('../cmd/list.js'),
     activate = require('../cmd/activate.js'),
     deactivate = require('../cmd/deactivate.js');
 
-var log = require('../lib/logger.js').log;
+var log = require('../lib/console.js').log;
 
 var isIDUnique = require('../lib/checker.js').isIDUnique,
     isIDExsit = require('../lib/checker.js').isIDExsit,
@@ -18,19 +18,20 @@ var virgin = require('../lib/utils.js').virgin,
     inception = require('../lib/utils.js').inception;
 
 var id, target, cmd = process.argv[2];
-var infor, example;
+var message, example, warning, error;
 
 if (isCMDValid(cmd) === false) {
-  infor = 'Available commands:\nhelp, create, list, activate, deactivate';
+  message = 'Available commands:\nhelp, create, list, activate, deactivate';
+  log('message', message);
 } else {
   // Subcommand create
   if (cmd === 'create') {
     virgin(function() {
       inception(cmd, function(exists) {
         if (process.argv.length < 4) {
-          infor = 'Missing id, please specific at least one ID( and the version of node, if you will).';
-          example = 'nc create <NECO-ID> [NODE-VERSION]';
-          log('message', infor, example, cmd);
+          message = 'Missing id, please specific at least one ID( and the version of node, if you will).';
+          example = 'nc create <ID> [NODE-VERSION]';
+          log('message', message, example, cmd);
         } else {
           id = process.argv[3];
           target = process.argv[4] || 'stable';
@@ -39,10 +40,14 @@ if (isCMDValid(cmd) === false) {
             create.run(id, target);
           } else {
             if (isIDValid(id) === false) {
-              console.log('The given id '+id+' is reconserved word in neco.');
-              console.log('Please choose another one.');
+              message = 'The given id '+id+' is one of the reconserved words in neco.';
+              example = 'Please choose another one.';
+              log('message', message, example, cmd);
+
             } else if (isIDUnique(id) === false) {
-              console.log('The given id '+id+' has already been used.'); 
+              message = 'The given id '+id+' has already been used.';
+              example = 'Please choose another one instead.';
+              log('message', message, example, cmd);
             } else {
               create.run(id, target);
             }
@@ -74,14 +79,17 @@ if (isCMDValid(cmd) === false) {
       inception(cmd, function(exists) {
         if (exists) {
           if (process.argv.length < 4) {
-            console.log('Please specify the id of the ecosystem you want to activate.')
+            message = 'Please specify the id of the ecosystem you want to activate.';
+            log('message', message);
           } else {
             id = process.argv[3];
 
             if (isActive(id) === true) {
-              console.log('The node ecosystem with id '+id+' is already active.');
+              warning = 'The node ecosystem with id '+id+' is already active.';
+              log('warning', warning);
             } else if (isIDExsit(id) == false) {
-              console.log('The node ecosystem with id '+id+' is not exists.');
+              warning = 'The node ecosystem with id '+id+' is not exists.';
+              log('warning', warning);
             } else {
               activate.run(id);
             }
@@ -97,13 +105,16 @@ if (isCMDValid(cmd) === false) {
       inception(cmd, function(exists) {
         if (exists) {
           if (process.argv.length < 4) {
-            console.log('Please specify the id of the ecosystem you want to activate.')
+            message = 'Please specify the id of the ecosystem you want to activate.';
+            log('message', message);
           } else {
             id = process.argv[3];
             if (isActive(id) === false) {
-              console.log('The node ecosystem with id '+id+' is not active.');
+              warning = 'The node ecosystem with id '+id+' is not active.';
+              log('warning', warning);
             } else if (isIDExsit(id) == false) {
-              console.log('The node ecosystem with id '+id+' is not exists.');
+              warning = 'The node ecosystem with id '+id+' is not exists.';
+              log('warning', warning);
             } else {
               deactivate.run(id);
             }
