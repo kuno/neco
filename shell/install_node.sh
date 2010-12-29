@@ -33,10 +33,9 @@ if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
     for file in $(find tools/scons/ -name '*.py' -print); do
       sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
       sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
-    done                                                                                                     gg
+    done
   fi
 
-  # python2 fix
   for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/node-waf; do
     sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
     sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
