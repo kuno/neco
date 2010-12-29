@@ -25,17 +25,13 @@ fi
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix
   if [ -e tools/waf-light ]; then
-    for file in $(find . -name '*.py' -print) tools/light; do
-      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
-      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
-    done
+      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/light
+      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/light
   fi
 
   if [ -e tools/node-waf ]; then
-    for file in $(find . -name '*.py' -print) tools/node-waf; do
-      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
-      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
-    done
+      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/node-waf
+      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/node-waf
   fi
 
   if [ -e tools/waf ]; then
