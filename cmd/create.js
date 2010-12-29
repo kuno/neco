@@ -17,12 +17,20 @@ ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
 var message, warning, error;
 
 function installNode(root, id, release, callback) {
-  var err, install, targetDir = path.join(root, id);
+  var err, ver, link, install, targetDir = path.join(root, id);
   path.exists(root, function(exists) {
     if (!exists) {
       fs.mkdirSync(root, mode=0777);
     }
-    install = spawn(NodeInstallScript, [release.version, release.link, targetDir]);
+
+    if (release.realver) {
+      ver = release.realver;
+    } else {
+      ver = release.version;
+    }
+    link = release.link;
+
+    install = spawn(NodeInstallScript, [ver, link, targetDir]);
     install.stdout.on('data', function(data) {
       log('stdout',data);
     });
@@ -116,8 +124,8 @@ exports.run = function(id, target) {
 
   // If the version of release smaller and equal to 0.1,9,
   // add 'v' prefix to version laterial
-  if (notSmaller(release.version, vStartsFrom) <= 0) {
-    release.version = 'v'.concat(release.version);
+  if (notSmaller(release.version, vStartsFrom) > 0) {
+    release.realver = 'v'.concat(release.version);
   }
 
   if (!release) {
