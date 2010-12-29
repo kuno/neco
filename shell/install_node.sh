@@ -12,6 +12,8 @@ else
   cd $distdir/../source
 fi
 
+echo node-$ver
+
 if [ ! -e node-$ver ]; then
   wget $link && tar zxvf node-$ver.tar.gz
   cd node-$ver || return 1  
