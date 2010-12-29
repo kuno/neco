@@ -124,9 +124,9 @@ exports.run = function(id, target) {
 
   // If the version of release smaller and equal to 0.1,9,
   // add 'v' prefix to version laterial
-  if (notSmaller(release.version, vStartsFrom) > 0) {
-    release.realver = true;
-  }
+ // if (notSmaller(release.version, vStartsFrom) > 0) {
+  //  release.realver = true;
+  //}
 
   if (!release) {
     error = 'Desired release ' + target + ' not found.';
