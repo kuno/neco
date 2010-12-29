@@ -63,7 +63,7 @@ mkdir -p $distdir/ecosystem/{bin,etc,lib,include,share,man}
 if [ -e tools/waf-light ];then
   tools/waf-light install --destdir=$distdir
 elif [ -e tools/waf ]; then
-  tools/waf install --distdir=$distdir
+  tools/waf install --destdir=$distdir
 fi
 
 install -D -m644 LICENSE $distdir/ecosystem/share/licenses/node/LICENSE
