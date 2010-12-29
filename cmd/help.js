@@ -3,7 +3,7 @@ docsDir = path.join(__dirname, '../docs'),
 helpDocFile = path.join(docsDir, 'help.json');
 
 exports.run = function(cmd) {
-  if (cmd === 'undefined') {
+  if (cmd === undefined) {
     console.log('neco - Nodejs Ecosystem COordinator, like virtualenv for python.');
     console.log('Usage:\n  nc <command>');
     console.log('Currently where <command> should be on of the below commands:\n');
