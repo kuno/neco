@@ -18,7 +18,8 @@
 ###0.0.1-alpha###
 * check node version before install npm
 * add help subcommand
-* add ansi-color to cosole.log output.
+* show how to deact in node ecosystem
+* add ansi-color to cosole.log output, completed version.
 * test, test, test!
 
 ###0.0.1-beta###
