@@ -25,8 +25,8 @@ fi
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix
   if [ -e tools/waf-light ]; then
-      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/light
-      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/light
+      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/waf-light
+      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/waf-light
   fi
 
   if [ -e tools/node-waf ]; then
