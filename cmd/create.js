@@ -24,7 +24,7 @@ function installNode(root, id, release, callback) {
     }
 
     if (release.realver) {
-      ver = release.realver;
+      ver = 'v'.concat(release.realver);
     } else {
       ver = release.version;
     }
@@ -125,7 +125,7 @@ exports.run = function(id, target) {
   // If the version of release smaller and equal to 0.1,9,
   // add 'v' prefix to version laterial
   if (notSmaller(release.version, vStartsFrom) > 0) {
-    release.realver = 'v'.concat(release.version);
+    release.realver = true;
   }
 
   if (!release) {
