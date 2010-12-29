@@ -11,13 +11,13 @@ NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
 NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
 ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
 
-var message, warning, error;
+var message, warning, error, suggestion, example;
 
 function installNode(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
   path.exists(root, function(exists) {
     if (!exists) {
-      fs.mkdirSync(root, mode=0777);
+      fs.mkdirSync(root, mode=777);
     }
     install = spawn(NodeInstallScript, [release.version, release.link, targetDir]);
     install.stdout.on('data', function(data) {
@@ -76,8 +76,8 @@ function installActivate(root, id, release, callback) {
   });
 }
 
-function makeRecord(root, id, release, npmVer) {
-  var date, record, createdDate, recordFile, 
+function makeRecord(root, id, release, npmVersion) {
+  var npm, date, record, createdDate, recordFile, 
   ecosystems, newEcosystem;
   date = new Date();
   recordFile = path.join(root, 'record.json');
@@ -92,8 +92,9 @@ function makeRecord(root, id, release, npmVer) {
       ecosystems = record.ecosystems;
     }
 
+    npm = npmVersion ? npmVersion : 'none';
     createdDate = date.toDateString(date.getTime());
-    newEcosystem = {id:id, cd:createdDate,nv: release.version, npm:npmVer};
+    newEcosystem = {id:id, cd:createdDate,nv: release.version, npm:npm};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
 
