@@ -24,16 +24,6 @@ fi
 
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix
-  if [ -e tools/waf-light ]; then
-      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/waf-light
-      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/waf-light
-  fi
-
-  if [ -e tools/node-waf ]; then
-      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/node-waf
-      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/node-waf
-  fi
-
   if [ -e tools/waf ]; then
     sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/waf
     sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/waf 
@@ -46,17 +36,17 @@ if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
     done                                                                                                     gg
   fi
 
-  for file in $(find . -name '*.py' -print) wscript tools/waf tools/waf-light tools/node-waf ; do
+  # python2 fix
+  for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/node-waf; do
     sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
-    sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_'     $file
+    sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
   done
-
   sed -i "s|cmd_R = 'python |cmd_R = 'python2 |" wscript
 
   ./configure --prefix=/ecosystem/ || return 1
   sed -i "s|python |python2 |" Makefile  
 else
-  ./configure --prefix=/ecosystem/ || return 1 
+  ./configure --prefix=/ecosystem/ || return 1
 fi
 
 make || return 1
