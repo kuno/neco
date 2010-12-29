@@ -74,7 +74,7 @@ if (isCMDValid(cmd) === false) {
   }
 
   // Subcommand help
-  else if (cmd === 'list') {
+  else if (cmd === 'help') {
     help.run();
   }
 
