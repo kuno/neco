@@ -61,10 +61,10 @@ function installActivate(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
   install = spawn(ActivateInstallScript, [packageDir, targetDir, release.version]);
   install.stdout.on('data', function(data) {
-    log('message', data);
+    log('stdout', data);
   });
   install.stderr.on('data', function(data) {
-    console.log('message', data);
+    console.log('stdout', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {
@@ -101,7 +101,7 @@ function makeRecord(root, id, release, npmVer) {
     // Write into records file
     fs.writeFile(recordFile, record, 'utf8', function(err) {
       if (err) {throw err;}
-      messge = 'Sucessfully create new node ecosystem!';
+      messge = 'New node ecosystem has been created sucessfully!';
       log('message', message);
     });
   });
