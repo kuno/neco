@@ -43,7 +43,7 @@ if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
     sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/waf 
   fi
 
-  if [ -e tools/scons ]; then
+  if [ -d tools/scons ]; then
     for file in $(find tools/scons -name '*.py' -print); do
       sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
       sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
