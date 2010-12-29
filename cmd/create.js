@@ -24,7 +24,7 @@ function installNode(root, id, release, callback) {
     }
 
     if (release.realver) {
-      ver = 'v'.concat(release.version);
+      ver = release.realver;
     } else {
       ver = release.version;
     }
@@ -122,16 +122,15 @@ exports.run = function(id, target) {
   var root, npmVer, release;
   release = getRelease(target);
 
-  // If the version of release smaller and equal to 0.1,9,
-  // add 'v' prefix to version laterial
- // if (notSmaller(release.version, vStartsFrom) > 0) {
-  //  release.realver = true;
-  //}
-
   if (!release) {
     error = 'Desired release ' + target + ' not found.';
     log('error', error);
   } else {
+    // If the version of release smaller and equal to 0.1,9,
+    // add 'v' prefix to version laterial
+    if (notSmaller(release.version, vStartsFrom) > 0) {
+      release.realver = 'v'.concat(release.version);
+    }    
     npmVer = getSuitedNPM(release.version);  
     root = path.join(process.env.NECO_ROOT, '.neco') || path.join(process.env.WORKON_HOME, '.neco');
 
