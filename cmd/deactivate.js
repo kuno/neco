@@ -1,5 +1,7 @@
-var path = require('path');
+var path = require('path'),
+    color = require('ansi-color').set;
 
-exports.run = function(id) {
-  console.log('run \'deactivate\' command in your shell.');
+    exports.run = function(id) {
+      var shell = color('deactivate', 'bold+yellow');
+  console.log('run \''+shell+' command in your shell.');
 };

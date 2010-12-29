@@ -114,12 +114,7 @@ if (isCMDValid(cmd) === false) {
     virgin(cmd, function() {
       inception(cmd, function(exists) {
         if (exists) {
-          if (process.argv.length < 4) {
-            message = 'Missing ID';
-            suggestion = 'Please specify the id of the ecosystem you want to activate.';
-            example = 'nc deactivate <id>';
-            log('message', message, suggestion, example);
-          } else {
+          if (process.argv.length >= 4) {
             id = process.argv[3];
             if (isActive(id) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
@@ -135,6 +130,7 @@ if (isCMDValid(cmd) === false) {
               deactivate.run(id);
             }
           }
+          deactivate.run();
         }
       });
     });
