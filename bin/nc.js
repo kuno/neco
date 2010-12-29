@@ -22,7 +22,7 @@ var message, suggestion, example, warning, error;
 
 if (isCMDValid(cmd) === false) {
   message = 'Missing command';
-  suggestion = 'Available commands:\nhelp, create, list, activate, deactivate';
+  suggestion = 'Available commands: help, create, list, activate, deactivate';
   log('message', message, suggestion);
 } else {
   // Subcommand create
