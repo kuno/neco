@@ -77,7 +77,7 @@ function installActivate(root, id, release, callback) {
 }
 
 function makeRecord(root, id, release, npmVer) {
-  var date, record, createdDate, recordFile, 
+  var npm, date, record, createdDate, recordFile, 
   ecosystems, newEcosystem;
   date = new Date();
   recordFile = path.join(root, 'record.json');
@@ -92,8 +92,9 @@ function makeRecord(root, id, release, npmVer) {
       ecosystems = record.ecosystems;
     }
 
+    npm = npmVer ? npmVer : 'none';
     createdDate = date.toDateString(date.getTime());
-    newEcosystem = {id:id, cd:createdDate,nv: release.version, npm:npmVer};
+    newEcosystem = {id:id, cd:createdDate,nv:release.version, npm:npm};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
 
@@ -119,8 +120,7 @@ exports.run = function(id, target) {
 
     installNode(root, id, release, function(err, root, id, release) {
       if (err) {throw err;}
-      console.log('the suited npm version is '+npmVer);
-      /*if (npmVer) {
+      if (npmVer) {
         installNPM(root, id, release, npmVer, function(err, root, id, release) {
           if (err) {throw err;}
           installActivate(root, id, release, function(err, root, id, release) {
@@ -133,7 +133,7 @@ exports.run = function(id, target) {
           if (err) {throw err;}
           makeRecord(root, id, release, npmVer);
         });
-        }*/
+        }
       });
     }
   };
