@@ -111,7 +111,7 @@ exports.run = function(id, target) {
   release = getRelease(target);
 
   if (!release) {
-    error = 'Desired release ' + target + ' not found.';
+    error = 'Desired release '+target + ' not found.';
     log('error', error);
   } else {
     npmVer = getSuitedNPM(release.version);  
@@ -119,8 +119,7 @@ exports.run = function(id, target) {
 
     installNode(root, id, release, function(err, root, id, release) {
       if (err) {throw err;}
-      console.log('the suited npm version is '+npmVer);
-      /*if (npmVer) {
+      if (npmVer) {
         installNPM(root, id, release, npmVer, function(err, root, id, release) {
           if (err) {throw err;}
           installActivate(root, id, release, function(err, root, id, release) {
@@ -133,7 +132,7 @@ exports.run = function(id, target) {
           if (err) {throw err;}
           makeRecord(root, id, release, npmVer);
         });
-        }*/
-      });
-    }
-  };
+      }
+    });
+  }
+};
