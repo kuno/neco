@@ -39,7 +39,7 @@ if (isCMDValid(cmd) === false) {
 
           if (isIDValid(id) === false) {
             message = 'The given id '+id+' is one of the reserved words in neco.';
-            suggstion = 'Please choose another one.';
+            suggestion = 'Please choose another one.';
             log('message', message, suggestion, example, cmd);
 
           } else {
