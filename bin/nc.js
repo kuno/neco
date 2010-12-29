@@ -18,7 +18,7 @@ var virgin = require('../lib/utils.js').virgin,
 inception = require('../lib/utils.js').inception;
 
 var id, target, cmd = process.argv[2];
-var message, example, warning, error;
+var message, suggestion, example, warning, error;
 
 if (isCMDValid(cmd) === false) {
   message = 'Available commands:\nhelp, create, list, activate, deactivate';
@@ -38,8 +38,8 @@ if (isCMDValid(cmd) === false) {
 
           if (isIDValid(id) === false) {
             message = 'The given id '+id+' is one of the reserved words in neco.';
-            example = 'Please choose another one.';
-            log('message', message, example, cmd);
+            suggstion = 'Please choose another one.';
+            log('message', message, suggestion, example, cmd);
 
           } else {
             if (!exists) {
@@ -47,8 +47,8 @@ if (isCMDValid(cmd) === false) {
             } else {  
               if (isIDUnique(id) === false) {
                 message = 'The given id '+id+' has already been used.';
-                example = 'Please choose another one instead.';
-                log('message', message, example, cmd);
+                suggestion = 'Please choose another one instead.';
+                log('message', message, suggestion, example, cmd);
               } else {
                 create.run(id, target);
               }
@@ -81,17 +81,20 @@ if (isCMDValid(cmd) === false) {
       inception(cmd, function(exists) {
         if (exists) {
           if (process.argv.length < 4) {
-            message = 'Please specify the id of the ecosystem you want to activate.';
-            log('message', message);
+            message = 'Missing ID';
+            suggestion = 'Please specify the id of the ecosystem you want to activate.';
+            log('message', message, suggestion, example, cmd);
           } else {
             id = process.argv[3];
 
             if (isActive(id) === true) {
               warning = 'The node ecosystem with id '+id+' is already active.';
-              log('warning', warning);
+              suggstion = 'Please use type deact in your shell to deactivate it.';
+              log('warning', warning, suggestion, example, cmd);
             } else if (isIDExsit(id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
-              log('warning', warning);
+              suggestion = 'You can use nc list command to find out all existing ecosystem.';
+              log('warning', warning, suggestion, example, cmd);
             } else {
               activate.run(id);
             }
@@ -107,16 +110,19 @@ if (isCMDValid(cmd) === false) {
       inception(cmd, function(exists) {
         if (exists) {
           if (process.argv.length < 4) {
-            message = 'Please specify the id of the ecosystem you want to activate.';
-            log('message', message);
+            message = 'Missing ID';
+            suggestion = 'Please specify the id of the ecosystem you want to activate.';
+            log('message', message, suggestion, example, cmd);
           } else {
             id = process.argv[3];
             if (isActive(id) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
-              log('warning', warning);
+              suggestion = 'Use nc activate command to activate one first.';
+              log('warning', warning, suggestion, example, cmd);
             } else if (isIDExsit(id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
-              log('warning', warning);
+              suggestion = 'You can use nc list command to find out all existing ecosystem.';
+              log('warning', warning, suggestion, example, cmd);
             } else {
               deactivate.run(id);
             }
