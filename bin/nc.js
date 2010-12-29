@@ -32,7 +32,7 @@ if (isCMDValid(cmd) === false) {
           message = 'Missing ID';
           suggestion = 'Please specific at least one ID( and the version of node, if you will).';
           example = 'nc create <ID> [NODE-VERSION]';
-          log('message', message, example, cmd);
+          log('message', message, suggestion, example, cmd);
         } else {
           id = process.argv[3];
           target = process.argv[4] || 'stable';
