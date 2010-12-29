@@ -29,7 +29,8 @@ if (isCMDValid(cmd) === false) {
     virgin(function() {
       inception(cmd, function(exists) {
         if (process.argv.length < 4) {
-          message = 'Missing id, please specific at least one ID( and the version of node, if you will).';
+          message = 'Missing ID';
+          suggestion = 'Please specific at least one ID( and the version of node, if you will).';
           example = 'nc create <ID> [NODE-VERSION]';
           log('message', message, example, cmd);
         } else {
