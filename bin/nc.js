@@ -21,8 +21,9 @@ var id, target, cmd = process.argv[2];
 var message, suggestion, example, warning, error;
 
 if (isCMDValid(cmd) === false) {
-  message = 'Available commands:\nhelp, create, list, activate, deactivate';
-  log('message', message);
+  message = 'Missing command';
+  suggestion = 'Available commands:\nhelp, create, list, activate, deactivate';
+  log('message', message, suggestion);
 } else {
   // Subcommand create
   if (cmd === 'create') {
