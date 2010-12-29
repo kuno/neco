@@ -6,6 +6,7 @@ exports.run = function(cmd) {
   if (cmd === undefined) {
     console.log('neco - Nodejs Ecosystem COordinator, like virtualenv for python.');
     console.log('Usage:\n  nc <command>');
+    console.log('');
     console.log('Currently where <command> should be on of the below commands:\n');
     console.log('  create      -  create new node ecosystem');
     console.log('     Useage: nc create <id> [node-version]');

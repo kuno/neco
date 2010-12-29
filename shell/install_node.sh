@@ -2,17 +2,13 @@
 
 ver=$1
 link=$2
-distdir=$3
+targetDir=$3
 
-echo $distdir
-
-if [ ! -d $distdir/../source ] && [ ! -L $distdir/../source ]; then
-  mkdir -p $distdir/../source && cd $distdir/../source
+if [ ! -d $targetDir/../source ] && [ ! -L $distdir/../source ]; then
+  mkdir -p $targetDir/../source && cd $distdir/../source
 else
-  cd $distdir/../source
+  cd $targetDir/../source
 fi
-
-echo node-$ver
 
 if [ -d node-$ver ]; then
   rm -rf node-$ver
@@ -44,14 +40,14 @@ fi
 
 make || return 1
 
-mkdir -p $distdir/ecosystem/{bin,etc,lib,include,share,man}
+mkdir -p $targetDir/ecosystem/{bin,etc,lib,include,share,man}
 
 if [ -e tools/waf-light ]; then
-  tools/waf-light install --destdir=$distdir
+  tools/waf-light install --destdir=$targetDir
 elif [ -e tools/waf ]; then
-  tools/waf install --destdir=$distdir
+  tools/waf install --destdir=$targetDir
 fi
 
-install -D -m644 LICENSE $distdir/ecosystem/share/licenses/node/LICENSE
-install -D -m644 ChangeLog $distdir/ecosystem/share/node/ChangeLog
-install -D -m644 README $distdir/ecosystem/share/node/README
+install -D -m644 LICENSE $targetDir/ecosystem/share/licenses/node/LICENSE
+install -D -m644 ChangeLog $targetDir/ecosystem/share/node/ChangeLog
+install -D -m644 README $targetDir/ecosystem/share/node/README
