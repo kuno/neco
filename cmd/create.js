@@ -2,8 +2,6 @@ var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn;
 
-var mode = require('../include/default.js').mode;
-
 var log = require('../lib/console.js').log,
 getRelease = require('../lib/utils.js').getRelease,
 getSuitedNPM = require('../lib/utils.js').getSuitedNPM;
@@ -19,7 +17,7 @@ function installNode(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
   path.exists(root, function(exists) {
     if (!exists) {
-      fs.mkdirSync(root, mode=mode);
+      fs.mkdirSync(root, mode=0777);
     }
     install = spawn(NodeInstallScript, [release.version, release.link, targetDir]);
     install.stdout.on('data', function(data) {
