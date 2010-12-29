@@ -2,6 +2,8 @@ var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn;
 
+var mode = require('../include/default.js').mode;
+
 var log = require('../lib/console.js').log,
 getRelease = require('../lib/utils.js').getRelease,
 getSuitedNPM = require('../lib/utils.js').getSuitedNPM;
@@ -17,7 +19,7 @@ function installNode(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
   path.exists(root, function(exists) {
     if (!exists) {
-      fs.mkdirSync(root, mode=0777);
+      fs.mkdirSync(root, mode=mode);
     }
     install = spawn(NodeInstallScript, [release.version, release.link, targetDir]);
     install.stdout.on('data', function(data) {
@@ -120,7 +122,8 @@ exports.run = function(id, target) {
 
     installNode(root, id, release, function(err, root, id, release) {
       if (err) {throw err;}
-      if (npmVer) {
+      console.log('suited npm version is '+npmVer);
+      /*if (npmVer) {
         installNPM(root, id, release, npmVer, function(err, root, id, release) {
           if (err) {throw err;}
           installActivate(root, id, release, function(err, root, id, release) {
@@ -133,7 +136,7 @@ exports.run = function(id, target) {
           if (err) {throw err;}
           makeRecord(root, id, release, npmVer);
         });
-        }
+      }*/
       });
     }
   };
