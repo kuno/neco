@@ -2,6 +2,9 @@
 pkgDir=$1
 distdir=$2
 npmVer=$3
+npmPrefix='http://registry.npmjs.org/npm/-/npm-'
+npmSuffix='.tgz'
+npmURL=$npmPrefix$npmVer$npmSuffix
 replace=$(echo $2 | sed 's/\//\\\//g' | sed 's/\./\\\./g')
 
 if [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.necoold ] ; then
@@ -19,7 +22,7 @@ node $pkgDir/deps/npm/cli.js config set binroot $distdir/ecosystem/bin || return
 node $pkgDir/deps/npm/cli.js config set manroot $distdir/ecosystem/share/man || return 1
 
 # Installation
-node $pkgDir/deps/npm/cli.js install npm@$npmVer || return 1
+node $pkgDir/deps/npm/cli.js install $npmURL || return 1
 
 sed -i -e "s/^root.*/root\ =\ $replace\/ecosystem\/lib\/node/g" $pkgDir/sample/npmrc || return 1
 sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $pkgDir/sample/npmrc || return 1
