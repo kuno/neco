@@ -2,7 +2,7 @@ var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn;
 
-var vStartFrom = require('../include/default.js').vStatsFrom;
+var vStartsFrom = require('../include/default.js').vStartsFrom;
 
 var log = require('../lib/console.js').log,
 getRelease = require('../lib/utils.js').getRelease,
@@ -114,7 +114,9 @@ exports.run = function(id, target) {
   var root, npmVer, release;
   release = getRelease(target);
 
-  if (notSmaller(release.version, vStatsFrom) <= 0) {
+  // If the version of release smaller and equal to 0.1,9,
+  // add 'v' prefix to version laterial
+  if (notSmaller(release.version, vStartsFrom) <= 0) {
     release.version = 'v'.concat(release.version);
   }
 
