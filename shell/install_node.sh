@@ -39,7 +39,6 @@ if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
     sed -i 's/^#\ \/usr\/bin\/env\ python/#!\/usr\/bin\/env\ python2/g' $file
   done
   
-  sed -i 's/python\ \%s/python2\ \%s/g' wscript
   sed -i "s|cmd_R = 'python |cmd_R = 'python2 |" wscript
 
   ./configure --prefix=/ecosystem/ || return 1
