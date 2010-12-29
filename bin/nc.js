@@ -34,7 +34,7 @@ if (isCMDValid(cmd) === false) {
           message = 'Missing ID';
           suggestion = 'Please specific at least one ID( and the version of node, if you will).';
           example = 'nc create <ID> [NODE-VERSION]';
-          log('message', message, suggestion, example, cmd);
+          log('message', message, suggestion, example);
         } else {
           id = process.argv[3];
           target = process.argv[4] || 'stable';
@@ -42,7 +42,7 @@ if (isCMDValid(cmd) === false) {
           if (isIDValid(id) === false) {
             message = 'The given id '+id+' is one of the reserved words in neco.';
             suggestion = 'Please choose another one.';
-            log('message', message, suggestion, example, cmd);
+            log('message', message, suggestion, example);
 
           } else {
             if (!exists) {
@@ -87,19 +87,19 @@ if (isCMDValid(cmd) === false) {
             message = 'Missing ID';
             suggestion = 'Please specify the id of the ecosystem you want to activate.';
             example = 'nc activate <id>';
-            log('message', message, suggestion, example, cmd);
+            log('message', message, suggestion, example);
           } else {
             id = process.argv[3];
 
             if (isActive(id) === true) {
               warning = 'The node ecosystem with id '+id+' is already active.';
               suggstion = 'Please use type deact in your shell to deactivate it.';
-              log('warning', warning, suggestion, example, cmd);
+              log('warning', warning, suggestion, example);
             } else if (isIDExsit(id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use nc list command to find out all existing ecosystem.';
               example = 'nc create <id> [node-version]';
-              log('warning', warning, suggestion, example, cmd);
+              log('warning', warning, suggestion, example);
             } else {
               activate.run(id);
             }
@@ -118,19 +118,19 @@ if (isCMDValid(cmd) === false) {
             message = 'Missing ID';
             suggestion = 'Please specify the id of the ecosystem you want to activate.';
             example = 'nc deactivate <id>';
-            log('message', message, suggestion, example, cmd);
+            log('message', message, suggestion, example);
           } else {
             id = process.argv[3];
             if (isActive(id) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
               suggestion = 'Use nc activate command to activate one first.';
               example = 'nc activate <id>';
-              log('warning', warning, suggestion, example, cmd);
+              log('warning', warning, suggestion, example);
             } else if (isIDExsit(id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use nc list command to find out all existing ecosystem.';
               example = 'nc list';
-              log('warning', warning, suggestion, example, cmd);
+              log('warning', warning, suggestion, example);
             } else {
               deactivate.run(id);
             }
