@@ -28,7 +28,7 @@ if (isCMDValid(cmd) === false) {
 } else {
   // Subcommand create
   if (cmd === 'create') {
-    virgin(function() {
+    virgin(cmd, function() {
       inception(cmd, function(exists) {
         if (process.argv.length < 4) {
           message = 'Missing ID';
@@ -80,7 +80,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand activate
   else if (cmd === 'activate') {
-    virgin(function() {
+    virgin(cmd, function() {
       inception(cmd, function(exists) {
         if (exists) {
           if (process.argv.length < 4) {
@@ -111,7 +111,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand deactvate
   else if (cmd === 'deactivate') {
-    virgin(function() {
+    virgin(cmd, function() {
       inception(cmd, function(exists) {
         if (exists) {
           if (process.argv.length < 4) {
@@ -142,7 +142,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand destory
   else if (cmd === 'destory') {
-    virgin(function() {
+    virgin(cmd, function() {
       inception(cmd, function(exists) {
         if (exists) {
         }
