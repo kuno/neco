@@ -24,24 +24,37 @@ fi
 
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix
-  for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/node-waf; do
-    sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
-    sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
-  done
-  sed -i "s|cmd_R = 'python |cmd_R = 'python2 |" wscript
+  if [ -e tools/waf-light ]; then
+    for file in $(find . -name '*.py' -print) tools/light; do
+      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
+      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
+    done
 
-  ./configure --prefix=/ecosystem/ || return 1
-  sed -i "s|python |python2 |" Makefile  
-else
-  ./configure --prefix=/ecosystem/ || return 1 
-fi
+    if [ -e tools/node-waf ]; then
+      for file in $(find . -name '*.py' -print) tools/node-waf; do
+        sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
+        sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
+      done
 
-make || return 1
+      for file in $(find . -name '*.py' -print) wscript; do
+        sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
+        sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_'     $file
+      done
 
-mkdir -p $distdir/ecosystem/{bin,etc,lib,include,share,man}
+      sed -i "s|cmd_R = 'python |cmd_R = 'python2 |" wscript
 
-tools/waf-light install --destdir=$distdir
+      ./configure --prefix=/ecosystem/ || return 1
+      sed -i "s|python |python2 |" Makefile  
+    else
+      ./configure --prefix=/ecosystem/ || return 1 
+    fi
 
-install -D -m644 LICENSE $distdir/ecosystem/share/licenses/node/LICENSE
-install -D -m644 ChangeLog $distdir/ecosystem/share/node/ChangeLog
-install -D -m644 README $distdir/ecosystem/share/node/README
+    make || return 1
+
+    mkdir -p $distdir/ecosystem/{bin,etc,lib,include,share,man}
+
+    tools/waf-light install --destdir=$distdir
+
+    install -D -m644 LICENSE $distdir/ecosystem/share/licenses/node/LICENSE
+    install -D -m644 ChangeLog $distdir/ecosystem/share/node/ChangeLog
+    install -D -m644 README $distdir/ecosystem/share/node/README
