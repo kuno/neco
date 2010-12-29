@@ -12,13 +12,13 @@ else
   cd $distdir/../source
 fi
 
-if [ ! -e node-v$ver ]; then
-  wget $link && tar zxvf node-v$ver.tar.gz
+if [ ! -e node-$ver ]; then
+  wget $link && tar zxvf node-$ver.tar.gz
+  cd node-$ver || return 1  
 else
-  tar zxvf node-v$ver.tar.gz
+  tar zxvf node-$ver.tar.gz
+  cd node-$ver || return 1
 fi
-
-cd node-v$ver || return 1
 
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix

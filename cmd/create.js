@@ -2,9 +2,12 @@ var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn;
 
+var vStartFrom = require('../include/default.js').vStatsFrom;
+
 var log = require('../lib/console.js').log,
 getRelease = require('../lib/utils.js').getRelease,
-getSuitedNPM = require('../lib/utils.js').getSuitedNPM;
+getSuitedNPM = require('../lib/utils.js').getSuitedNPM,
+notSmaller = require('../lib/utils.js').compareNodeVersion;
 
 var   packageDir = path.join(__dirname, '..'),   
 NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
@@ -110,6 +113,10 @@ function makeRecord(root, id, release, npmVer) {
 exports.run = function(id, target) {
   var root, npmVer, release;
   release = getRelease(target);
+
+  if (notSmaller(release.version, vStatsFrom) <= 0) {
+    release.version = 'v'.concat(release.version);
+  }
 
   if (!release) {
     error = 'Desired release ' + target + ' not found.';
