@@ -23,7 +23,8 @@ var message, suggestion, example, warning, error;
 if (isCMDValid(cmd) === false) {
   message = 'Missing command';
   suggestion = 'Available commands: help, create, list, activate, deactivate';
-  log('message', message, suggestion);
+  example = 'nc create <id> or nc list';
+  log('message', message, suggestion, example);
 } else {
   // Subcommand create
   if (cmd === 'create') {
