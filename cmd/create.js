@@ -92,7 +92,7 @@ function makeRecord(root, id, release, npmVer) {
       ecosystems = record.ecosystems;
     }
 
-    createdDate = date.toUTCString(date.getTime());
+    createdDate = date.toDateString(date.getTime());
     newEcosystem = {id:id, cd:createdDate,nv: release.version, npm:npmVer};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
@@ -111,7 +111,7 @@ exports.run = function(id, target) {
   release = getRelease(target);
 
   if (!release) {
-    error = 'Err: Desired release ' + target + ' not found.';
+    error = 'Desired release ' + target + ' not found.';
     log('error', error);
   } else {
     npmVer = getSuitedNPM(release.version);  
