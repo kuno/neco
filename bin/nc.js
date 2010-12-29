@@ -64,7 +64,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand list
   else if (cmd === 'list') {
-    virgin(function() {
+    virgin(cmd, function() {
       inception(cmd, function(exists) {
         if (exists) {
           list.run();
