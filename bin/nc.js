@@ -51,7 +51,7 @@ if (isCMDValid(cmd) === false) {
               if (isIDUnique(id) === false) {
                 message = 'The given id '+id+' has already been used.';
                 suggestion = 'Please choose another one instead.';
-                log('message', message, suggestion, example, cmd);
+                log('message', message, suggestion, example);
               } else {
                 create.run(id, target);
               }
