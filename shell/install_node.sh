@@ -14,6 +14,10 @@ fi
 
 echo node-$ver
 
+if [ -d node-$ver ]; then
+  rm -rf node-$ver
+fi
+
 if [ ! -e node-$ver.tar.gz ]; then
   wget $link && tar zxvf node-$ver.tar.gz
 else
@@ -29,7 +33,7 @@ if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
     sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
   done
 
-  sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file    
+  sed -i 's/^#\ \/usr\/bin\/env\ python/#!\/usr\/bin\/env\ python2/g' wscript    
   sed -i "s|cmd_R = 'python |cmd_R = 'python2 |" wscript
 
   ./configure --prefix=/ecosystem/ || return 1
