@@ -24,19 +24,7 @@ fi
 
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix
-  if [ -e tools/waf ]; then
-    sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/waf
-    sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/waf 
-  fi
-
-  if [ -d tools/scons ]; then
-    for file in $(find tools/scons/ -name '*.py' -print); do
-      sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
-      sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
-    done
-  fi
-
-  for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/node-waf; do
+  for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/node-waf tools/waf; do
     sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
     sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
   done
