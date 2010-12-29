@@ -119,8 +119,8 @@ exports.run = function(id, target) {
 
     installNode(root, id, release, function(err, root, id, release) {
       if (err) {throw err;}
-       console.log('why do not install npm?');
-      if (npmVer) {
+      console.log('the suited npm version is '+npmVer);
+      /*if (npmVer) {
         installNPM(root, id, release, npmVer, function(err, root, id, release) {
           if (err) {throw err;}
           installActivate(root, id, release, function(err, root, id, release) {
@@ -133,7 +133,7 @@ exports.run = function(id, target) {
           if (err) {throw err;}
           makeRecord(root, id, release, npmVer);
         });
-      }
-    }); 
-  }
-};
+        }*/
+      });
+    }
+  };
