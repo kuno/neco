@@ -14,7 +14,7 @@ fi
 
 echo node-$ver
 
-if [ ! -e node-$ver ]; then
+if [ ! -e node-$ver.tar.gz ]; then
   wget $link && tar zxvf node-$ver.tar.gz
   cd node-$ver || return 1  
 else
