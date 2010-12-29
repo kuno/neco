@@ -29,15 +29,17 @@ cd node-$ver || return 1
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix
 
-  for file in $(find . -name '*.pyc' -print); do
+  for file in $(find . -name '*.pyc' -print) deps/v8/SConstruct; do
     rm -rf $file
   done
 
-  for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/node-waf tools/waf; do
+  for file in $(find . -name '*.py' -print) deps/v8/SConstruct wscript tools/waf-light tools/node-waf tools/waf; do
     sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
     sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
     sed -i 's/^#\ \/usr\/bin\/env\ python/#!\/usr\/bin\/env\ python2/g' $file
   done
+  
+  sed -i 's/python\ \%s/python2\ \%s/g' wscript
   sed -i "s|cmd_R = 'python |cmd_R = 'python2 |" wscript
 
   ./configure --prefix=/ecosystem/ || return 1
