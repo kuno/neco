@@ -9,8 +9,10 @@ exports.run = function(cmd) {
     console.log('Currently where <command> should be on of the below commands:\n');
     console.log('  create    -  create new node ecosystem');
     console.log('     Useage: nc create <id> [node-version]');
+    console.log('');
     console.log('  list      -  list all installed node ecosystem');
     console.log('     Usage: nc list');
+    console.log('');
     console.log('  activate  -  how to activate a existing node ecosystem.');
     console.log('     Usage: nc activate <id>');
     console.log('');
