@@ -24,7 +24,7 @@ function installNode(root, id, release, callback) {
     }
 
     if (release.realver) {
-      ver = 'v'.concat(release.realver);
+      ver = 'v'.concat(release.version);
     } else {
       ver = release.version;
     }
