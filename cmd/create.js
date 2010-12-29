@@ -11,13 +11,13 @@ NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
 NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
 ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
 
-var message, warning, error, suggestion, example;
+var message, warning, error;
 
 function installNode(root, id, release, callback) {
   var err, install, targetDir = path.join(root, id);
   path.exists(root, function(exists) {
     if (!exists) {
-      fs.mkdirSync(root, mode=777);
+      fs.mkdirSync(root, mode=0777);
     }
     install = spawn(NodeInstallScript, [release.version, release.link, targetDir]);
     install.stdout.on('data', function(data) {
@@ -76,8 +76,8 @@ function installActivate(root, id, release, callback) {
   });
 }
 
-function makeRecord(root, id, release, npmVersion) {
-  var npm, date, record, createdDate, recordFile, 
+function makeRecord(root, id, release, npmVer) {
+  var date, record, createdDate, recordFile, 
   ecosystems, newEcosystem;
   date = new Date();
   recordFile = path.join(root, 'record.json');
@@ -92,9 +92,8 @@ function makeRecord(root, id, release, npmVersion) {
       ecosystems = record.ecosystems;
     }
 
-    npm = npmVersion ? npmVersion : 'none';
     createdDate = date.toDateString(date.getTime());
-    newEcosystem = {id:id, cd:createdDate,nv: release.version, npm:npm};
+    newEcosystem = {id:id, cd:createdDate,nv: release.version, npm:npmVer};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
 
@@ -112,7 +111,7 @@ exports.run = function(id, target) {
   release = getRelease(target);
 
   if (!release) {
-    error = 'Desired release '+target + ' not found.';
+    error = 'Desired release ' + target + ' not found.';
     log('error', error);
   } else {
     npmVer = getSuitedNPM(release.version);  
@@ -120,7 +119,8 @@ exports.run = function(id, target) {
 
     installNode(root, id, release, function(err, root, id, release) {
       if (err) {throw err;}
-      if (npmVer) {
+      console.log('the suited npm version is '+npmVer);
+      /*if (npmVer) {
         installNPM(root, id, release, npmVer, function(err, root, id, release) {
           if (err) {throw err;}
           installActivate(root, id, release, function(err, root, id, release) {
@@ -133,7 +133,7 @@ exports.run = function(id, target) {
           if (err) {throw err;}
           makeRecord(root, id, release, npmVer);
         });
-      }
-    });
-  }
-};
+        }*/
+      });
+    }
+  };
