@@ -3,3 +3,9 @@
 2. completed create command
 3, completed help command
 4, activate and deactivate command is useful
+
+###0.0.1-alpha1###
+1, change executable file name from nc to neco, thanks Benjamin W. Smith.
+2. make stdout and stderr looks a bit pretty.
+3, hidden all un-handlable release
+4, recommonded npm ver fro node>=0.2.3 now is 0.2.13-3
