@@ -26,7 +26,7 @@
       "cmd":"./cmd","data":"./data","deps":"./deps","include":"./include",
       "sample":"./sample","shell":"./shell"
     },
-    "bin":{"nc":"./bin/nc.js"},
+    "bin":{"neco":"./bin/neco.js"},
     "main":"nc",
     "engines": {"node":">=0.2.5"},
     "scripts":{},
