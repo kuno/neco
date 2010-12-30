@@ -33,7 +33,7 @@ if (isCMDValid(cmd) === false) {
         if (process.argv.length < 4) {
           message = 'Missing ID';
           suggestion = 'Please specific at least one ID( and the version of node, if you will).';
-          example = 'neco create <ID> [NODE-VERSION]';
+          example = 'neco create <id> [NODE-VERSION]';
           log('message', message, suggestion, example);
         } else {
           id = process.argv[3];

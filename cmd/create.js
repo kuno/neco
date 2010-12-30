@@ -14,7 +14,7 @@ NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
 NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
 ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
 
-var message, warning, error;
+var message, warning, error, suggestion, example;
 
 function installNode(root, id, release, callback) {
   var err, ver, link, install, targetDir = path.join(root, id);
@@ -124,8 +124,11 @@ exports.run = function(id, target) {
 
   if (!release) {
     error = 'The desired release '+target+' not found or neco can\'t handle it.';
-    log('error', error);
+    suggestion = 'Try a newer version.';
+    example = 'neco create <id> stable OR neco create <id> latest';
+    log('error', error, suggestion, example);
   } else {
+
     // If the version of release smaller and equal to 0.1,9,
     // add 'v' prefix to version laterial
     if (notSmaller(release.version, vStartsFrom) >= 0) {
