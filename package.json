@@ -11,14 +11,14 @@
       "type":"git",
       "url":"https://github.com/kuno/neco"
     },
+    "dependencies":
+    {"npm":">=0.2.12-1",
+      "ansi-color":"0.2.1"
+    },
     "bugs":
     {
       "mail":"neokuno@gmail.com",
       "web":""
-    },
-    "dependencies":
-    {"npm":"0.2.12-1",
-      "ansi-color"
     },
     "directories": 
     {
