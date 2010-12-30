@@ -4,8 +4,8 @@ ver=$1
 link=$2
 targetDir=$3
 
-if [ ! -d $targetDir/../source ] && [ ! -L $distdir/../source ]; then
-  mkdir -p $targetDir/../source && cd $distdir/../source
+if [ ! -d $targetDir/../source ] && [ ! -L $targetDir/../source ]; then
+  mkdir -p $targetDir/../source && cd targetDir/../source
 else
   cd $targetDir/../source
 fi
