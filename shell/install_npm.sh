@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 pkgDir=$1
-distdir=$2
+targetDir=$2
 npmVer=$3
 npmPrefix='http://registry.npmjs.org/npm/-/npm-'
 npmSuffix='.tgz'
@@ -17,9 +17,9 @@ else
   cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1
 fi
 
-node $pkgDir/deps/npm/cli.js config set root $distdir/ecosystem/lib/node || return 1
-node $pkgDir/deps/npm/cli.js config set binroot $distdir/ecosystem/bin || return 1
-node $pkgDir/deps/npm/cli.js config set manroot $distdir/ecosystem/share/man || return 1
+node $pkgDir/deps/npm/cli.js config set root $targetDir/ecosystem/lib/node || return 1
+node $pkgDir/deps/npm/cli.js config set binroot $targetDir/ecosystem/bin || return 1
+node $pkgDir/deps/npm/cli.js config set manroot $targetDir/ecosystem/share/man || return 1
 
 # Installation
 node $pkgDir/deps/npm/cli.js install $npmURL || return 1
@@ -29,8 +29,8 @@ sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $pkgDir/sample/n
 sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $pkgDir/sample/npmrc || return 1
 
 # Global npm config
-install -Dm644 $pkgDir/sample/npmrc $distdir/ecosystem/etc/npmrc || return 1
-install -Dm644 $pkgDir/sample/npmrc $distdir/npmrc     || return 1
+install -Dm644 $pkgDir/sample/npmrc $targetDir/ecosystem/etc/npmrc || return 1
+install -Dm644 $pkgDir/sample/npmrc $targetDir/npmrc     || return 1
 
 # Make user npmrc 
 if [ -e $HOME/.npmrc.necoold ]; then
