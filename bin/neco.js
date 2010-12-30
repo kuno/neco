@@ -14,8 +14,8 @@ isIDValid = require('../lib/checker.js').isIDValid,
 isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive;
 
-var virgin = require('../lib/utils.js').virgin,
-inception = require('../lib/utils.js').inception;
+var virgin = require('../lib/inception.js').virgin,
+inception = require('../lib/inception.js').inception;
 
 var id, target, cmd = process.argv[2];
 var message, suggestion, example, warning, error;
