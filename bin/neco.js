@@ -23,7 +23,7 @@ var message, suggestion, example, warning, error;
 if (isCMDValid(cmd) === false) {
   message = 'Missing command';
   suggestion = 'Available commands: help, create, list, activate, deactivate';
-  example = 'nc create <id> or nc list';
+  example = 'neco create <id>, neco list';
   log('message', message, suggestion, example);
 } else {
   // Subcommand create
@@ -33,7 +33,7 @@ if (isCMDValid(cmd) === false) {
         if (process.argv.length < 4) {
           message = 'Missing ID';
           suggestion = 'Please specific at least one ID( and the version of node, if you will).';
-          example = 'nc create <ID> [NODE-VERSION]';
+          example = 'neco create <ID> [NODE-VERSION]';
           log('message', message, suggestion, example);
         } else {
           id = process.argv[3];
@@ -86,7 +86,7 @@ if (isCMDValid(cmd) === false) {
           if (process.argv.length < 4) {
             message = 'Missing ID';
             suggestion = 'Please specify the id of the ecosystem you want to activate.';
-            example = 'nc activate <id>';
+            example = 'neco activate <id>';
             log('message', message, suggestion, example);
           } else {
             id = process.argv[3];
@@ -97,8 +97,8 @@ if (isCMDValid(cmd) === false) {
               log('warning', warning, suggestion, example);
             } else if (isIDExsit(id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
-              suggestion = 'You can use nc list command to find out all existing ecosystem.';
-              example = 'nc create <id> [node-version]';
+              suggestion = 'You can use neco list command to find out all existing ecosystem.';
+              example = 'neco create <id> [node-version]';
               log('warning', warning, suggestion, example);
             } else {
               activate.run(id);
@@ -118,13 +118,13 @@ if (isCMDValid(cmd) === false) {
             id = process.argv[3];
             if (isActive(id) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
-              suggestion = 'Use nc activate command to activate one first.';
-              example = 'nc activate <id>';
+              suggestion = 'Use neco activate command to activate one first.';
+              example = 'neco activate <id>';
               log('warning', warning, suggestion, example);
             } else if (isIDExsit(id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
-              suggestion = 'You can use nc list command to find out all existing ecosystem.';
-              example = 'nc list';
+              suggestion = 'You can use neco list command to find out all existing ecosystem.';
+              example = 'neco list';
               log('warning', warning, suggestion, example);
             } else {
               deactivate.run(id);

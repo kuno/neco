@@ -27,7 +27,7 @@
       "sample":"./sample","shell":"./shell"
     },
     "bin":{"neco":"./bin/neco.js"},
-    "main":"nc",
+    "main":"neco",
     "engines": {"node":">=0.2.5"},
     "scripts":{},
     "licenses":
