@@ -9,3 +9,6 @@
 2. make stdout and stderr looks a bit pretty.
 3, hidden all un-handlable release
 4, recommonded npm ver fro node>=0.2.3 now is 0.2.13-3
+
+###0.0.1-alpha2###
+1, fixed double-direction refrences bug
