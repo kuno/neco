@@ -123,12 +123,12 @@ exports.run = function(id, target) {
   release = getRelease(target);
 
   if (!release) {
-    error = 'Desired release ' + target + ' not found.';
+    error = 'The desired release '+target+' not found or neco can\'t handle it.';
     log('error', error);
   } else {
     // If the version of release smaller and equal to 0.1,9,
     // add 'v' prefix to version laterial
-    if (notSmaller(release.version, vStartsFrom) > 0) {
+    if (notSmaller(release.version, vStartsFrom) >= 0) {
       release.realver = 'v'.concat(release.version);
     }    
     npmVer = getSuitedNPM(release.version);  

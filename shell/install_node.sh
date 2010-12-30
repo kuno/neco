@@ -4,8 +4,6 @@ ver=$1
 link=$2
 targetDir=$3
 
-echo 'link is'$link
-
 if [ ! -d $targetDir/../source ] && [ ! -L $targetDir/../source ]; then
   mkdir -p $targetDir/../source && cd $targetDir/../source
 else
