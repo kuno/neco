@@ -16,7 +16,7 @@ fi
 
 if [ ! -e node-$ver.tar.gz ]; then
   #curl -O $link || return 1
-  wget -O $link || return 1
+  wget $link || return 1
   tar zxvf node-$ver.tar.gz
 else
   tar zxvf node-$ver.tar.gz
