@@ -16,6 +16,10 @@
       "mail":"neokuno@gmail.com",
       "web":""
     },
+    "dependencies":
+    {"npm":"0.2.12-1",
+      "ansi-color"
+    },
     "directories": 
     {
       "bin":"./bin","doc":"/.docs","man":"./man", "lib":"./lib", 
