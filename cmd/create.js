@@ -7,7 +7,7 @@ var vStartsFrom = require('../include/default.js').vStartsFrom;
 var log = require('../lib/console.js').log,
 getRelease = require('../lib/utils.js').getRelease,
 getSuitedNPM = require('../lib/utils.js').getSuitedNPM,
-notSmaller = require('../lib/utils.js').comparesVersions;
+notSmaller = require('../lib/utils.js').compareVersions;
 
 var   packageDir = path.join(__dirname, '..'),   
 NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
