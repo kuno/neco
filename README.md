@@ -8,7 +8,7 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
 
     nc <command>
 
-Currently where <command> should be on of the below commands:
+Currently where command should be on of the below commands:
 
     create      -  create a new node ecosystem
         Useage: neco create <id> [node-version]
