@@ -5,7 +5,7 @@ link=$2
 targetDir=$3
 
 if [ ! -d $targetDir/../source ] && [ ! -L $targetDir/../source ]; then
-  mkdir -p $targetDir/../source && cd targetDir/../source
+  mkdir -p $targetDir/../source && cd $targetDir/../source
 else
   cd $targetDir/../source
 fi
@@ -15,7 +15,9 @@ if [ -d node-$ver ]; then
 fi
 
 if [ ! -e node-$ver.tar.gz ]; then
-  wget $link && tar zxvf node-$ver.tar.gz
+  curl -O $link || return 1
+  #wget $link || return 1
+  tar zxvf node-$ver.tar.gz
 else
   tar zxvf node-$ver.tar.gz
 fi
@@ -29,7 +31,7 @@ if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
     sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
     sed -i 's/^#\ \/usr\/bin\/env\ python/#!\/usr\/bin\/env\ python2/g' $file
   done
-  
+
   sed -i "s|cmd_R = 'python |cmd_R = 'python2 |" wscript
 
   ./configure --prefix=/ecosystem/ || return 1
