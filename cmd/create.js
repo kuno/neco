@@ -11,9 +11,12 @@ getNodeInstallScript = require('../lib/utils.js').getNodeInstallScript,
 getNPMInstallScript = require('../lib/utils.js').getNPMInstallScript,
 getActivateInstallScript = require('../lib/utils.js').getActivateInstallScript;
 
-var root = path.join(process.env.NECO_ROOT) || path.join(process.env.HOME),  
-pkgDir = path.join(__dirname, '..'), 
-vStartsFrom = require('../include/default.js').vStartsFrom ;
+var pkgDir = path.join(__dirname, '..'), 
+root = process.env.NECO_ROOT || process.env.HOME;
+
+var vStartsFrom = require('../include/default.js').vStartsFrom;
+
+var message, warning, error, suggestion, example;
 
 function installNode(config, callback) {
   var error, version, link, install, 
@@ -72,8 +75,9 @@ function installNPM(config, callback) {
 }
 
 function installActivate(config, callback) {
-  var error, destDir = config.destDir,script = getActivateInstallScript(),
-  install = spawn('sh', [script, pkgDir, destDir, release.version]);
+  var error, version = config.release.version, 
+  destDir = config.destDir,script = getActivateInstallScript(),
+  install = spawn('sh', [script, pkgDir, destDir, version]);
 
   install.stdout.on('data', function(data) {
     log('stdout', data);
@@ -123,10 +127,10 @@ function makeRecord(config) {
 exports.run = function(config) {
   config.release = getRelease(config.nodeVer);
   if (!config.release) {
-    config.error = 'The desired release '+config.nodeVer+' not found or neco can\'t handle it.';
-    config.suggestion = 'Try a newer version.';
-    config.example = 'neco create <id> stable OR neco create <id> latest';
-    log('error', config);
+    error = 'The desired release '+config.nodeVer+' not found or neco can\'t handle it.';
+    suggestion = 'Try a newer version.';
+    example = 'neco create <id> stable OR neco create <id> latest';
+    log('error', error, suggestion, example);
   } else {
     // If the version of release smaller and equal to 0.1,9,
     // add 'v' prefix to version laterial
@@ -136,7 +140,6 @@ exports.run = function(config) {
 
     config.root = path.join(root, '.neco');
     config.destDir = path.join(config.root, config.id);
-    config.npmVer = getSuitedNPM(config.release.version);  
 
     installNode(config, function(err, config) {
       if (err) {
