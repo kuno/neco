@@ -96,11 +96,11 @@ if (isCMDValid(cmd) === false) {
             config.id = id;
             config.cmd = cmd;
 
-            if (isActive(config.id) === true) {
+            if (isActive(id) === true) {
               warning = 'The node ecosystem with id '+id+' is already active.';
               suggstion = 'Please use type deact in your shell to deactivate it.';
               log('warning', warning, suggestion, example);
-            } else if (isIDExsit(config.id) == false) {
+            } else if (isIDExsit(id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco create <id> [node-version]';
