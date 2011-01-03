@@ -3,15 +3,17 @@ path = require('path'),
 spawn = require('child_process').spawn;
 
 var log = require('../lib/console.js').log,
+getDateTime = require('../lib/utils.js').getDateTime,
 getRelease = require('../lib/utils.js').getRelease,
 getSuitedNPM = require('../lib/utils.js').getSuitedNPM,
 notSmaller = require('../lib/utils.js').compareVersions,
 getNodeInstallScript = require('../lib/utils.js').getNodeInstallScript,
 getNPMInstallScript = require('../lib/utils.js').getNPMInstallScript,
-getActivateInstallScript = require('../lib/utils.js').getActivateScript;
+getActivateInstallScript = require('../lib/utils.js').getActivateInstallScript;
 
-var root = path.join(process.env.NECO_ROOT, '.neco') || path.join(process.env.HOME, '.neco'),  
-pkgDir = path.join(__dirname, '..'), vStartsFrom = require('../include/default.js').vStartsFrom ;
+var root = path.join(process.env.NECO_ROOT) || path.join(process.env.HOME),  
+pkgDir = path.join(__dirname, '..'), 
+vStartsFrom = require('../include/default.js').vStartsFrom ;
 
 function installNode(config, callback) {
   var error, version, link, install, 
@@ -70,8 +72,7 @@ function installNPM(config, callback) {
 }
 
 function installActivate(config, callback) {
-  var error, destDir = path.join(config.root, config.id),
-  script = getActivateInstallScript(),
+  var error, destDir = config.destDir,script = getActivateInstallScript(),
   install = spawn('sh', [script, pkgDir, destDir, release.version]);
 
   install.stdout.on('data', function(data) {
@@ -91,8 +92,7 @@ function installActivate(config, callback) {
 }
 
 function makeRecord(config) {
-  var npm, record, createdDate, ecosystems, 
-  newEcosystem, date = new Date(),
+  var npm, record, createdDate, ecosystems, newEcosystem, 
   recordFile = path.join(root, 'record.json');
 
   path.exists(recordFile, function(exists) {
@@ -106,7 +106,7 @@ function makeRecord(config) {
     }
 
     npm = config.npmVer ? config.npmVer : 'none';
-    createdDate = date.toDateString(date.getTime());
+    createdDate = getDateTime(config);
     newEcosystem = {id:config.id, cd:createdDate,nv:config.release.version, npm:npm};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
@@ -134,21 +134,24 @@ exports.run = function(config) {
       config.release.realver = 'v'.concat(config.release.version);
     }
 
-    config.root = root;
+    config.root = path.join(root, '.neco');
     config.destDir = path.join(config.root, config.id);
     config.npmVer = getSuitedNPM(config.release.version);  
 
     installNode(config, function(err, config) {
-      if (err) {throw err;}
-      //console.log('suited npm version is '+npmVer);
-      if (config.npmVer) {
-        installNPM(config, function(err, config) {
-          if (err) {throw err;}
-          installActivate(config, function(err, config) {
-            if (err) {throw err;} 
-            makeRecord(config);
+      if (err) {
+        throw err;
+      } else if (config.insallNPM) {
+        config.npmVer = getSuitedNPM(config.release.version);
+        if (config.npmVer) {
+          installNPM(config, function(err, config) {
+            if (err) {throw err;}
+            installActivate(config, function(err, config) {
+              if (err) {throw err;} 
+              makeRecord(config);
+            });
           });
-        });
+        } 
       } else {
         installActivate(config, function(err, config) {
           if (err) {throw err;}
