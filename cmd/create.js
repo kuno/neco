@@ -8,13 +8,14 @@ getSuitedNPM = require('../lib/utils.js').getSuitedNPM,
 notSmaller = require('../lib/utils.js').compareVersions,
 getNodeInstallScript = require('../lib/utils.js').getNodeInstallScript,
 getNPMInstallScript = require('../lib/utils.js').getNPMInstallScript,
-getActivateScript = require('../lib/utils.js').getActivateScript;
+getActivateInstallScript = require('../lib/utils.js').getActivateScript;
 
 var root = path.join(process.env.NECO_ROOT, '.neco') || path.join(process.env.HOME, '.neco'),  
 pkgDir = path.join(__dirname, '..'), vStartsFrom = require('../include/default.js').vStartsFrom ;
 
 function installNode(config, callback) {
-  var error, version, link, install, targetDir = config.targetDir;
+  var error, version, link, install, 
+  targetDir = config.targetDir, script = getNodeInstallScript();
 
   path.exists(config.root, function(exists) {
     if (!exists) {
@@ -48,7 +49,8 @@ function installNode(config, callback) {
 }
 
 function installNPM(config, callback) {
-  var script, error, targetDir = config.targetDir,
+  var error, targetDir = config.targetDir,
+  script = getNPMInstallScript,
   install = spawn('sh', [script, pkgDir, targetDir, npmVer]);
 
   install.stdout.on('data', function(data) {
@@ -68,7 +70,8 @@ function installNPM(config, callback) {
 }
 
 function installActivate(config, callback) {
-  var script, error, targetDir = path.join(config.root, id);
+  var error, targetDir = path.join(config.root, id),
+  script = getActivateInstallScript,
   install = spawn('sh', [script, pkgDir, targetDir, release.version]);
 
   install.stdout.on('data', function(data) {
