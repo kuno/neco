@@ -85,9 +85,8 @@ virtualenvwrapper_derive_workon_home() {
 }
 
 # Verify that the NECO_ROOT directory exists
-virtualenvwrapper_verify_workon_home () {
-    if [ ! -d "$NECO_ROOT" ]
-    then
+neco_verify_root () {
+    if [ ! -d "$NECO_ROOT" ]; then
         [ "$1" != "-q" ] && echo "ERROR: Virtual environments directory '$NECO_ROOT' does not exist.  Create it or set WORKON_HOME to an existing directory." 1>&2
         return 1
     fi
@@ -148,7 +147,7 @@ virtualenvwrapper_initialize () {
 }
 
 # Verify that virtualenv is installed and visible
-virtualenvwrapper_verify_virtualenv () {
+neco_verify_virtualenv () {
     typeset venv=$(\which virtualenv | (unset GREP_OPTIONS; \grep -v "not found"))
     if [ "$venv" = "" ]
     then
@@ -164,10 +163,9 @@ virtualenvwrapper_verify_virtualenv () {
 }
 
 # Verify that the requested environment exists
-virtualenvwrapper_verify_workon_environment () {
+neco_verify_ecosystem () {
     typeset env_name="$1"
-    if [ ! -d "$NECO_ROOT.neco/$env_name" ]
-    then
+    if [ ! -d "$NECO_ROOT/.neco/$env_name" ]; then
        echo "ERROR: Environment '$env_name' does not exist. Create it with 'mkvirtualenv $env_name'." >&2
        return 1
     fi
@@ -189,24 +187,24 @@ virtualenvwrapper_verify_active_environment () {
 # Usage: mkvirtualenv [options] ENVNAME
 # (where the options are passed directly to virtualenv)
 #
-mkvirtualenv () {
-    eval "envname=\$$#"
-    virtualenvwrapper_verify_workon_home || return 1
-    virtualenvwrapper_verify_virtualenv || return 1
-    (cd "$NECO_ROOT" &&
-        virtualenv "$@" &&
-        [ -d "$NECO_ROOT/$envname" ] && virtualenvwrapper_run_hook "pre_mkvirtualenv" "$envname"
-        )
-    typeset RC=$?
-    [ $RC -ne 0 ] && return $RC
+#mkvirtualenv () {
+#    eval "envname=\$$#"
+#    virtualenvwrapper_verify_workon_home || return 1
+#    virtualenvwrapper_verify_virtualenv || return 1
+#    (cd "$NECO_ROOT" &&
+#        virtualenv "$@" &&
+#        [ -d "$NECO_ROOT/$envname" ] && virtualenvwrapper_run_hook "pre_mkvirtualenv" "$envname"
+#        )
+#    typeset RC=$?
+#    [ $RC -ne 0 ] && return $RC
     # If they passed a help option or got an error from virtualenv,
     # the environment won't exist.  Use that to tell whether
     # we should switch to the environment and run the hook.
-    [ ! -d "$NECO_ROOT/$envname" ] && return 0
+#    [ ! -d "$NECO_ROOT/$envname" ] && return 0
     # Now activate the new environment
-    workon "$envname"
-    virtualenvwrapper_run_hook "post_mkvirtualenv"
-}
+#    workon "$envname"
+#    virtualenvwrapper_run_hook "post_mkvirtualenv"
+#}
 
 # Remove an environment, in the NECO_ROOT.
 rmvirtualenv () {
@@ -311,8 +309,8 @@ neco_act () {
         return 1
     fi
 
-    virtualenvwrapper_verify_workon_home || return 1
-    virtualenvwrapper_verify_workon_environment $env_name || return 1
+    neco_verify_root || return 1
+    neco_verify_ecosystem $env_name || return 1
     
     activate="$NECO_ROOT/.neco/$env_name/activate"
     if [ ! -f "$activate" ]
@@ -324,21 +322,21 @@ neco_act () {
     # Deactivate any current environment "destructively"
     # before switching so we use our override function,
     # if it exists.
-    type deactivate >/dev/null 2>&1
+    type neco_deact >/dev/null 2>&1
     if [ $? -eq 0 ]
     then
-        deactivate
-        unset -f deactivate >/dev/null 2>&1
+        neco_deact
+        unset -f neco_deact >/dev/null 2>&1
     fi
 
-    virtualenvwrapper_run_hook "pre_activate" "$env_name"
+    #virtualenvwrapper_run_hook "pre_activate" "$env_name"
     
     source "$activate"
     
     # Save the deactivate function from virtualenv under a different name
-    virtualenvwrapper_original_deactivate=`typeset -f deactivate | sed 's/deactivate/virtualenv_deactivate/g'`
-    eval "$virtualenvwrapper_original_deactivate"
-    unset -f deactivate >/dev/null 2>&1
+    #neco_original_deact=`typeset -f deactivate | sed 's/deactivate/virtualenv_deactivate/g'`
+    #eval "$virtualenvwrapper_original_deactivate"
+    #unset -f deactivate >/dev/null 2>&1
 
     # Replace the deactivate() function with a wrapper.
     eval 'deactivate () {
@@ -364,7 +362,7 @@ neco_act () {
 
     }'
     
-    virtualenvwrapper_run_hook "post_activate"
+    #virtualenvwrapper_run_hook "post_activate"
     
 	return 0
 }
@@ -411,9 +409,9 @@ virtualenvwrapper_get_python_version () {
 }
 
 # Prints the path to the site-packages directory for the current environment.
-virtualenvwrapper_get_site_packages_dir () {
-    echo "$VIRTUAL_ENV/lib/python`virtualenvwrapper_get_python_version`/site-packages"    
-}
+#virtualenvwrapper_get_site_packages_dir () {
+#    echo "$VIRTUAL_ENV/lib/python`virtualenvwrapper_get_python_version`/site-packages"    
+#}
 
 # Path management for packages outside of the virtual env.
 # Based on a contribution from James Bennett and Jannis Leidel.
@@ -468,12 +466,12 @@ add2virtualenv () {
 
 # Does a ``cd`` to the site-packages directory of the currently-active
 # virtualenv.
-cdsitepackages () {
-    virtualenvwrapper_verify_workon_home || return 1
-    virtualenvwrapper_verify_active_environment || return 1
-    typeset site_packages="`virtualenvwrapper_get_site_packages_dir`"
-    cd "$site_packages"/$1
-}
+#cdsitepackages () {
+#    virtualenvwrapper_verify_workon_home || return 1
+#    virtualenvwrapper_verify_active_environment || return 1
+#    typeset site_packages="`virtualenvwrapper_get_site_packages_dir`"
+#    cd "$site_packages"/$1
+#}
 
 # Does a ``cd`` to the root of the currently-active virtualenv.
 cdvirtualenv () {
@@ -484,20 +482,20 @@ cdvirtualenv () {
 
 # Shows the content of the site-packages directory of the currently-active
 # virtualenv
-lssitepackages () {
-    virtualenvwrapper_verify_workon_home || return 1
-    virtualenvwrapper_verify_active_environment || return 1
-    typeset site_packages="`virtualenvwrapper_get_site_packages_dir`"
-    ls $@ $site_packages
-    
-    path_file="$site_packages/virtualenv_path_extensions.pth"
-    if [ -f "$path_file" ]
-    then
-        echo
-        echo "virtualenv_path_extensions.pth:"
-        cat "$path_file"
-    fi
-}
+#lssitepackages () {
+#    virtualenvwrapper_verify_workon_home || return 1
+#    virtualenvwrapper_verify_active_environment || return 1
+#    typeset site_packages="`virtualenvwrapper_get_site_packages_dir`"
+#    ls $@ $site_packages
+#    
+#    path_file="$site_packages/virtualenv_path_extensions.pth"
+#    if [ -f "$path_file" ]
+#    then
+#        echo
+#        echo "virtualenv_path_extensions.pth:"
+#        cat "$path_file"
+#    fi
+#}
 
 # Duplicate the named virtualenv to make a new one.
 cpvirtualenv() {

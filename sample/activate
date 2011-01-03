@@ -35,17 +35,19 @@ neco_deact () {
     unset NODE_VERSION
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
-        unset -f nc_deact
+        unset -f neco_deact
     fi
 }
 
 # unset irrelavent variables
-nc_deact nondestructive
+neco_deact nondestructive
 
+NECO_ID="test3"
 NODE_ECOSYSTEM="/tmp/neco/test/.neco/test3"
 NODE_VERSION="0.2.0"
 export NODE_ECOSYSTEM
 export NODE_VERSION
+export NECO_ID
 
 _OLD_NECO_PATH="$PATH"
 PATH="$NODE_ECOSYSTEM/ecosystem/bin:$PATH"

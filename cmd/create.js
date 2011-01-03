@@ -75,9 +75,9 @@ function installNPM(config, callback) {
 }
 
 function installActivate(config, callback) {
-  var error, version = config.release.version, 
+  var id = config.id, error, version = config.release.version, 
   destDir = config.destDir,script = getActivateInstallScript(),
-  install = spawn('sh', [script, pkgDir, destDir, version]);
+  install = spawn('sh', [script, id, pkgDir, destDir, version]);
 
   install.stdout.on('data', function(data) {
     log('stdout', data);
