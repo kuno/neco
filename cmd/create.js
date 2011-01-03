@@ -96,7 +96,7 @@ function installActivate(config, callback) {
 }
 
 function makeRecord(config) {
-  var npm = config.npmVer ? config.npmVer : 'none',
+  var npm = config.npmVer || 'none',
   id = config.id, version = config.release.version,
   record, createdDate, ecosystems, newEcosystem, 
   recordFile = path.join(root, '.neco', 'record.json'), 
