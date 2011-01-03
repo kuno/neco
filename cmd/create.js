@@ -38,10 +38,10 @@ function installNode(root, id, release, callback) {
 
     install.on('exit', function(code) {
       if (code !== 0) {
-        err = new Error('Installing node exit wich code ' + code);
-        callback(err, root, id, release);
+        error = new Error('Installing node exit wich code ' + code);
+        callback(error, root, id, release);
       } else {
-        callback(err, root, id, release);
+        callback(error, root, id, release);
       }
     });
   });
@@ -58,10 +58,10 @@ function installNPM(root, id, release, npmVer, callback) {
   });
   install.on('exit', function(code) {
     if (code !== 0) {
-      err = new Error('Installing NPM exit with code ' + code);
-      callback(err, root, id, release);
+      error = new Error('Installing NPM exit with code ' + code);
+      callback(error, root, id, release);
     } else {
-      callback(err, root, id, release);
+      callback(error, root, id, release);
     }
   });
 }
@@ -77,10 +77,10 @@ function installActivate(root, id, release, callback) {
   });
   install.on('exit', function(code) {
     if (code !== 0) {
-      err = new Error('Installing Activate exit with code ' + code);
-      callback(err, root, id, release);
+      error = new Error('Installing Activate exit with code ' + code);
+      callback(error, root, id, release);
     } else {
-      callback(err, root, id, release);
+      callback(error, root, id, release);
     }
   });
 }
