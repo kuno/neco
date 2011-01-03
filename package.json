@@ -28,7 +28,7 @@
     },
     "bin":{"neco":"./bin/neco.js"},
     "main":"neco",
-    "engines": {"node":">=0.2.5"},
+    "engines": {"node":">=0.3.3"},
     "scripts":{},
     "licenses":
       [

@@ -7,17 +7,15 @@ var vStartsFrom = require('../include/default.js').vStartsFrom;
 var log = require('../lib/console.js').log,
 getRelease = require('../lib/utils.js').getRelease,
 getSuitedNPM = require('../lib/utils.js').getSuitedNPM,
-notSmaller = require('../lib/utils.js').compareVersions;
+notSmaller = require('../lib/utils.js').compareVersions,
+getNodeInstallScript = require('../lib/utils.js').getNodeInstallScript,
+getNPMInstallScript = require('../lib/utils.js').getNPMInstallScript,
+getActivateScript = require('../lib/utils.js').getActivateScript;
 
-var   packageDir = path.join(__dirname, '..'),   
-NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
-NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
-ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
-
-var message, warning, error, suggestion, example;
+var pkgDir = path.join(__dirname, '..'), message, warning, error, suggestion, example;
 
 function installNode(root, id, release, callback) {
-  var err, ver, link, install, targetDir = path.join(root, id);
+  var error, version, link, install, targetDir = path.join(root, id);
   path.exists(root, function(exists) {
     if (!exists) {
       fs.mkdirSync(root, mode=0777);
@@ -30,7 +28,7 @@ function installNode(root, id, release, callback) {
     }
     link = release.link;
 
-    install = spawn(NodeInstallScript, [ver, link, targetDir]);
+    install = spawn('sh', [script, ver, link, targetDir]);
     install.stdout.on('data', function(data) {
       log('stdout',data);
     });
@@ -50,8 +48,8 @@ function installNode(root, id, release, callback) {
 }
 
 function installNPM(root, id, release, npmVer, callback) {
-  var err, install, targetDir = path.join(root, id);
-  install = spawn(NPMInstallScript, [packageDir, targetDir, npmVer]);
+  var script, error, install, targetDir = path.join(root, id);
+  install = spawn('sh', [script, pkgDir, targetDir, npmVer]);
   install.stdout.on('data', function(data) {
     log('stdout', data);
   });
@@ -69,8 +67,8 @@ function installNPM(root, id, release, npmVer, callback) {
 }
 
 function installActivate(root, id, release, callback) {
-  var err, install, targetDir = path.join(root, id);
-  install = spawn(ActivateInstallScript, [packageDir, targetDir, release.version]);
+  var script, error, install, targetDir = path.join(root, id);
+  install = spawn('sh', [script, pkgDir, targetDir, release.version]);
   install.stdout.on('data', function(data) {
     log('stdout', data);
   });

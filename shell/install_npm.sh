@@ -6,6 +6,13 @@ npmSuffix='.tgz'
 npmURL=$npmPrefix$npmVer$npmSuffix
 replace=$(echo $2 | sed 's/\//\\\//g' | sed 's/\./\\\./g')
 
+# If binary file not found under $targetDir/bin/node, 
+# then this means previous node build was failed.
+if [ ! -d $targetDir/bin/node ]; then
+  return 1
+fi
+
+# Backup current npmrc config file
 if [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.necoold ] ; then
   rm -rf $HOME/.npmrc || return 1
   cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1  
@@ -16,6 +23,7 @@ else
   cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1
 fi
 
+# Make config suited installation
 node $pkgDir/deps/npm/cli.js config set root $targetDir/ecosystem/lib/node || return 1
 node $pkgDir/deps/npm/cli.js config set binroot $targetDir/ecosystem/bin || return 1
 node $pkgDir/deps/npm/cli.js config set manroot $targetDir/ecosystem/share/man || return 1
@@ -31,7 +39,7 @@ sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $pkgDir/
 install -Dm644 $pkgDir/sample/npmrc $targetDir/ecosystem/etc/npmrc || return 1
 install -Dm644 $pkgDir/sample/npmrc $targetDir/npmrc     || return 1
 
-# Make user npmrc 
+# User npmrc 
 if [ -e $HOME/.npmrc.necoold ]; then
   #  sed -i -e 's/^root.*/root\ =\ \/usr\/local\/lib\/node/g' $HOME/.npmrc.necoold || return 1
   #  sed -i -e 's/^binroot.*/binroot\ =\ \/usr\/local\/bin/g' $HOME/.npmrc.necoold || return 1
