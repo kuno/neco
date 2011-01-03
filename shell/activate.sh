@@ -166,7 +166,7 @@ virtualenvwrapper_verify_virtualenv () {
 # Verify that the requested environment exists
 virtualenvwrapper_verify_workon_environment () {
     typeset env_name="$1"
-    if [ ! -d "$NECO_ROOT/.neco/$env_name" ]
+    if [ ! -d "$NECO_ROOT.neco/$env_name" ]
     then
        echo "ERROR: Environment '$env_name' does not exist. Create it with 'mkvirtualenv $env_name'." >&2
        return 1
