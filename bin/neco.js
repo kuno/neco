@@ -14,11 +14,12 @@ isIDValid = require('../lib/checker.js').isIDValid,
 isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive;
 
-var virgin = require('../lib/inception.js').virgin,
+var getConfig = require('../lib/config.js').getConfig, 
+virgin = require('../lib/inception.js').virgin,
 inception = require('../lib/inception.js').inception;
 
-var id, target, cmd = process.argv[2];
-var message, suggestion, example, warning, error;
+var config, cmd = process.argv[2];
+var message, warning, error, suggestion, example;
 
 if (isCMDValid(cmd) === false) {
   message = 'Missing command';
@@ -28,32 +29,34 @@ if (isCMDValid(cmd) === false) {
 } else {
   // Subcommand create
   if (cmd === 'create') {
-    virgin(cmd, function() {
-      inception(cmd, function(exists) {
+    virgin(config, function() {
+      inception(config, function(exists, config) {
         if (process.argv.length < 4) {
           message = 'Missing ID';
           suggestion = 'Please specific at least one ID( and the version of node, if you will).';
           example = 'neco create <id> [NODE-VERSION]';
           log('message', message, suggestion, example);
         } else {
-          id = process.argv[3];
-          target = process.argv[4] || 'stable';
+          config = getConfig(process.argv[3])
+          config.id = process.argv[3];
+          config.cmd = cmd;
+          config.nodeVer = process.argv[4] || 'stable';
 
-          if (isIDValid(id) === false) {
-            message = 'The given id '+id+' is one of the reserved words in neco.';
+          if (isIDValid(config) === false) {
+            message = 'The given id '+config.id+' is one of the reserved words in neco.';
             suggestion = 'Please choose another one.';
             log('message', message, suggestion, example);
 
           } else {
             if (!exists) {
-              create.run(id, target);
+              create.run(config.id, config.node);
             } else {  
-              if (isIDUnique(id) === false) {
-                message = 'The given id '+id+' has already been used.';
+              if (isIDUnique(config.id) === false) {
+                message = 'The given id '+config.id+' has already been used.';
                 suggestion = 'Please choose another one instead.';
-                log('message', message, suggestion, example);
+                log('message', message, suggestion);
               } else {
-                create.run(id, target);
+                create.run(config);
               }
             }
           }
