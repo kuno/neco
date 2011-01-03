@@ -20,37 +20,37 @@ function installNode(config, callback) {
   path.exists(config.root, function(exists) {
     if (!exists) {
       fs.mkdirSync(config.root, mode=0777);
-    }
-
-    if (config.release.realver) {
-      version = config.release.realver;
     } else {
-      version = config.release.version;
-    }
-    link = config.release.link;
-
-    install = spawn('sh', [script, version, link, tgtDir]);
-    install.stdout.on('data', function(data) {
-      log('stdout',data);
-    });
-    install.stderr.on('data', function(data) {
-      log('stdout',data);
-    });
-
-    install.on('exit', function(code) {
-      if (code !== 0) {
-        error = new Error('Installing node exit wich code ' + code);
-        callback(error, config);
+      if (config.release.realver) {
+        version = config.release.realver;
       } else {
-        callback(error, config);
+        version = config.release.version;
       }
-    });
+      link = config.release.link;
+
+      install = spawn('sh', [script, version, link, tgtDir]);
+      install.stdout.on('data', function(data) {
+        log('stdout',data);
+      });
+      install.stderr.on('data', function(data) {
+        log('stdout',data);
+      });
+
+      install.on('exit', function(code) {
+        if (code !== 0) {
+          error = new Error('Installing node exit wich code ' + code);
+          callback(error, config);
+        } else {
+          callback(error, config);
+        }
+      });
+    }
   });
 }
 
 function installNPM(config, callback) {
   var error, tgtDir = config.tgtDir,
-  script = getNPMInstallScript, npmVer = config.npmVer;
+  script = getNPMInstallScript(), npmVer = config.npmVer;
   install = spawn('sh', [script, pkgDir, tgtDir, npmVer]);
 
   install.stdout.on('data', function(data) {
@@ -71,7 +71,7 @@ function installNPM(config, callback) {
 
 function installActivate(config, callback) {
   var error, tgtDir = path.join(config.root, id),
-  script = getActivateInstallScript,
+  script = getActivateInstallScript(),
   install = spawn('sh', [script, pkgDir, tgtDir, release.version]);
 
   install.stdout.on('data', function(data) {
