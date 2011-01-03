@@ -1,6 +1,6 @@
 {
   "stable":"0.2.5",
-    "latest":"0.3.2",
+    "latest":"0.3.3",
     "history":[
     {"version":"0.1.100","link":"http://nodejs.org/dist/node-v0.1.100.tar.gz","released":"13-Aug-2010 23:13","size":3813493},
     {"version":"0.1.101","link":"http://nodejs.org/dist/node-v0.1.101.tar.gz","released":"13-Aug-2010 23:13","size":3825097},
