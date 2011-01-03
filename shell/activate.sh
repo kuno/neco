@@ -30,7 +30,7 @@
 #
 #  1. Create a directory to hold the virtual environments.
 #     (mkdir $HOME/.virtualenvs).
-#  2. Add a line like "export WORKON_HOME=$HOME/.virtualenvs"
+#  2. Add a line like "export NECO_ROOT=$HOME/.virtualenvs"
 #     to your .bashrc.
 #  3. Add a line like "source /path/to/this/file/virtualenvwrapper.sh"
 #     to your .bashrc.
@@ -51,9 +51,9 @@ then
 fi
 
 virtualenvwrapper_derive_workon_home() {
-    typeset workon_home_dir="$WORKON_HOME"
+    typeset workon_home_dir="$NECO_ROOT"
 
-    # Make sure there is a default value for WORKON_HOME.
+    # Make sure there is a default value for NECO_ROOT.
     # You can override this setting in your .bashrc.
     if [ "$workon_home_dir" = "" ]
     then
@@ -64,7 +64,7 @@ virtualenvwrapper_derive_workon_home() {
     # (note: for compatibility)
     if echo "$workon_home_dir" | (unset GREP_OPTIONS; \grep -e '^[^/~]' > /dev/null)
     then
-        workon_home_dir="$HOME/$WORKON_HOME"
+        workon_home_dir="$HOME/$NECO_ROOT"
     fi
 
     # Only call on Python to fix the path if it looks like the
@@ -84,11 +84,11 @@ virtualenvwrapper_derive_workon_home() {
     return 0
 }
 
-# Verify that the WORKON_HOME directory exists
+# Verify that the NECO_ROOT directory exists
 virtualenvwrapper_verify_workon_home () {
-    if [ ! -d "$WORKON_HOME" ]
+    if [ ! -d "$NECO_ROOT" ]
     then
-        [ "$1" != "-q" ] && echo "ERROR: Virtual environments directory '$WORKON_HOME' does not exist.  Create it or set WORKON_HOME to an existing directory." 1>&2
+        [ "$1" != "-q" ] && echo "ERROR: Virtual environments directory '$NECO_ROOT' does not exist.  Create it or set WORKON_HOME to an existing directory." 1>&2
         return 1
     fi
     return 0
@@ -137,7 +137,7 @@ virtualenvwrapper_run_hook () {
 
 # Set up virtualenvwrapper properly
 virtualenvwrapper_initialize () {
-    export WORKON_HOME=$(virtualenvwrapper_derive_workon_home)
+    export NECO_ROOT=$(virtualenvwrapper_derive_workon_home)
     virtualenvwrapper_verify_workon_home -q || return 1
     virtualenvwrapper_run_hook "initialize"
     if [ $? -ne 0 ]
@@ -166,7 +166,7 @@ virtualenvwrapper_verify_virtualenv () {
 # Verify that the requested environment exists
 virtualenvwrapper_verify_workon_environment () {
     typeset env_name="$1"
-    if [ ! -d "$WORKON_HOME/$env_name" ]
+    if [ ! -d "$NECO_ROOT/$env_name" ]
     then
        echo "ERROR: Environment '$env_name' does not exist. Create it with 'mkvirtualenv $env_name'." >&2
        return 1
@@ -184,7 +184,7 @@ virtualenvwrapper_verify_active_environment () {
     return 0
 }
 
-# Create a new environment, in the WORKON_HOME.
+# Create a new environment, in the NECO_ROOT.
 #
 # Usage: mkvirtualenv [options] ENVNAME
 # (where the options are passed directly to virtualenv)
@@ -193,22 +193,22 @@ mkvirtualenv () {
     eval "envname=\$$#"
     virtualenvwrapper_verify_workon_home || return 1
     virtualenvwrapper_verify_virtualenv || return 1
-    (cd "$WORKON_HOME" &&
+    (cd "$NECO_ROOT" &&
         virtualenv "$@" &&
-        [ -d "$WORKON_HOME/$envname" ] && virtualenvwrapper_run_hook "pre_mkvirtualenv" "$envname"
+        [ -d "$NECO_ROOT/$envname" ] && virtualenvwrapper_run_hook "pre_mkvirtualenv" "$envname"
         )
     typeset RC=$?
     [ $RC -ne 0 ] && return $RC
     # If they passed a help option or got an error from virtualenv,
     # the environment won't exist.  Use that to tell whether
     # we should switch to the environment and run the hook.
-    [ ! -d "$WORKON_HOME/$envname" ] && return 0
+    [ ! -d "$NECO_ROOT/$envname" ] && return 0
     # Now activate the new environment
     workon "$envname"
     virtualenvwrapper_run_hook "post_mkvirtualenv"
 }
 
-# Remove an environment, in the WORKON_HOME.
+# Remove an environment, in the NECO_ROOT.
 rmvirtualenv () {
     typeset env_name="$1"
     virtualenvwrapper_verify_workon_home || return 1
@@ -217,7 +217,7 @@ rmvirtualenv () {
         echo "Please specify an enviroment." >&2
         return 1
     fi
-    env_dir="$WORKON_HOME/$env_name"
+    env_dir="$NECO_ROOT/$env_name"
     if [ "$VIRTUAL_ENV" = "$env_dir" ]
     then
         echo "ERROR: You cannot remove the active environment ('$env_name')." >&2
@@ -235,9 +235,9 @@ virtualenvwrapper_show_workon_options () {
     # NOTE: DO NOT use ls here because colorized versions spew control characters
     #       into the output list.
     # echo seems a little faster than find, even with -depth 3.
-    (cd "$WORKON_HOME"; for f in */bin/activate; do echo $f; done) 2>/dev/null | \sed 's|^\./||' | \sed 's|/bin/activate||' | \sort | (unset GREP_OPTIONS; \egrep -v '^\*$')
+    (cd "$NECO_ROOT"; for f in */bin/activate; do echo $f; done) 2>/dev/null | \sed 's|^\./||' | \sed 's|/bin/activate||' | \sort | (unset GREP_OPTIONS; \egrep -v '^\*$')
     
-#    (cd "$WORKON_HOME"; find -L . -depth 3 -path '*/bin/activate') | sed 's|^\./||' | sed 's|/bin/activate||' | sort
+#    (cd "$NECO_ROOT"; find -L . -depth 3 -path '*/bin/activate') | sed 's|^\./||' | sed 's|/bin/activate||' | sort
 }
 
 _lsvirtualenv_usage () {
@@ -303,7 +303,7 @@ showvirtualenv () {
 #
 # Usage: workon [environment_name]
 #
-workon () {
+neco_act () {
 	typeset env_name="$1"
 	if [ "$env_name" = "" ]
     then
@@ -314,10 +314,10 @@ workon () {
     virtualenvwrapper_verify_workon_home || return 1
     virtualenvwrapper_verify_workon_environment $env_name || return 1
     
-    activate="$WORKON_HOME/$env_name/bin/activate"
+    activate="$NECO_ROOT/.neco/$env_name/activate"
     if [ ! -f "$activate" ]
     then
-        echo "ERROR: Environment '$WORKON_HOME/$env_name' does not contain an activate script." >&2
+        echo "ERROR: Environment '$NECO_ROOT/.neco/$env_name' does not contain an activate script." >&2
         return 1
     fi
     
@@ -513,11 +513,11 @@ cpvirtualenv() {
         echo "Please specify target virtualenv"
         return 1
     fi
-    if echo "$WORKON_HOME" | (unset GREP_OPTIONS; \grep -e "/$" > /dev/null)
+    if echo "$NECO_ROOT" | (unset GREP_OPTIONS; \grep -e "/$" > /dev/null)
     then
-        typset env_home="$WORKON_HOME"
+        typset env_home="$NECO_ROOT"
     else
-        typeset env_home="$WORKON_HOME/"
+        typeset env_home="$NECO_ROOT/"
     fi
     typeset source_env="$env_home$env_name"
     typeset target_env="$env_home$new_env"
@@ -540,7 +540,7 @@ cpvirtualenv() {
     virtualenv "$target_env" --relocatable
     \sed "s/VIRTUAL_ENV\(.*\)$env_name/VIRTUAL_ENV\1$new_env/g" < "$source_env/bin/activate" > "$target_env/bin/activate"
 
-    (cd "$WORKON_HOME" && ( 
+    (cd "$NECO_ROOT" && ( 
         virtualenvwrapper_run_hook "pre_cpvirtualenv" "$env_name" "$new_env";
         virtualenvwrapper_run_hook "pre_mkvirtualenv" "$new_env"
         ))
