@@ -96,6 +96,7 @@ function installActivate(config, callback) {
 }
 
 function makeRecord(config) {
+  console.log(config.npmVer);
   var npm = config.npmVer || 'none',
   id = config.id, version = config.release.version,
   record, createdDate, ecosystems, newEcosystem, 
