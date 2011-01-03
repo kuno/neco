@@ -15,7 +15,7 @@ pkgDir = path.join(__dirname, '..'), vStartsFrom = require('../include/default.j
 
 function installNode(config, callback) {
   var error, version, link, install, 
-  tgtDir = config.tgtDir, script = getNodeInstallScript();
+  destDir = config.destDir, script = getNodeInstallScript();
 
   path.exists(config.root, function(exists) {
     if (!exists) {
@@ -28,7 +28,7 @@ function installNode(config, callback) {
       }
       link = config.release.link;
 
-      install = spawn('sh', [script, version, link, tgtDir]);
+      install = spawn('sh', [script, version, link, destDir]);
       install.stdout.on('data', function(data) {
         log('stdout',data);
       });
@@ -49,9 +49,9 @@ function installNode(config, callback) {
 }
 
 function installNPM(config, callback) {
-  var error, tgtDir = config.tgtDir,
+  var error, destDir = config.destDir,
   script = getNPMInstallScript(), npmVer = config.npmVer;
-  install = spawn('sh', [script, pkgDir, tgtDir, npmVer]);
+  install = spawn('sh', [script, pkgDir, destDir, npmVer]);
 
   install.stdout.on('data', function(data) {
     log('stdout', data);
@@ -70,9 +70,9 @@ function installNPM(config, callback) {
 }
 
 function installActivate(config, callback) {
-  var error, tgtDir = path.join(config.root, id),
+  var error, destDir = path.join(config.root, config.id),
   script = getActivateInstallScript(),
-  install = spawn('sh', [script, pkgDir, tgtDir, release.version]);
+  install = spawn('sh', [script, pkgDir, destDir, release.version]);
 
   install.stdout.on('data', function(data) {
     log('stdout', data);
@@ -114,8 +114,8 @@ function makeRecord(config) {
     // Write into records file
     fs.writeFile(recordFile, record, 'utf8', function(err) {
       if (err) {throw err;}
-      config.message = 'New node ecosystem has been created sucessfully!';
-      log('message', config);
+      message = 'New node ecosystem has been created sucessfully!';
+      log('message', message);
     });
   });
 }
@@ -135,7 +135,7 @@ exports.run = function(config) {
     }
 
     config.root = root;
-    config.tgtDir = path.join(config.root, config.id);
+    config.destDir = path.join(config.root, config.id);
     config.npmVer = getSuitedNPM(config.release.version);  
 
     installNode(config, function(err, config) {
