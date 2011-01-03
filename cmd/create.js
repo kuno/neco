@@ -96,7 +96,6 @@ function installActivate(config, callback) {
 }
 
 function makeRecord(config) {
-  console.log(config.npmVer);
   var npm = config.npmVer || 'none',
   id = config.id, version = config.release.version,
   record, createdDate, ecosystems, newEcosystem, 
@@ -144,8 +143,9 @@ exports.run = function(config) {
     config.destDir = path.join(config.root, config.id);
 
     installNode(config, function(err, config) {
-      if (err) {throw err;} 
-      if (config.insallNPM) {
+      if (err) {
+        throw err;
+      } else if (config.installNPM) {
         config.npmVer = getSuitedNPM(config.release.version);
         if (config.npmVer) {
           installNPM(config, function(err, config) {
