@@ -15,7 +15,7 @@ pkgDir = path.join(__dirname, '..'), vStartsFrom = require('../include/default.j
 
 function installNode(config, callback) {
   var error, version, link, install, 
-  targetDir = config.targetDir, script = getNodeInstallScript();
+  tgtDir = config.tgtDir, script = getNodeInstallScript();
 
   path.exists(config.root, function(exists) {
     if (!exists) {
@@ -29,7 +29,7 @@ function installNode(config, callback) {
     }
     link = config.release.link;
 
-    install = spawn('sh', [script, version, link, targetDir]);
+    install = spawn('sh', [script, version, link, tgtDir]);
     install.stdout.on('data', function(data) {
       log('stdout',data);
     });
@@ -49,9 +49,9 @@ function installNode(config, callback) {
 }
 
 function installNPM(config, callback) {
-  var error, targetDir = config.targetDir,
-  script = getNPMInstallScript,
-  install = spawn('sh', [script, pkgDir, targetDir, npmVer]);
+  var error, tgtDir = config.tgtDir,
+  script = getNPMInstallScript, npmVer = config.npmVer;
+  install = spawn('sh', [script, pkgDir, tgtDir, npmVer]);
 
   install.stdout.on('data', function(data) {
     log('stdout', data);
@@ -70,9 +70,9 @@ function installNPM(config, callback) {
 }
 
 function installActivate(config, callback) {
-  var error, targetDir = path.join(config.root, id),
+  var error, tgtDir = path.join(config.root, id),
   script = getActivateInstallScript,
-  install = spawn('sh', [script, pkgDir, targetDir, release.version]);
+  install = spawn('sh', [script, pkgDir, tgtDir, release.version]);
 
   install.stdout.on('data', function(data) {
     log('stdout', data);
@@ -122,7 +122,6 @@ function makeRecord(config) {
 
 exports.run = function(config) {
   config.release = getRelease(config.nodeVer);
-
   if (!config.release) {
     config.error = 'The desired release '+config.nodeVer+' not found or neco can\'t handle it.';
     config.suggestion = 'Try a newer version.';
@@ -136,7 +135,7 @@ exports.run = function(config) {
     }
 
     config.root = root;
-    config.targetDir = path.join(config.root, config.id);
+    config.tgtDir = path.join(config.root, config.id);
     config.npmVer = getSuitedNPM(config.release.version);  
 
     installNode(config, function(err, config) {
