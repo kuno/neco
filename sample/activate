@@ -1,7 +1,7 @@
 # This file must be used with "source bin/activate" *from bash*
 # you cannot run it directly
 
-deactivate () {
+nc_deact () {
     # reset old environment variables
     if [ -n "$_OLD_NECO_PATH" ] ; then
         PATH="$_OLD_NECO_PATH"
@@ -35,12 +35,12 @@ deactivate () {
     unset NODE_VERSION
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
-        unset -f deactivate
+        unset -f nc_deact
     fi
 }
 
 # unset irrelavent variables
-deactivate nondestructive
+nc_deact nondestructive
 
 NODE_ECOSYSTEM="/tmp/neco/test/.neco/test3"
 NODE_VERSION="0.2.0"
