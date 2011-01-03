@@ -96,12 +96,10 @@ function installActivate(config, callback) {
 }
 
 function makeRecord(config) {
-  console.log(config.installNPM);
-  console.log(config.timeFormat);
   var npm = config.npmVer ? config.npmVer : 'none',
   id = config.id, version = config.release.version,
   record, createdDate, ecosystems, newEcosystem, 
-  recordFile = path.join(root, 'record.json'), 
+  recordFile = path.join(root, '.neco', 'record.json'), 
   date = getDateTime(config);
 
   path.exists(recordFile, function(exists) {
@@ -145,7 +143,6 @@ exports.run = function(config) {
     config.destDir = path.join(config.root, config.id);
 
     installNode(config, function(err, config) {
-      console.log('install npm is '+config.installNPM);
       if (err) {
         throw err;
       } else if (config.insallNPM) {
