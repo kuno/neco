@@ -28,3 +28,4 @@
 
 ###0.0.2-alpha###
 * use shell script as main binary file
+* use id as temporary npmrc file suffix
