@@ -144,9 +144,8 @@ exports.run = function(config) {
     config.destDir = path.join(config.root, config.id);
 
     installNode(config, function(err, config) {
-      if (err) {
-        throw err;
-      } else if (config.insallNPM) {
+      if (err) {throw err;} 
+      if (config.insallNPM) {
         config.npmVer = getSuitedNPM(config.release.version);
         if (config.npmVer) {
           installNPM(config, function(err, config) {
