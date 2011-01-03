@@ -1,4 +1,3 @@
-#!/usr/bin/env sh
 pkgDir=$1
 targetDir=$2
 npmVer=$3

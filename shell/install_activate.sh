@@ -1,4 +1,3 @@
-#!/usr/bin/env sh
 packageDir=$1
 targetDir=$2
 version=$3
