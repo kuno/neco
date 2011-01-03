@@ -18,7 +18,7 @@ var getConfig = require('../lib/config.js').getConfig,
 virgin = require('../lib/inception.js').virgin,
 inception = require('../lib/inception.js').inception;
 
-var config, cmd = process.argv[2];
+var config, id, cmd = process.argv[2];
 var message, warning, error, suggestion, example;
 
 if (isCMDValid(cmd) === false) {
@@ -68,7 +68,7 @@ if (isCMDValid(cmd) === false) {
   // Subcommand list
   else if (cmd === 'list') {
     virgin(cmd, function() {
-      inception(cmd, function(exists) {
+      inception(cmd, function(exists, config) {
         if (exists) {
           list.run();
         }
@@ -84,7 +84,7 @@ if (isCMDValid(cmd) === false) {
   // Subcommand activate
   else if (cmd === 'activate') {
     virgin(cmd, function() {
-      inception(cmd, function(exists) {
+      inception(cmd, function(exists, config) {
         if (exists) {
           if (process.argv.length < 4) {
             message = 'Missing ID';
@@ -93,18 +93,20 @@ if (isCMDValid(cmd) === false) {
             log('message', message, suggestion, example);
           } else {
             id = process.argv[3];
+            config.id = id;
+            config.cmd = cmd;
 
-            if (isActive(id) === true) {
+            if (isActive(config.id) === true) {
               warning = 'The node ecosystem with id '+id+' is already active.';
               suggstion = 'Please use type deact in your shell to deactivate it.';
               log('warning', warning, suggestion, example);
-            } else if (isIDExsit(id) == false) {
+            } else if (isIDExsit(config.id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco create <id> [node-version]';
               log('warning', warning, suggestion, example);
             } else {
-              activate.run(id);
+              activate.run(config);
             }
           }
         }
@@ -115,25 +117,27 @@ if (isCMDValid(cmd) === false) {
   // Subcommand deactvate
   else if (cmd === 'deactivate') {
     virgin(cmd, function() {
-      inception(cmd, function(exists) {
+      inception(cmd, function(exists, config) {
         if (exists) {
           if (process.argv.length >= 4) {
             id = process.argv[3];
-            if (isActive(id) === false) {
+            config.id = id;
+            config.cmd = cmd;
+            if (isActive(config.id) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
               suggestion = 'Use neco activate command to activate one first.';
               example = 'neco activate <id>';
               log('warning', warning, suggestion, example);
-            } else if (isIDExsit(id) == false) {
+            } else if (isIDExsit(config.id) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco list';
               log('warning', warning, suggestion, example);
             } else {
-              deactivate.run(id);
+              deactivate.run(config);
             }
           }
-          deactivate.run();
+          deactivate.run(config);
         }
       });
     });
@@ -142,7 +146,7 @@ if (isCMDValid(cmd) === false) {
   // Subcommand destory
   else if (cmd === 'destory') {
     virgin(cmd, function() {
-      inception(cmd, function(exists) {
+      inception(cmd, function(exists, config) {
         if (exists) {
         }
       });
