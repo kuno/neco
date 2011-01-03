@@ -129,7 +129,7 @@ exports.run = function(config) {
     // If the version of release smaller and equal to 0.1,9,
     // add 'v' prefix to version laterial
     if (notSmaller(config.release.version, vStartsFrom) >= 0) {
-      release.realver = 'v'.concat(config.release.version);
+      config.release.realver = 'v'.concat(config.release.version);
     }
 
     config.root = root;
