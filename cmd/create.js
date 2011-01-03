@@ -96,8 +96,13 @@ function installActivate(config, callback) {
 }
 
 function makeRecord(config) {
-  var npm, record, createdDate, ecosystems, newEcosystem, 
-  recordFile = path.join(root, 'record.json');
+  console.log(config.installNPM);
+  console.log(config.timeFormat);
+  var npm = config.npmVer ? config.npmVer : 'none',
+  id = config.id, version = config.release.version,
+  record, createdDate, ecosystems, newEcosystem, 
+  recordFile = path.join(root, 'record.json'), 
+  date = getDateTime(config);
 
   path.exists(recordFile, function(exists) {
     if (!exists) {
@@ -109,9 +114,7 @@ function makeRecord(config) {
       ecosystems = record.ecosystems;
     }
 
-    npm = config.npmVer ? config.npmVer : 'none';
-    createdDate = getDateTime(config);
-    newEcosystem = {id:config.id, cd:createdDate,nv:config.release.version, npm:npm};
+    newEcosystem = {id:id, cd:date,nv:version, npm:npm};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
 
@@ -142,6 +145,7 @@ exports.run = function(config) {
     config.destDir = path.join(config.root, config.id);
 
     installNode(config, function(err, config) {
+      console.log('install npm is '+config.installNPM);
       if (err) {
         throw err;
       } else if (config.insallNPM) {
