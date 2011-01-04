@@ -24,6 +24,7 @@ else
 fi
 
 # Make config suited installation
+node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc || return 1
 node $pkgDir/deps/npm/cli.js config set root $destDir/ecosystem/lib/node || return 1
 node $pkgDir/deps/npm/cli.js config set binroot $destDir/ecosystem/bin || return 1
 node $pkgDir/deps/npm/cli.js config set manroot $destDir/ecosystem/share/man || return 1
