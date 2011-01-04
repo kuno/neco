@@ -4,6 +4,10 @@ Nodejs Ecosyste COordinator, just like vitualenv for python.
 
 An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
 
+###Install###
+
+    npm install neco (note: neco needs latest version of nodejs, right now it's 0.3.3)
+
 ###Usage:###
 
     neco <command>
