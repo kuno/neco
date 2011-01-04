@@ -85,9 +85,9 @@ neco_activate () {
     source "$activate"
     
     # Save the deactivate function from virtualenv under a different name
-    old_neco_deactivate=`typeset -f neco_deactivate | sed 's/neco_deactivate/old_neco_deactivate/g'`
-    eval "$old_neco_deactivate"
-    unset -f neco_deactivate >/dev/null 2>&1
+    #old_neco_deactivate=`typeset -f neco_deactivate | sed 's/neco_deactivate/old_neco_deactivate/g'`
+    #eval "$old_neco_deactivate"
+    #unset -f neco_deactivate >/dev/null 2>&1
 
     # Replace the deactivate() function with a wrapper.
     #eval 'neco_deactivate () {
