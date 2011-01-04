@@ -45,11 +45,11 @@ neco_verify_ecosystem () {
     return 0
 }
 
+
 # Verify that the active environment exists
 neco_verify_active_ecosystem () {
-    if [ ! -n "${NODE_ECOSYSTEM}" ] || [ ! -n "${NODE_VERSION}" ]
-    then
-        echo "ERR: no ecosystem active, or active ecosystem is missing" >&2
+    if [ -n "${NODE_ECOSYSTEM}" ] || [ -e $HOME/.npmrc.neco.bak ]; then
+        echo "ERR: Anohter ecosystem has already in active" >&2
         return 1
     fi
     return 0
@@ -63,6 +63,7 @@ neco_activate () {
     fi
 
     neco_verify_root || return 1
+    neco_verify_active_ecosystem || return 1
     neco_verify_ecosystem $eco_name || return 1
     
     activate="$NECO_ROOT/.neco/$eco_name/activate"

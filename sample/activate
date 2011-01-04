@@ -53,9 +53,9 @@ export PATH
 if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
   mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
   ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
-elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
-  rm -rf $HOME/.npmrc || return 1
-  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+#elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
+#  rm -rf $HOME/.npmrc || return 1
+#  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
 else
   ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
 fi
