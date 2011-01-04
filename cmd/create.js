@@ -11,16 +11,13 @@ getNodeInstallScript = require('../lib/utils.js').getNodeInstallScript,
 getNPMInstallScript = require('../lib/utils.js').getNPMInstallScript,
 getActivateInstallScript = require('../lib/utils.js').getActivateInstallScript;
 
-var pkgDir = path.join(__dirname, '..'), 
-root = process.env.NECO_ROOT || process.env.HOME;
-
 var vStartsFrom = require('../include/default.js').vStartsFrom;
 
 var message, warning, error, suggestion, example;
 
 function installNode(config, callback) {
   var error, version, link, install, 
-  destDir = config.destDir, script = getNodeInstallScript();
+  destDir = config.destDir, script = getNodeInstallScript(config);
 
   path.exists(config.root, function(exists) {
     if (!exists) {
@@ -55,7 +52,7 @@ function installNode(config, callback) {
 
 function installNPM(config, callback) {
   var error, destDir = config.destDir,
-  script = getNPMInstallScript(), npmVer = config.npmVer;
+  script = getNPMInstallScript(config), npmVer = config.npmVer;
   install = spawn('sh', [script, pkgDir, destDir, npmVer]);
 
   install.stdout.on('data', function(data) {
@@ -76,7 +73,7 @@ function installNPM(config, callback) {
 
 function installActivate(config, callback) {
   var id = config.id, error, version = config.release.version, 
-  destDir = config.destDir,script = getActivateInstallScript(),
+  destDir = config.destDir,script = getActivateInstallScript(config),
   install = spawn('sh', [script, id, pkgDir, destDir, version]);
 
   install.stdout.on('data', function(data) {
@@ -96,10 +93,10 @@ function installActivate(config, callback) {
 }
 
 function makeRecord(config) {
-  var npm = config.npmVer || 'none',
+  var npmVer = config.npmVer || 'none',
   id = config.id, version = config.release.version,
   record, createdDate, ecosystems, newEcosystem, 
-  recordFile = path.join(root, '.neco', 'record.json'), 
+  recordFile = path.join(config.root, '.neco', 'record.json'), 
   date = getDateTime(config);
 
   path.exists(recordFile, function(exists) {
@@ -112,7 +109,7 @@ function makeRecord(config) {
       ecosystems = record.ecosystems;
     }
 
-    newEcosystem = {id:id, cd:date,nv:version, npm:npm};
+    newEcosystem = {id:id, cd:date,nv:version, npm:npmVer};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
 
@@ -126,9 +123,9 @@ function makeRecord(config) {
 }
 
 exports.run = function(config) {
-  config.release = getRelease(config.nodeVer);
+  config.release = getRelease(config.target);
   if (!config.release) {
-    error = 'The desired release '+config.nodeVer+' not found or neco can\'t handle it.';
+    error = 'The desired release '+config.target+' not found or neco can\'t handle it.';
     suggestion = 'Try a newer version.';
     example = 'neco create <id> stable OR neco create <id> latest';
     log('error', error, suggestion, example);
@@ -139,14 +136,13 @@ exports.run = function(config) {
       config.release.realver = 'v'.concat(config.release.version);
     }
 
-    config.root = path.join(root, '.neco');
-    config.destDir = path.join(config.root, config.id);
+    config.destDir = path.join(config.root, '.neco', config.id);
 
     installNode(config, function(err, config) {
       if (err) {
         throw err;
       } else if (config.installNPM) {
-        config.npmVer = getSuitedNPM(config.release.version);
+        config.npmVer = getSuitedNPM(config);
         if (config.npmVer) {
           installNPM(config, function(err, config) {
             if (err) {throw err;}

@@ -1,7 +1,7 @@
 # This file must be used with "source bin/activate" *from bash*
 # you cannot run it directly
 
-neco_deact () {
+neco_deactivate () {
     # reset old environment variables
     if [ -n "$_OLD_NECO_PATH" ] ; then
         PATH="$_OLD_NECO_PATH"
@@ -27,20 +27,20 @@ neco_deact () {
         unset _OLD_NECO_PS1
     fi
 
-    if [ -e $HOME/.npmrc.neco.bak ]; then
-        mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
+    if [ -e $HOME/.npmrc.neco.$NECO_ID ]; then
+        mv $HOME/.npmrc.neco.$NECO_ID $HOME/.npmrc  || return 1
     fi
 
     unset NODE_ECOSYSTEM
     unset NODE_VERSION
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
-        unset -f neco_deact
+        unset -f neco_deactivate
     fi
 }
 
 # unset irrelavent variables
-neco_deact nondestructive
+neco_deactivate nondestructive
 
 NECO_ID="test3"
 NODE_ECOSYSTEM="/tmp/neco/test/.neco/test3"
@@ -61,10 +61,10 @@ export PATH
 #    unset PYTHONHOME
 #fi
 
-if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
-  mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
+if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.$NECO_ID ]; then
+  mv $HOME/.npmrc $HOME/.npmrc.neco.$NECO_ID || return  1
   ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
-elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
+elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.$NECO_ID ]; then
   rm -rf $HOME/.npmrc || return 1
   ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
 else
