@@ -1,9 +1,8 @@
 var fs = require('fs'),
 path = require('path'),
-display = require('../lib/console.js').display,
-recordFile = path.join(process.env.NECO_ROOT, '.neco/record.json');
+display = require('../lib/console.js').display;
 
-exports.run = function() {
-  ecosystems = JSON.parse(fs.readFileSync(recordFile, 'utf8')).ecosystems;
+exports.run = function(config) {
+  ecosystems = JSON.parse(fs.readFileSync(config.recordFile, 'utf8')).ecosystems;
   display(ecosystems);
 };

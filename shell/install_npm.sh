@@ -1,32 +1,34 @@
 pkgDir=$1
-targetDir=$2
+destDir=$2
 npmVer=$3
 npmPrefix='http://registry.npmjs.org/npm/-/npm-'
 npmSuffix='.tgz'
 npmURL=$npmPrefix$npmVer$npmSuffix
 replace=$(echo $2 | sed 's/\//\\\//g' | sed 's/\./\\\./g')
 
-# If binary file not found under $targetDir/bin/node, 
+# If binary file not found under $destDir/bin/node, 
 # then this means previous node build was failed.
-if [ ! -d $targetDir/bin/node ]; then
+if [ ! -d $destDir/bin/node ]; then
   return 1
 fi
 
 # Backup current npmrc config file
-if [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.necoold ] ; then
+if [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.old ] ; then
   rm -rf $HOME/.npmrc || return 1
   cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1  
-elif [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.necoold ]; then
-  mv $HOME/.npmrc $HOME/.npmrc.necoold || return 1
+elif [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.old ]; then
+  mv $HOME/.npmrc $HOME/.npmrc.neco.old || return 1
   cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1  
 else
   cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1
 fi
 
 # Make config suited installation
-node $pkgDir/deps/npm/cli.js config set root $targetDir/ecosystem/lib/node || return 1
-node $pkgDir/deps/npm/cli.js config set binroot $targetDir/ecosystem/bin || return 1
-node $pkgDir/deps/npm/cli.js config set manroot $targetDir/ecosystem/share/man || return 1
+node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc || return 1
+node $pkgDir/deps/npm/cli.js config set root $destDir/ecosystem/lib/node || return 1
+node $pkgDir/deps/npm/cli.js config set binroot $destDir/ecosystem/bin || return 1
+node $pkgDir/deps/npm/cli.js config set manroot $destDir/ecosystem/share/man || return 1
+node $pkgDir/deps/npm/cli.js config set userconfig $destDir/npmrc || return 1
 
 # Installation
 node $pkgDir/deps/npm/cli.js install $npmURL || return 1
@@ -36,15 +38,15 @@ sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $pkgDir/sample/n
 sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $pkgDir/sample/npmrc || return 1
 
 # Global npm config
-install -Dm644 $pkgDir/sample/npmrc $targetDir/ecosystem/etc/npmrc || return 1
-install -Dm644 $pkgDir/sample/npmrc $targetDir/npmrc     || return 1
+install -Dm644 $pkgDir/sample/npmrc $destDir/ecosystem/etc/npmrc || return 1
+install -Dm644 $pkgDir/sample/npmrc $destDir/npmrc     || return 1
 
 # User npmrc 
-if [ -e $HOME/.npmrc.necoold ]; then
+if [ -e $HOME/.npmrc.neco.old ]; then
   #  sed -i -e 's/^root.*/root\ =\ \/usr\/local\/lib\/node/g' $HOME/.npmrc.necoold || return 1
   #  sed -i -e 's/^binroot.*/binroot\ =\ \/usr\/local\/bin/g' $HOME/.npmrc.necoold || return 1
   #  sed -i -e 's/^manroot.*/manroot\ = \ \/usr\/local\/share\/man/g' $HOME/.npmrc.necoold || return 1
-  mv $HOME/.npmrc.necoold $HOME/.npmrc || return 1
+  mv $HOME/.npmrc.neco.old $HOME/.npmrc || return 1
   #  sed -i -e 's/^root.*/root\ =\ \/usr\/local\/lib\/node/g' $HOME/.npmrc || return 1
   #  sed -i -e 's/^binroot.*/binroot\ =\ \/usr\/local\/bin/g' $HOME/.npmrc || return 1
   #  sed -i -e 's/^manroot.*/manroot\ = \ \/usr\/local\/share\/man/g' $HOME/.npmrc || return 1

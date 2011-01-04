@@ -1,18 +1,13 @@
 # This file must be used with "source bin/activate" *from bash*
 # you cannot run it directly
 
-neco_deact () {
+neco_deactivate () {
     # reset old environment variables
     if [ -n "$_OLD_NECO_PATH" ] ; then
         PATH="$_OLD_NECO_PATH"
         export PATH
         unset _OLD_NECO_PATH
     fi
-    #if [ -n "$_OLD_VIRTUAL_PYTHONHOME" ] ; then
-    #    PYTHONHOME="$_OLD_VIRTUAL_PYTHONHOME"
-    #    export PYTHONHOME
-    #    unset _OLD_VIRTUAL_PYTHONHOME
-    #fi
 
     # This should detect bash and zsh, which have a hash command that must
     # be called to get it to forget past commands.  Without forgetting
@@ -27,44 +22,40 @@ neco_deact () {
         unset _OLD_NECO_PS1
     fi
 
-    if [ -e $HOME/.npmrc.neco.bak ]; then
+    if [ -L $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
+        rm -rf $HOME/.npmrc || return 1
         mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
     fi
 
     unset NODE_ECOSYSTEM
     unset NODE_VERSION
+    unset NECO_ID
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
-        unset -f nc_deact
+        unset -f neco_deactivate
     fi
 }
 
 # unset irrelavent variables
-nc_deact nondestructive
+neco_deactivate nondestructive
 
+NECO_ID="test3"
 NODE_ECOSYSTEM="/tmp/neco/test/.neco/test3"
 NODE_VERSION="0.2.0"
 export NODE_ECOSYSTEM
 export NODE_VERSION
+export NECO_ID
 
 _OLD_NECO_PATH="$PATH"
 PATH="$NODE_ECOSYSTEM/ecosystem/bin:$PATH"
 export PATH
 
-# unset PYTHONHOME if set
-# this will fail if PYTHONHOME is set to the empty string (which is bad anyway)
-# could use `if (set -u; : $PYTHONHOME) ;` in bash
-#if [ -n "$PYTHONHOME" ] ; then
-#    _OLD_VIRTUAL_PYTHONHOME="$PYTHONHOME"
-#    unset PYTHONHOME
-#fi
-
 if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
   mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
   ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
-elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
-  rm -rf $HOME/.npmrc || return 1
-  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+#elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
+#  rm -rf $HOME/.npmrc || return 1
+#  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
 else
   ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
 fi

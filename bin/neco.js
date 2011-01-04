@@ -18,7 +18,7 @@ var getConfig = require('../lib/config.js').getConfig,
 virgin = require('../lib/inception.js').virgin,
 inception = require('../lib/inception.js').inception;
 
-var config, id, cmd = process.argv[2];
+var config = getConfig(), id, cmd = process.argv[2];
 var message, warning, error, suggestion, example;
 
 if (isCMDValid(cmd) === false) {
@@ -37,10 +37,9 @@ if (isCMDValid(cmd) === false) {
           example = 'neco create <id> [NODE-VERSION]';
           log('message', message, suggestion, example);
         } else {
-          config = getConfig(process.argv[3])
           config.id = process.argv[3];
           config.cmd = cmd;
-          config.nodeVer = process.argv[4] || 'stable';
+          config.target = process.argv[4] || 'stable';
 
           if (isIDValid(config) === false) {
             message = 'The given id '+config.id+' is one of the reserved words in neco.';
@@ -49,9 +48,9 @@ if (isCMDValid(cmd) === false) {
 
           } else {
             if (!exists) {
-              create.run(config.id, config.node);
+              create.run(config);
             } else {  
-              if (isIDUnique(config.id) === false) {
+              if (isIDUnique(config) === false) {
                 message = 'The given id '+config.id+' has already been used.';
                 suggestion = 'Please choose another one instead.';
                 log('message', message, suggestion);
@@ -67,10 +66,11 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand list
   else if (cmd === 'list') {
-    virgin(cmd, function() {
-      inception(cmd, function(exists, config) {
+    config.cmd = cmd;
+    virgin(config, function() {
+      inception(config, function(exists, config) {
         if (exists) {
-          list.run();
+          list.run(config);
         }
       });
     });
@@ -78,29 +78,29 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand help
   else if (cmd === 'help') {
-    help.run();
+    help.run(config);
   }
 
   // Subcommand activate
   else if (cmd === 'activate') {
-    virgin(cmd, function() {
-      inception(cmd, function(exists, config) {
+    virgin(config, function() {
+      inception(config, function(exists, config) {
         if (exists) {
           if (process.argv.length < 4) {
             message = 'Missing ID';
             suggestion = 'Please specify the id of the ecosystem you want to activate.';
-            example = 'neco activate <id>';
+            example = 'neco_activate <id>';
             log('message', message, suggestion, example);
           } else {
             id = process.argv[3];
             config.id = id;
             config.cmd = cmd;
 
-            if (isActive(id) === true) {
+            if (isActive(config) === true) {
               warning = 'The node ecosystem with id '+id+' is already active.';
               suggstion = 'Please use type deact in your shell to deactivate it.';
               log('warning', warning, suggestion, example);
-            } else if (isIDExsit(id) == false) {
+            } else if (isIDExsit(config) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco create <id> [node-version]';
@@ -116,19 +116,19 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand deactvate
   else if (cmd === 'deactivate') {
-    virgin(cmd, function() {
-      inception(cmd, function(exists, config) {
+    virgin(config, function() {
+      inception(config, function(exists, config) {
         if (exists) {
           if (process.argv.length >= 4) {
             id = process.argv[3];
             config.id = id;
             config.cmd = cmd;
-            if (isActive(config.id) === false) {
+            if (isActive(config) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
               suggestion = 'Use neco activate command to activate one first.';
               example = 'neco activate <id>';
               log('warning', warning, suggestion, example);
-            } else if (isIDExsit(config.id) == false) {
+            } else if (isIDExsit(config) == false) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco list';
@@ -145,8 +145,8 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand destory
   else if (cmd === 'destory') {
-    virgin(cmd, function() {
-      inception(cmd, function(exists, config) {
+    virgin(config, function() {
+      inception(config, function(exists, config) {
         if (exists) {
         }
       });
