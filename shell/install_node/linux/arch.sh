@@ -8,9 +8,9 @@ else
   cd $targetDir/../source
 fi
 
-#if [ -d node-$ver ]; then
-#  rm -rf node-$ver
-#fi
+if [ -d node-$ver ]; then
+  rm -rf node-$ver
+fi
 
 if [ ! -e node-$ver.tar.gz ]; then
   #curl -O $link || return 1
