@@ -6,5 +6,5 @@ exports.run = function(config) {
   var shell = color('source '+act, 'bold+yellow');
   console.log();
   console.log('add \''+shell+'\' to your .bashrc or .zshrc file, :)');
-  console.log('Then run '+color('neco_activate '+config.id, 'bold+yellow')+'in you shell.');
+  console.log('Then run '+color('neco_activate '+config.id, 'bold+yellow')+' in you shell.');
 };
