@@ -31,6 +31,8 @@ neco_verify_root () {
     if [ ! -d "$NECO_ROOT" ]; then
         [ "$1" != "-q" ] && echo "ERR: Ecosystem directory '$NECO_ROOT' does not exist.  Create it or set NECO_ROOT to an existing directory." 1>&2
         return 1
+      else 
+        OLD_NECO_ROOT = $NECO_ROOT
     fi
     return 0
 }
@@ -83,6 +85,8 @@ neco_activate () {
     fi
 
     source "$activate"
+    NECO_ROOT = $OLD_NECO_ROOT
+    export NECO_ROOT
     
     # Save the deactivate function from virtualenv under a different name
     #old_neco_deactivate=`typeset -f neco_deactivate | sed 's/neco_deactivate/old_neco_deactivate/g'`
