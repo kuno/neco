@@ -28,11 +28,12 @@ neco_deactivate () {
     fi
 
     if [ -e $HOME/.npmrc.neco.$NECO_ID ]; then
-        mv $HOME/.npmrc.neco.$NECO_ID $HOME/.npmrc  || return 1
+        mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
     fi
 
     unset NODE_ECOSYSTEM
     unset NODE_VERSION
+    unset NECO_ID
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
         unset -f neco_deactivate
@@ -53,18 +54,10 @@ _OLD_NECO_PATH="$PATH"
 PATH="$NODE_ECOSYSTEM/ecosystem/bin:$PATH"
 export PATH
 
-# unset PYTHONHOME if set
-# this will fail if PYTHONHOME is set to the empty string (which is bad anyway)
-# could use `if (set -u; : $PYTHONHOME) ;` in bash
-#if [ -n "$PYTHONHOME" ] ; then
-#    _OLD_VIRTUAL_PYTHONHOME="$PYTHONHOME"
-#    unset PYTHONHOME
-#fi
-
-if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.$NECO_ID ]; then
-  mv $HOME/.npmrc $HOME/.npmrc.neco.$NECO_ID || return  1
+if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
+  mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
   ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
-elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.$NECO_ID ]; then
+elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
   rm -rf $HOME/.npmrc || return 1
   ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
 else

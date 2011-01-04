@@ -47,7 +47,7 @@ neco_verify_ecosystem () {
 
 # Verify that the active environment exists
 neco_verify_active_ecosystem () {
-    if [ ! -n "${NODE_ECOSYSTEM}" ] || [ ! -d "${NODE_VERSION}" ]
+    if [ ! -n "${NODE_ECOSYSTEM}" ] || [ ! -n "${NODE_VERSION}" ]
     then
         echo "ERR: no ecosystem active, or active ecosystem is missing" >&2
         return 1
@@ -92,7 +92,7 @@ neco_activate () {
     #unset -f deactivate >/dev/null 2>&1
 
     # Replace the deactivate() function with a wrapper.
-    eval 'neco_deactivate () {
+    eval 'old_neco_deactivate () {
 
         # Call the local hook before the global so we can undo
         # any settings made by the local postactivate first.
