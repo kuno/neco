@@ -93,8 +93,9 @@ if (isCMDValid(cmd) === false) {
             example = 'neco find';
             log('error', error, suggestion, example);
           }
+        } else {
+          find.run(config);
         }
-        find.run(config);
       });
     });
   }
