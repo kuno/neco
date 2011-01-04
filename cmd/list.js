@@ -1,8 +1,8 @@
 var fs = require('fs'),
 path = require('path'),
-display = require('../lib/console.js').display;
+show = require('../lib/console.js').showEcosystems;
 
 exports.run = function(config) {
-  ecosystems = JSON.parse(fs.readFileSync(config.recordFile, 'utf8')).ecosystems;
-  display(ecosystems);
+  var ecosystems = JSON.parse(fs.readFileSync(config.recordFile, 'utf8')).ecosystems;
+  show(ecosystems);
 };

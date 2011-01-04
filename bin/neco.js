@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var list = require('../cmd/list.js'),
+find = require('../cmd/find.js'),
 help = require('../cmd/help.js'),
 create = require('../cmd/create.js'),
 activate = require('../cmd/activate.js'),
@@ -12,7 +13,8 @@ var isIDUnique = require('../lib/checker.js').isIDUnique,
 isIDExsit = require('../lib/checker.js').isIDExsit,
 isIDValid = require('../lib/checker.js').isIDValid,
 isCMDValid = require('../lib/checker.js').isCMDValid,
-isActive = require('../lib/checker.js').isActive;
+isActive = require('../lib/checker.js').isActive,
+getRelease = require('../lib/utils.js').getRelease;
 
 var getConfig = require('../lib/config.js').getConfig, 
 virgin = require('../lib/inception.js').virgin,
@@ -76,6 +78,28 @@ if (isCMDValid(cmd) === false) {
     });
   }
 
+  // Subcommand find
+  else if (cmd === 'find') {
+    virgin(config, function(config) {
+      inception(config, function(exists, config) {
+        config.cmd = cmd;
+        if (process.argv.length >= 4) {
+          config.target = process.argv[3];
+          if (getRelease(config)) {
+            find.run(config);
+          } else {
+            error = 'The desired release '+config.target+' is not available.'
+            suggestion = 'Find out all the aviable releases.';
+            example = 'neco find';
+            log('error', error, suggestion, example);
+          }
+        } else {
+          find.run(config);
+        }
+      });
+    });
+  }
+
   // Subcommand help
   else if (cmd === 'help') {
     help.run(config);
@@ -89,7 +113,7 @@ if (isCMDValid(cmd) === false) {
           if (process.argv.length < 4) {
             message = 'Missing ID';
             suggestion = 'Please specify the id of the ecosystem you want to activate.';
-            example = 'neco_activate <id>';
+            example = 'neco activate <id>';
             log('message', message, suggestion, example);
           } else {
             id = process.argv[3];
