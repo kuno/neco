@@ -11,18 +11,21 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
     Currently where <command> should be on of the below commands:
 
     create      -  create a new node ecosystem
-        Usage: neco create <id> [node-version]
+        Usage:  neco create <id> [node-version]
 
     list        -  list all installed node ecosystems
-        Usage: neco list
+        Usage:  neco list
+
+    find        -  find out the available node release(s)
+        Usage:  neco find [stalbe, latest, <version>]
 
     activate    -  show how to activate an existing node ecosystem
-        Usage: neco activate <id>
+        Usage:  neco activate <id>
 
     deactivate  -  show how to deactivate an active node ecosystem
-        Usage: neco deactivate [id]
+        Usage:  neco deactivate [id]
 
     help        -  show help information
-        Usage: neco help
+        Usage:  neco help
 
 Git repository: http://github.com/kuno/neco
