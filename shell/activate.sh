@@ -85,7 +85,7 @@ neco_activate () {
     fi
 
     source "$activate"
-    NECO_ROOT = $OLD_NECO_ROOT
+    NECO_ROOT="$OLD_NECO_ROOT"
     export NECO_ROOT
     
     # Save the deactivate function from virtualenv under a different name
