@@ -6,5 +6,5 @@ exports.run = function(config) {
   var shell = color('source '+act, 'bold+yellow');
   console.log();
   console.log('add \''+shell+'\' to your .bashrc file, :)');
-  console.log('Then type '+color('neco_act <id>', 'bold+yellow'));
+  console.log('Then type '+color('neco_activate <id>', 'bold+yellow'));
 };
