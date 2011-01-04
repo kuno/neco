@@ -126,7 +126,7 @@ function makeRecord(config) {
 }
 
 exports.run = function(config) {
-  config.release = getRelease(config.target);
+  config.release = getRelease(config);
   if (!config.release) {
     error = 'The desired release '+config.target+' not found or neco can\'t handle it.';
     suggestion = 'Try a newer version.';
