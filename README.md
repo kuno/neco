@@ -17,7 +17,7 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
         Usage:  neco list
 
     find        -  find out the available node release(s)
-        Usage:  neco find [stalbe, latest, <version>]
+        Usage:  neco find [stable, latest, <version>]
 
     activate    -  show how to activate an existing node ecosystem
         Usage:  neco activate <id>
