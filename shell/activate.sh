@@ -85,30 +85,30 @@ neco_activate () {
     source "$activate"
     
     # Save the deactivate function from virtualenv under a different name
-    old_neco_deactivate=`typeset -f neco_deactivate | sed 's/neco_deactivate/old_neco_deactivate/g'`
-    eval "$old_neco_deactivate"
-    unset -f neco_deactivate >/dev/null 2>&1
+#    old_neco_deactivate=`typeset -f neco_deactivate | sed 's/neco_deactivate/old_neco_deactivate/g'`
+#    eval "$old_neco_deactivate"
+#    unset -f neco_deactivate >/dev/null 2>&1
 
     # Replace the deactivate() function with a wrapper.
-    eval 'neco_deactivate () {
+#    eval 'neco_deactivate () {
 
         # Call the local hook before the global so we can undo
         # any settings made by the local postactivate first.
         
-        old_ecosytem=$(basename "$NODE_ECOSYSTEM")
+#        old_ecosytem=$(basename "$NODE_ECOSYSTEM")
         
         # Call the original function.
-        old_neco_deactivate $1
+#        old_neco_deactivate $1
 
 
-        if [ ! "$1" = "nondestructive" ]
-        then
+#        if [ ! "$1" = "nondestructive" ]
+#        then
             # Remove this function
-            unset -f old_neco_deactivate >/dev/null 2>&1
-            unset -f neco_deactivate >/dev/null 2>&1
-        fi
+#            unset -f old_neco_deactivate >/dev/null 2>&1
+#            unset -f neco_deactivate >/dev/null 2>&1
+#        fi
 
-    }'
+#    }'
     
     #virtualenvwrapper_run_hook "post_activate"
     
