@@ -2,56 +2,60 @@ var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn;
 
-var vStartsFrom = require('../include/default.js').vStartsFrom;
-
 var log = require('../lib/console.js').log,
+getDateTime = require('../lib/utils.js').getDateTime,
 getRelease = require('../lib/utils.js').getRelease,
 getSuitedNPM = require('../lib/utils.js').getSuitedNPM,
-notSmaller = require('../lib/utils.js').compareVersions;
+notSmaller = require('../lib/utils.js').compareVersions,
+writeConfigFile = require('../lib/utils.js').writeConfigFile,
+getNodeInstallScript = require('../lib/utils.js').getNodeInstallScript,
+getNPMInstallScript = require('../lib/utils.js').getNPMInstallScript,
+getActivateInstallScript = require('../lib/utils.js').getActivateInstallScript;
 
-var   packageDir = path.join(__dirname, '..'),   
-NodeInstallScript = path.join(__dirname, '../shell/install_node.sh'),
-NPMInstallScript  = path.join(__dirname, '../shell/install_npm.sh'),
-ActivateInstallScript = path.join(__dirname, '../shell/install_activate.sh');
+var vStartsFrom = require('../include/default.js').vStartsFrom;
 
 var message, warning, error, suggestion, example;
 
-function installNode(root, id, release, callback) {
-  var err, ver, link, install, targetDir = path.join(root, id);
-  path.exists(root, function(exists) {
+function installNode(config, callback) {
+  var error, version, link, install, 
+  destDir = config.destDir, script = getNodeInstallScript(config);
+
+  path.exists(config.root, function(exists) {
     if (!exists) {
-      fs.mkdirSync(root, mode=0777);
-    }
-
-    if (release.realver) {
-      ver = release.realver;
+      fs.mkdirSync(config.root, mode=0777);
     } else {
-      ver = release.version;
-    }
-    link = release.link;
-
-    install = spawn(NodeInstallScript, [ver, link, targetDir]);
-    install.stdout.on('data', function(data) {
-      log('stdout',data);
-    });
-    install.stderr.on('data', function(data) {
-      log('stdout',data);
-    });
-
-    install.on('exit', function(code) {
-      if (code !== 0) {
-        err = new Error('Installing node exit wich code ' + code);
-        callback(err, root, id, release);
+      if (config.release.realver) {
+        version = config.release.realver;
       } else {
-        callback(err, root, id, release);
+        version = config.release.version;
       }
-    });
+      link = config.release.link;
+
+      install = spawn('sh', [script, version, link, destDir]);
+      install.stdout.on('data', function(data) {
+        log('stdout',data);
+      });
+      install.stderr.on('data', function(data) {
+        log('stdout',data);
+      });
+
+      install.on('exit', function(code) {
+        if (code !== 0) {
+          error = new Error('Installing node exit wich code ' + code);
+          callback(error, config);
+        } else {
+          callback(error, config);
+        }
+      });
+    }
   });
 }
 
-function installNPM(root, id, release, npmVer, callback) {
-  var err, install, targetDir = path.join(root, id);
-  install = spawn(NPMInstallScript, [packageDir, targetDir, npmVer]);
+function installNPM(config, callback) {
+  var error, destDir = config.destDir, pkgDir = config.pkgDir,
+  script = getNPMInstallScript(config), npmVer = config.npmVer;
+  install = spawn('sh', [script, pkgDir, destDir, npmVer]);
+
   install.stdout.on('data', function(data) {
     log('stdout', data);
   });
@@ -60,17 +64,20 @@ function installNPM(root, id, release, npmVer, callback) {
   });
   install.on('exit', function(code) {
     if (code !== 0) {
-      err = new Error('Installing NPM exit with code ' + code);
-      callback(err, root, id, release);
+      error = new Error('Installing NPM exit with code ' + code);
+      callback(error, config);
     } else {
-      callback(err, root, id, release);
+      callback(error, config);
     }
   });
 }
 
-function installActivate(root, id, release, callback) {
-  var err, install, targetDir = path.join(root, id);
-  install = spawn(ActivateInstallScript, [packageDir, targetDir, release.version]);
+function installActivate(config, callback) {
+  var error, id = config.id, version = config.release.version, 
+  pkgDir = config.pkgDir, destDir = config.destDir, 
+  script = getActivateInstallScript(config),
+  install = spawn('sh', [script, id, pkgDir, destDir, version]);
+
   install.stdout.on('data', function(data) {
     log('stdout', data);
   });
@@ -79,19 +86,20 @@ function installActivate(root, id, release, callback) {
   });
   install.on('exit', function(code) {
     if (code !== 0) {
-      err = new Error('Installing Activate exit with code ' + code);
-      callback(err, root, id, release);
+      error = new Error('Installing Activate exit with code ' + code);
+      callback(error, config);
     } else {
-      callback(err, root, id, release);
+      callback(error, config);
     }
   });
 }
 
-function makeRecord(root, id, release, npmVer) {
-  var npm, date, record, createdDate, recordFile, 
-  ecosystems, newEcosystem;
-  date = new Date();
-  recordFile = path.join(root, 'record.json');
+function makeRecord(config) {
+  var error, npmVer = config.npmVer || 'none',
+  id = config.id, version = config.release.version,
+  record, createdDate, ecosystems, newEcosystem, 
+  recordFile = path.join(config.root, '.neco', 'record.json'), 
+  date = getDateTime(config);
 
   path.exists(recordFile, function(exists) {
     if (!exists) {
@@ -103,9 +111,7 @@ function makeRecord(root, id, release, npmVer) {
       ecosystems = record.ecosystems;
     }
 
-    npm = npmVer ? npmVer : 'none';
-    createdDate = date.toDateString(date.getTime());
-    newEcosystem = {id:id, cd:createdDate,nv:release.version, npm:npm};
+    newEcosystem = {id:id, cd:date,nv:version, npm:npmVer};
     record.ecosystems = ecosystems.concat(newEcosystem);
     record = JSON.stringify(record);
 
@@ -114,44 +120,42 @@ function makeRecord(root, id, release, npmVer) {
       if (err) {throw err;}
       message = 'New node ecosystem has been created sucessfully!';
       log('message', message);
+      writeConfigFile(config);
     });
   });
 }
 
-exports.run = function(id, target) {
-  var root, npmVer, release;
-  release = getRelease(target);
-
-  if (!release) {
-    error = 'The desired release '+target+' not found or neco can\'t handle it.';
+exports.run = function(config) {
+  config.release = getRelease(config);
+  if (!config.release) {
+    error = 'The desired release '+config.target+' not found or neco can\'t handle it.';
     suggestion = 'Try a newer version.';
     example = 'neco create <id> stable OR neco create <id> latest';
     log('error', error, suggestion, example);
   } else {
-
     // If the version of release smaller and equal to 0.1,9,
     // add 'v' prefix to version laterial
-    if (notSmaller(release.version, vStartsFrom) >= 0) {
-      release.realver = 'v'.concat(release.version);
-    }    
-    npmVer = getSuitedNPM(release.version);  
-    root = path.join(process.env.NECO_ROOT, '.neco') || path.join(process.env.WORKON_HOME, '.neco');
+    if (notSmaller(config.release.version, vStartsFrom) >= 0) {
+      config.release.realver = 'v'.concat(config.release.version);
+    }
 
-    installNode(root, id, release, function(err, root, id, release) {
-      if (err) {throw err;}
-      //console.log('suited npm version is '+npmVer);
-      if (npmVer) {
-        installNPM(root, id, release, npmVer, function(err, root, id, release) {
+    config.destDir = path.join(config.root, '.neco', config.id);
+
+    installNode(config, function(err, config) {
+      if (err) {throw err;} 
+      if (config.installNPM && getSuitedNPM(config)) {
+        config.npmVer = getSuitedNPM(config);
+        installNPM(config, function(err, config) {
           if (err) {throw err;}
-          installActivate(root, id, release, function(err, root, id, release) {
+          installActivate(config, function(err, config) {
             if (err) {throw err;} 
-            makeRecord(root, id, release, npmVer);
+            makeRecord(config);
           });
         });
       } else {
-        installActivate(root, id, release, function(err, root, id, release) {
+        installActivate(config, function(err, config) {
           if (err) {throw err;}
-          makeRecord(root, id, release, npmVer);
+          makeRecord(config);
         });
       }
     });

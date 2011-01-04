@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 ver=$1
 link=$2
 targetDir=$3
@@ -26,15 +24,7 @@ cd node-$ver || return 1
 
 if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
   # python2 fix
-
-  # If version under 0.2.5
-  if [ -e tools/node-waf ]; then
-    sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' tools/node-waf
-    sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' tools/node-waf
-    sed -i 's/^#\ \/usr\/bin\/env\ python/#!\/usr\/bin\/env\ python2/g' tools/node-waf 
-  fi
-
-  for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/waf; do
+  for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/node-waf tools/waf; do
     sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
     sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
     sed -i 's/^#\ \/usr\/bin\/env\ python/#!\/usr\/bin\/env\ python2/g' $file

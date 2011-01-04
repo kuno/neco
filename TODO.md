@@ -24,3 +24,11 @@
 
 ###0.0.1-beta###
 * global config object
+* different npm do not conflict earch other, (due to the dotnpm prblem)
+
+###0.0.2-alpha###
+* use shell script as main binary file
+* use id as temporary npmrc file suffix
+
+###0.0.3###
+* added md5sum check for every node achive?

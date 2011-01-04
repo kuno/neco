@@ -23,6 +23,6 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
         Usage: neco deactivate [id]
 
     help        -  show help information
-        Useage: neco help
+        Usage: neco help
 
 Git repository: http://github.com/kuno/neco
