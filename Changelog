@@ -12,3 +12,11 @@
 
 ###0.0.1-alpha2###
 1, fixed double-direction refrences bug
+
+###0.0.2-alpha, 2011-01-04###
+1. now neco depends on node 0.3.3
+2, added global config object
+3, choose install script based on operating system
+4, completed neco_activate and neco_deactivate shell function(modefied from
+python virtualenv and virtualenvwrapper package)
+5, added find command
