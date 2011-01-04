@@ -46,7 +46,7 @@ neco_verify_ecosystem () {
 }
 
 # Verify that the active environment exists
-virtualenvwrapper_verify_active_environment () {
+neco_verify_active_ecosystem () {
     if [ ! -n "${NODE_ECOSYSTEM}" ] || [ ! -d "${NODE_VERSION}" ]
     then
         echo "ERR: no ecosystem active, or active ecosystem is missing" >&2
@@ -92,25 +92,22 @@ neco_activate () {
     #unset -f deactivate >/dev/null 2>&1
 
     # Replace the deactivate() function with a wrapper.
-    eval 'deactivate () {
+    eval 'neco_deactivate () {
 
         # Call the local hook before the global so we can undo
         # any settings made by the local postactivate first.
-        virtualenvwrapper_run_hook "pre_deactivate"
         
-        env_postdeactivate_hook="$VIRTUAL_ENV/bin/postdeactivate"
-        old_env=$(basename "$VIRTUAL_ENV")
+        old_ecosytem=$(basename "$NODE_ECOSYSTEM")
         
         # Call the original function.
-        virtualenv_deactivate $1
+        old_neco_deactivate $1
 
-        virtualenvwrapper_run_hook "post_deactivate" "$old_env"
 
         if [ ! "$1" = "nondestructive" ]
         then
             # Remove this function
-            unset -f virtualenv_deactivate >/dev/null 2>&1
-            unset -f deactivate >/dev/null 2>&1
+            unset -f old_neco_deactivate >/dev/null 2>&1
+            unset -f neco_deactivate >/dev/null 2>&1
         fi
 
     }'
@@ -126,29 +123,29 @@ neco_activate () {
 # http://arthurkoziel.com/2008/10/11/virtualenvwrapper-bash-completion/)
 # 
 
-if [ -n "$BASH" ] ; then
-    _virtualenvs ()
-    {
-        local cur="${COMP_WORDS[COMP_CWORD]}"
-        COMPREPLY=( $(compgen -W "`virtualenvwrapper_show_workon_options`" -- ${cur}) )
-    }
-
-    _cdvirtualenv_complete ()
-    {
-        local cur="$2"
-        # COMPREPLY=( $(compgen -d -- "${VIRTUAL_ENV}/${cur}" | sed -e "s@${VIRTUAL_ENV}/@@" ) )
-        COMPREPLY=( $(cdvirtualenv && compgen -d -- "${cur}" ) )
-    }
-    _cdsitepackages_complete ()
-    {
-        local cur="$2"
-        COMPREPLY=( $(cdsitepackages && compgen -d -- "${cur}" ) )
-    }
-    complete -o nospace -F _cdvirtualenv_complete -S/ cdvirtualenv
-    complete -o nospace -F _cdsitepackages_complete -S/ cdsitepackages
-    complete -o default -o nospace -F _virtualenvs workon
-    complete -o default -o nospace -F _virtualenvs rmvirtualenv
-    complete -o default -o nospace -F _virtualenvs cpvirtualenv
-elif [ -n "$ZSH_VERSION" ] ; then
-    compctl -g "`virtualenvwrapper_show_workon_options`" workon rmvirtualenv cpvirtualenv
-fi
+#if [ -n "$BASH" ] ; then
+#    _virtualenvs ()
+#    {
+#        local cur="${COMP_WORDS[COMP_CWORD]}"
+#        COMPREPLY=( $(compgen -W "`virtualenvwrapper_show_workon_options`" -- ${cur}) )
+#    }
+#
+#    _cdvirtualenv_complete ()
+#    {
+#        local cur="$2"
+#        # COMPREPLY=( $(compgen -d -- "${VIRTUAL_ENV}/${cur}" | sed -e "s@${VIRTUAL_ENV}/@@" ) )
+#        COMPREPLY=( $(cdvirtualenv && compgen -d -- "${cur}" ) )
+#    }
+#    _cdsitepackages_complete ()
+#    {
+#        local cur="$2"
+#        COMPREPLY=( $(cdsitepackages && compgen -d -- "${cur}" ) )
+#    }
+#    complete -o nospace -F _cdvirtualenv_complete -S/ cdvirtualenv
+#    complete -o nospace -F _cdsitepackages_complete -S/ cdsitepackages
+#    complete -o default -o nospace -F _virtualenvs workon
+#    complete -o default -o nospace -F _virtualenvs rmvirtualenv
+#    complete -o default -o nospace -F _virtualenvs cpvirtualenv
+#elif [ -n "$ZSH_VERSION" ] ; then
+#    compctl -g "`virtualenvwrapper_show_workon_options`" workon rmvirtualenv cpvirtualenv
+#fi
