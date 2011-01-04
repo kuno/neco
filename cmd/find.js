@@ -1,6 +1,7 @@
 var fs = require('fs'),
 path = require('path'),
-show = require('../lib/console.js').showReleases;
+show = require('../lib/console.js').showReleases,
+getRelease = require('../lib/utils.js').getRelease;
 
 exports.run = function(config) {
   var releases = [], release;
@@ -10,7 +11,6 @@ exports.run = function(config) {
       release = getRelease(config);
       releases[0] = release;
     } else {
-      console.log(data);
       releases = JSON.parse(data).history;
     }
     show(releases);
