@@ -142,19 +142,16 @@ exports.run = function(config) {
     config.destDir = path.join(config.root, '.neco', config.id);
 
     installNode(config, function(err, config) {
-      if (err) {
-        throw err;
-      } else if (config.installNPM) {
+      if (err) {throw err;} 
+      if (config.installNPM && getSuitedNPM(config)) {
         config.npmVer = getSuitedNPM(config);
-        if (config.npmVer) {
-          installNPM(config, function(err, config) {
-            if (err) {throw err;}
-            installActivate(config, function(err, config) {
-              if (err) {throw err;} 
-              makeRecord(config);
-            });
+        installNPM(config, function(err, config) {
+          if (err) {throw err;}
+          installActivate(config, function(err, config) {
+            if (err) {throw err;} 
+            makeRecord(config);
           });
-        } 
+        });
       } else {
         installActivate(config, function(err, config) {
           if (err) {throw err;}
