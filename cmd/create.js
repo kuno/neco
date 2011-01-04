@@ -51,7 +51,7 @@ function installNode(config, callback) {
 }
 
 function installNPM(config, callback) {
-  var error, destDir = config.destDir,
+  var error, destDir = config.destDir, pkgDir = config.pkgDir,
   script = getNPMInstallScript(config), npmVer = config.npmVer;
   install = spawn('sh', [script, pkgDir, destDir, npmVer]);
 
@@ -72,8 +72,9 @@ function installNPM(config, callback) {
 }
 
 function installActivate(config, callback) {
-  var id = config.id, error, version = config.release.version, 
-  destDir = config.destDir,script = getActivateInstallScript(config),
+  var error, id = config.id, version = config.release.version, 
+  pkgDir = config.pkgDir, destDir = config.destDir, 
+  script = getActivateInstallScript(config),
   install = spawn('sh', [script, id, pkgDir, destDir, version]);
 
   install.stdout.on('data', function(data) {
