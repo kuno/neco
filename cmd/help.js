@@ -2,8 +2,8 @@ var path = require('path'),
 docsDir = path.join(__dirname, '../docs'),
 helpDocFile = path.join(docsDir, 'help.json');
 
-exports.run = function(cmd) {
-  if (cmd === undefined) {
+exports.run = function(config) {
+  if (config.cmd === undefined) {
     console.log('neco - Nodejs Ecosystem COordinator, like virtualenv for python.');
     console.log('Usage:\n  neco <command>');
     console.log('');
