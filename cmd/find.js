@@ -11,7 +11,7 @@ exports.run = function(config) {
       releases = getRelease(config);
     } else {
       releases = JSON.parse(data).histroy;
-      show(releases);
     }
+    show(releases);
   });
 };
