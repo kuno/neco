@@ -7,6 +7,7 @@ getDateTime = require('../lib/utils.js').getDateTime,
 getRelease = require('../lib/utils.js').getRelease,
 getSuitedNPM = require('../lib/utils.js').getSuitedNPM,
 notSmaller = require('../lib/utils.js').compareVersions,
+writeConfigFile = require('../lib/utils.js').writeConfigFile,
 getNodeInstallScript = require('../lib/utils.js').getNodeInstallScript,
 getNPMInstallScript = require('../lib/utils.js').getNPMInstallScript,
 getActivateInstallScript = require('../lib/utils.js').getActivateInstallScript;
@@ -94,7 +95,7 @@ function installActivate(config, callback) {
 }
 
 function makeRecord(config) {
-  var npmVer = config.npmVer || 'none',
+  var error, npmVer = config.npmVer || 'none',
   id = config.id, version = config.release.version,
   record, createdDate, ecosystems, newEcosystem, 
   recordFile = path.join(config.root, '.neco', 'record.json'), 
@@ -119,6 +120,7 @@ function makeRecord(config) {
       if (err) {throw err;}
       message = 'New node ecosystem has been created sucessfully!';
       log('message', message);
+      writeConfigFile(config);
     });
   });
 }
