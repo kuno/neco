@@ -2,15 +2,15 @@ var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn;
 
-var log = require('../lib/console.js').log,
-getDateTime = require('../lib/utils.js').getDateTime,
-getRelease = require('../lib/utils.js').getRelease,
-getSuitedNPM = require('../lib/utils.js').getSuitedNPM,
+var log = require('../lib/display.js').log,
+getDateTime = require('../lib/assistant.js').getDateTime,
+getRelease = require('../lib/assistant.js').getRelease,
+getSuitedNPM = require('../lib/assistant.js').getSuitedNPM,
 notSmaller = require('../lib/utils.js').compareVersions,
-writeConfigFile = require('../lib/utils.js').writeConfigFile,
-getNodeInstallScript = require('../lib/utils.js').getNodeInstallScript,
-getNPMInstallScript = require('../lib/utils.js').getNPMInstallScript,
-getActivateInstallScript = require('../lib/utils.js').getActivateInstallScript;
+writeConfigFile = require('../lib/assistant.js').writeConfigFile,
+getNodeInstallScript = require('../lib/assistant.js').getNodeInstallScript,
+getNPMInstallScript = require('../lib/assistant.js').getNPMInstallScript,
+getActivateInstallScript = require('../lib/assistant.js').getActivateInstallScript;
 
 var vStartsFrom = require('../include/default.js').vStartsFrom;
 
@@ -82,7 +82,7 @@ function installActivate(config, callback) {
     log('stdout', data);
   });
   install.stderr.on('data', function(data) {
-    console.log('stdout', data);
+    log('stdout', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {

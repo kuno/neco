@@ -1,6 +1,4 @@
-var path = require('path'), 
-docsDir = path.join(__dirname, '../docs'),
-helpDocFile = path.join(docsDir, 'help.json');
+var path = require('path');
 
 exports.run = function(config) {
   if (config.cmd === undefined) {

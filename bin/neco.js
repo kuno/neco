@@ -7,14 +7,14 @@ create = require('../cmd/create.js'),
 activate = require('../cmd/activate.js'),
 deactivate = require('../cmd/deactivate.js');
 
-var log = require('../lib/console.js').log;
+var log = require('../lib/display.js').log;
 
 var isIDUnique = require('../lib/checker.js').isIDUnique,
 isIDExsit = require('../lib/checker.js').isIDExsit,
 isIDValid = require('../lib/checker.js').isIDValid,
 isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive,
-getRelease = require('../lib/utils.js').getRelease;
+getRelease = require('../lib/assistant.js').getRelease;
 
 var getConfig = require('../lib/config.js').getConfig, 
 virgin = require('../lib/inception.js').virgin,

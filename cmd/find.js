@@ -1,7 +1,7 @@
 var fs = require('fs'),
 path = require('path'),
-show = require('../lib/console.js').showReleases,
-getRelease = require('../lib/utils.js').getRelease;
+show = require('../lib/display.js').showReleases,
+getRelease = require('../lib/assistant.js').getRelease;
 
 exports.run = function(config) {
   var releases = [], release;

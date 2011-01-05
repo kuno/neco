@@ -1,8 +1,6 @@
 var fs = require('fs'),
 path = require('path'),
-spawn = require('child_process').spawn,
-root = process.env.NECO_ROOT,
-recordFile = path.join(root, '.neco/record.json');
+spawn = require('child_process').spawn;
 
 function removeDir(id, callback) {
   var err, cmd, targetDir;
