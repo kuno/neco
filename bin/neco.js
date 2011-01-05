@@ -17,26 +17,26 @@ isActive = require('../lib/checker.js').isActive,
 getRelease = require('../lib/assistant.js').getRelease;
 
 var getConfig = require('../lib/config.js').getConfig, 
-virgin = require('../lib/inception.js').virgin,
-inception = require('../lib/inception.js').inception;
+envReady = require('../lib/inception.js').envReady,
+recordReady = require('../lib/inception.js').recordReady;
 
 var config = getConfig(), id, cmd = process.argv[2];
 var message, warning, error, suggestion, example;
 
 if (isCMDValid(cmd) === false) {
-  message = 'Missing command';
+  message = 'Not a valid command';
   suggestion = 'Available commands: help, create, list, find, activate, deactivate';
   example = 'neco create <id>, neco list';
   log('message', message, suggestion, example);
 } else {
   // Subcommand create
   if (cmd === 'create') {
-    virgin(config, function() {
-      inception(config, function(exists, config) {
+    envReady(config, function(config) {
+      recordReady(config, function(exists, config) {
         if (process.argv.length < 4) {
           message = 'Missing ID';
           suggestion = 'Please specific at least one ID( and the version of node, if you will).';
-          example = 'neco create <id> [NODE-VERSION]';
+          example = 'neco create <id> [stable, latest, node-version]';
           log('message', message, suggestion, example);
         } else {
           config.id = process.argv[3];
@@ -68,8 +68,8 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand list
   else if (cmd === 'list') {
-    virgin(config, function() {
-      inception(config, function(exists, config) {
+    envReady(config, function(config) {
+      recordReady(config, function(exists, config) {
         if (exists) {
           config.cmd = cmd;
           list.run(config);
@@ -80,8 +80,8 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand find
   else if (cmd === 'find') {
-    virgin(config, function(config) {
-      inception(config, function(exists, config) {
+    envReady(config, function(config) {
+      recordReady(config, function(exists, config) {
         config.cmd = cmd;
         if (process.argv.length >= 4) {
           config.target = process.argv[3];
@@ -107,8 +107,8 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand activate
   else if (cmd === 'activate') {
-    virgin(config, function() {
-      inception(config, function(exists, config) {
+    envReady(config, function(config) {
+      recordReady(config, function(exists, config) {
         if (exists) {
           if (process.argv.length < 4) {
             message = 'Missing ID';
@@ -140,8 +140,8 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand deactvate
   else if (cmd === 'deactivate') {
-    virgin(config, function() {
-      inception(config, function(exists, config) {
+    envReady(config, function(config) {
+      recordReady(config, function(exists, config) {
         if (exists) {
           if (process.argv.length >= 4) {
             id = process.argv[3];
@@ -169,8 +169,8 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand destory
   else if (cmd === 'destroy') {
-    virgin(config, function() {
-      inception(config, function(exists, config) {
+    envReady(config, function(config) {
+      recordReady(config, function(exists, config) {
         if (exists) {
         }
       });
