@@ -1,11 +1,13 @@
+# Nodejs installation shell script fro Arch Linux (www.archlinux.org).
+
 ver=$1
 link=$2
-targetDir=$3
+destDir=$3
 
-if [ ! -d $targetDir/../source ] && [ ! -L $targetDir/../source ]; then
-  mkdir -p $targetDir/../source && cd $targetDir/../source
+if [ ! -d $destDir/../source ] && [ ! -L $destDir/../source ]; then
+  mkdir -p $destDir/../source && cd $destDir/../source
 else
-  cd $targetDir/../source
+  cd $destDir/../source
 fi
 
 if [ -d node-$ver ]; then
@@ -40,14 +42,14 @@ fi
 
 make || return 1
 
-mkdir -p $targetDir/ecosystem/{bin,etc,lib,include,share,man}
+mkdir -p $destDir/ecosystem/{bin,etc,lib,include,share,man}
 
 if [ -e tools/waf-light ]; then
-  tools/waf-light install --destdir=$targetDir
+  tools/waf-light install --destdir=$destDir
 elif [ -e tools/waf ]; then
-  tools/waf install --destdir=$targetDir
+  tools/waf install --destdir=$destDir
 fi
 
-install -D -m644 LICENSE $targetDir/ecosystem/share/licenses/node/LICENSE
-install -D -m644 ChangeLog $targetDir/ecosystem/share/node/ChangeLog
-install -D -m644 README $targetDir/ecosystem/share/node/README
+install -D -m644 LICENSE $destDir/ecosystem/share/licenses/node/LICENSE
+install -D -m644 ChangeLog $destDir/ecosystem/share/node/ChangeLog
+install -D -m644 README $destDir/ecosystem/share/node/README

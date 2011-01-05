@@ -1,3 +1,5 @@
+# NPM installation shell script
+
 pkgDir=$1
 destDir=$2
 npmVer=$3
@@ -23,7 +25,7 @@ else
   cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1
 fi
 
-# Make config suited installation
+# Make config suited for installation
 node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc || return 1
 node $pkgDir/deps/npm/cli.js config set root $destDir/ecosystem/lib/node || return 1
 node $pkgDir/deps/npm/cli.js config set binroot $destDir/ecosystem/bin || return 1
@@ -41,7 +43,7 @@ sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $pkgDir/
 install -Dm644 $pkgDir/sample/npmrc $destDir/ecosystem/etc/npmrc || return 1
 install -Dm644 $pkgDir/sample/npmrc $destDir/npmrc     || return 1
 
-# User npmrc 
+# Reocer original user npmrc 
 if [ -e $HOME/.npmrc.neco.old ]; then
   #  sed -i -e 's/^root.*/root\ =\ \/usr\/local\/lib\/node/g' $HOME/.npmrc.necoold || return 1
   #  sed -i -e 's/^binroot.*/binroot\ =\ \/usr\/local\/bin/g' $HOME/.npmrc.necoold || return 1
