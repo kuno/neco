@@ -1,4 +1,8 @@
 {
 "installNPM":true,
-"timeFormat":"GMT"
+"timeFormat":"GMT",
+"idLenStandard":8,
+"verLenStardard":7,
+"linkLenStandard":43,
+"sizeLenStardard":5
 }
