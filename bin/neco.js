@@ -25,7 +25,7 @@ var message, warning, error, suggestion, example;
 
 if (isCMDValid(cmd) === false) {
   message = 'Missing command';
-  suggestion = 'Available commands: help, create, list, activate, deactivate';
+  suggestion = 'Available commands: help, create, list, find, activate, deactivate';
   example = 'neco create <id>, neco list';
   log('message', message, suggestion, example);
 } else {
@@ -68,10 +68,10 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand list
   else if (cmd === 'list') {
-    config.cmd = cmd;
     virgin(config, function() {
       inception(config, function(exists, config) {
         if (exists) {
+          config.cmd = cmd;
           list.run(config);
         }
       });
@@ -168,7 +168,7 @@ if (isCMDValid(cmd) === false) {
   }
 
   // Subcommand destory
-  else if (cmd === 'destory') {
+  else if (cmd === 'destroy') {
     virgin(config, function() {
       inception(config, function(exists, config) {
         if (exists) {

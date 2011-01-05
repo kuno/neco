@@ -34,3 +34,4 @@
 ###0.0.3###
 * added md5sum check for every node achive?
 * automatialy switch between ecosystems
+* added command line arguments parse?
