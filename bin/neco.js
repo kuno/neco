@@ -16,7 +16,7 @@ isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive,
 getRelease = require('../lib/assistant.js').getRelease;
 
-var getConfiguration = require('../lib/config.js').getConfig, 
+var getConfiguration = require('../lib/config.js').getConfiguration, 
 envReady = require('../lib/inception.js').envReady,
 recordReady = require('../lib/inception.js').recordReady;
 
