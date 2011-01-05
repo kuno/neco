@@ -16,11 +16,11 @@ isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive,
 getRelease = require('../lib/assistant.js').getRelease;
 
-var getConfig = require('../lib/config.js').getConfig, 
+var getConfiguration = require('../lib/config.js').getConfig, 
 envReady = require('../lib/inception.js').envReady,
 recordReady = require('../lib/inception.js').recordReady;
 
-var config = getConfig(), id, cmd = process.argv[2];
+var configuration = getConfiguration(), id, cmd = process.argv[2];
 var message, warning, error, suggestion, example;
 
 if (isCMDValid(cmd) === false) {
@@ -31,7 +31,7 @@ if (isCMDValid(cmd) === false) {
 } else {
   // Subcommand create
   if (cmd === 'create') {
-    envReady(config, function(config) {
+    envReady(configuration, function(config) {
       recordReady(config, function(exists, config) {
         if (process.argv.length < 4) {
           message = 'Missing ID';
@@ -68,7 +68,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand list
   else if (cmd === 'list') {
-    envReady(config, function(config) {
+    envReady(configuration, function(config) {
       recordReady(config, function(exists, config) {
         if (exists) {
           config.cmd = cmd;
@@ -80,7 +80,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand find
   else if (cmd === 'find') {
-    envReady(config, function(config) {
+    envReady(configuration, function(config) {
       recordReady(config, function(exists, config) {
         config.cmd = cmd;
         if (process.argv.length >= 4) {
@@ -90,7 +90,7 @@ if (isCMDValid(cmd) === false) {
           } else {
             error = 'The desired release '+config.target+' is not available.'
             suggestion = 'Find out all the aviable releases.';
-            example = 'neco find';
+            example = 'neco find [stable, latest, node-version]';
             log('error', error, suggestion, example);
           }
         } else {
@@ -102,12 +102,12 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand help
   else if (cmd === 'help') {
-    help.run(config);
+    help.run(configuration);
   }
 
   // Subcommand activate
   else if (cmd === 'activate') {
-    envReady(config, function(config) {
+    envReady(configuration, function(config) {
       recordReady(config, function(exists, config) {
         if (exists) {
           if (process.argv.length < 4) {
@@ -140,7 +140,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand deactvate
   else if (cmd === 'deactivate') {
-    envReady(config, function(config) {
+    envReady(configuration, function(config) {
       recordReady(config, function(exists, config) {
         if (exists) {
           if (process.argv.length >= 4) {
@@ -169,7 +169,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand destory
   else if (cmd === 'destroy') {
-    envReady(config, function(config) {
+    envReady(configuration, function(config) {
       recordReady(config, function(exists, config) {
         if (exists) {
         }
