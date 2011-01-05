@@ -120,7 +120,7 @@ function makeRecord(config) {
       if (err) {throw err;}
       message = 'New node ecosystem has been created sucessfully!';
       log('message', message);
-      writeConfigFile(config);
+      writeConfigFiles(config);
     });
   });
 }
