@@ -25,6 +25,10 @@ else
   cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1
 fi
 
+# Replace with root, binroot, manroot with destDir
+sed -i -e "s/^root.*/root\ =\ $replace\/ecosystem\/lib\/node/g" $pkgDir/sample/npmrc || return 1
+sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $pkgDir/sample/npmrc || return 1
+sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $pkgDir/sample/npmrc || return 1  
 # Make config suited for installation
 install -Dm755 $pkgDir/sample/npmrc $destDir/ecosystem/etc/npmrc || return 1 
 node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc --flags || return 1
@@ -37,10 +41,6 @@ node $pkgDir/deps/npm/cli.js config set manroot $destDir/ecosystem/share/man --f
 
 # Installation
 node $pkgDir/deps/npm/cli.js install $npmURL || return 1
-
-sed -i -e "s/^root.*/root\ =\ $replace\/ecosystem\/lib\/node/g" $pkgDir/sample/npmrc || return 1
-sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $pkgDir/sample/npmrc || return 1
-sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $pkgDir/sample/npmrc || return 1
 
 # Global npm config
 #install -Dm644 $pkgDir/sample/npmrc $destDir/ecosystem/etc/npmrc || return 1
