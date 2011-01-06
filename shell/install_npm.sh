@@ -27,14 +27,13 @@ fi
 
 # Make config suited for installation
 install -Dm755 $pkgDir/sample/npmrc $destDir/ecosystem/etc/npmrc || return 1 
-node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc --flags || return 1
-node $pkgDir/deps/npm/cli.js config set userconfig $destDir/npmrc --flags || return 1
+node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc || return 1
+node $pkgDir/deps/npm/cli.js config set userconfig $destDir/npmrc || return 1
 install -Dm644 $pkgDir/sample/npmrc $destDir/npmrc  || return 1
 
-node $pkgDir/deps/npm/cli.js config set root $destDir/ecosystem/lib/node --flags || return 1
-node $pkgDir/deps/npm/cli.js config set binroot $destDir/ecosystem/bin --flags || return 1
-node $pkgDir/deps/npm/cli.js config set manroot $destDir/ecosystem/share/man --flags || return 1
-node $pkgDir/deps/npm/cli.js config set userconfig $destDir/npmrc --flags || return 1
+node $pkgDir/deps/npm/cli.js config set root $destDir/ecosystem/lib/node  || return 1
+node $pkgDir/deps/npm/cli.js config set binroot $destDir/ecosystem/bin || return 1
+node $pkgDir/deps/npm/cli.js config set manroot $destDir/ecosystem/share/man || return 1
 
 # Installation
 node $pkgDir/deps/npm/cli.js install $npmURL || return 1
