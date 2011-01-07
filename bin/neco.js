@@ -14,7 +14,8 @@ isIDExsit = require('../lib/checker.js').isIDExsit,
 isIDValid = require('../lib/checker.js').isIDValid,
 isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive,
-getRelease = require('../lib/assistant.js').getRelease;
+getRelease = require('../lib/assistant.js').getRelease,
+getEcosystem = require('../lib/assistant.js').getEcosystem;
 
 var getConfiguration = require('../lib/config.js').getConfiguration, 
 envReady = require('../lib/inception.js').envReady,
