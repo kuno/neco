@@ -32,10 +32,9 @@ neco_deactivate () {
     unset NODE_VERSION
     unset NECO_ID
 
-    if [ -n $_old_npm_config_userconfig ]; then
-       npm_config_userconfig=$_old_npm_config_userconfig
-       unset _old_npm_config_userconfig
-       export npm_config_userconfig
+    if [ -n "${old_npm_config_userconfig}" ]; then
+       export npm_config_userconfig=$old_npm_config_userconfig
+       unset old_npm_config_userconfig
     else
        export npm_config_userconfig=$HOME/.npmrc
     fi
@@ -49,19 +48,20 @@ neco_deactivate () {
 # unset irrelavent variables
 neco_deactivate nondestructive
 
-NECO_ID="test3"
-NODE_ECOSYSTEM="/tmp/neco/test/.neco/test3"
-NODE_VERSION="0.2.0"
+NECO_ID="test9006"
+NODE_ECOSYSTEM="/home/kuno/utopia/.neco/test9006"
+NODE_VERSION="0.2.6"
 export NODE_ECOSYSTEM
 export NODE_VERSION
 export NECO_ID
 
 if [ -n "${npm_config_userconfig}" ]; then
-    export _old_npm_config_userconfig="${npm_config_userconfig}"
-    export npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
+    export old_npm_config_userconfig=$npm_config_userconfig
 else
-    export npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
+    export old_npm_config_userconfig=$HOME/.npmrc
 fi
+
+export npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
 
 
 _OLD_NECO_PATH="$PATH"
