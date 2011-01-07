@@ -10,7 +10,7 @@ replace=$(echo $2 | sed 's/\//\\\//g' | sed 's/\./\\\./g')
 
 # If binary file not found under $destDir/bin/node, 
 # then this means previous node build was failed.
-if [ ! -d $destDir/bin/node ]; then
+if [ ! -e $destDir/bin/node ]; then
   return 1
 fi
 
