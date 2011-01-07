@@ -37,9 +37,9 @@ neco_verify_root () {
 
 # Verify that the requested environment exists
 neco_verify_ecosystem () {
-  typeset eco_name="$1"
-  if [ ! -d "$NECO_ROOT/.neco/$eco_name" ]; then
-    echo "Err: Ecosystem '$eco_name' does not exist. Create it with 'neco create $env_name'." >&2
+  typeset neco_id="$1"
+  if [ ! -d "$NECO_ROOT/.neco/$neco_id" ]; then
+    echo "Err: Ecosystem '$neco_id' does not exist. Create it with 'neco create $env_name'." >&2
     return 1
   fi
   return 0
@@ -60,20 +60,20 @@ neco_verify_active_ecosystem () {
 }
 
 neco_activate () {
-  typeset eco_name="$1"
-  if [ "$eco_name" = "" ]
+  typeset neco_id="$1"
+  if [ "$neco_id" = "" ]
   then
     return 1
   fi
 
   neco_verify_root || return 1
   neco_verify_active_ecosystem || return 1
-  neco_verify_ecosystem $eco_name || return 1
+  neco_verify_ecosystem $neco_id || return 1
 
-  activate="$NECO_ROOT/.neco/$eco_name/activate"
+  activate="$NECO_ROOT/.neco/$neco_id/activate"
   if [ ! -f "$activate" ]
   then
-    echo "Err: Ecosystem '$NECO_ROOT/.neco/$eco_name' does not contain an activate script." >&2
+    echo "Err: Ecosystem '$NECO_ROOT/.neco/$neco_id' does not contain an activate script." >&2
     return 1
   fi
 
