@@ -29,7 +29,7 @@
 # Verify that the NECO_ROOT directory exists
 neco_verify_root () {
     if [ ! -d "$NECO_ROOT" ]; then
-        [ "$1" != "-q" ] && echo "ERR: Ecosystem directory '$NECO_ROOT' does not exist.  Create it or set NECO_ROOT to an existing directory." 1>&2
+        [ "$1" != "-q" ] && echo "Err: Ecosystem directory '$NECO_ROOT' does not exist.  Create it or set NECO_ROOT to an existing directory." 1>&2
         return 1
     fi
     return 0
@@ -39,17 +39,20 @@ neco_verify_root () {
 neco_verify_ecosystem () {
     typeset eco_name="$1"
     if [ ! -d "$NECO_ROOT/.neco/$eco_name" ]; then
-       echo "ERR: Ecosystem '$eco_name' does not exist. Create it with 'neco create $env_name'." >&2
+       echo "Err: Ecosystem '$eco_name' does not exist. Create it with 'neco create $env_name'." >&2
        return 1
     fi
     return 0
 }
 
 
-# Verify that the active environment exists
+# Verify that the active ecosystem exists
 neco_verify_active_ecosystem () {
-    if [ -n "${NODE_ECOSYSTEM}" ] || [ -e $HOME/.npmrc.neco.bak ]; then
-        echo "ERR: Anohter ecosystem has already in active" >&2
+    if [ !-n "${NODE_ECOSYSTEM}" ] && [ -e $HOME/.npmrc.neco.bak ]; then
+        echo "Err: Another ecosystem has already in active" >&2
+        return 1
+    elif [ -n "${NODE_ECOSYSTEM}}" ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
+        echo "Err: Another ecosystem has already in active">%s
         return 1
     fi
     return 0
@@ -69,7 +72,7 @@ neco_activate () {
     activate="$NECO_ROOT/.neco/$eco_name/activate"
     if [ ! -f "$activate" ]
     then
-        echo "ERR: Ecosystem '$NECO_ROOT/.neco/$eco_name' does not contain an activate script." >&2
+        echo "Err: Ecosystem '$NECO_ROOT/.neco/$eco_name' does not contain an activate script." >&2
         return 1
     fi
     

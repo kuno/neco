@@ -5,7 +5,7 @@ exports.run = function(config) {
     console.log('neco - Nodejs Ecosystem COordinator, like virtualenv for python.');
     console.log('Usage:\n  neco <command>');
     console.log('');
-    console.log('Currently where <command> should be on of the below commands:\n');
+    console.log('Currently where <command> should be one of the below commands:\n');
     console.log('  create      -  create new node ecosystem');
     console.log('      Useage: neco create <id> [node-version]');
     console.log('');
