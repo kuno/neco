@@ -31,13 +31,13 @@ sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $pkgDir/sample/n
 sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $pkgDir/sample/npmrc || return 1  
 # Make config suited for installation
 install -Dm755 $pkgDir/sample/npmrc $destDir/ecosystem/etc/npmrc || return 1 
-node $pkgDir/deps/npm/cli.js --globalconfig $destDir/ecosystem/etc/npmrc --flags || return 1
+node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc --flags || return 1
 install -Dm755 $pkgDir/sample/npmrc $destDir/npmrc || return 1
-node $pkgDir/deps/npm/cli.js --userconfig $destDir/npmrc --flags || return 1
+node $pkgDir/deps/npm/cli.js config set userconfig $destDir/npmrc --flags || return 1
 
-node $pkgDir/deps/npm/cli.js --root $destDir/ecosystem/lib/node --flags || return 1
-node $pkgDir/deps/npm/cli.js --binroot $destDir/ecosystem/bin --flags || return 1
-node $pkgDir/deps/npm/cli.js --manroot $destDir/ecosystem/share/man --flags || return 1
+node $pkgDir/deps/npm/cli.js config set root $destDir/ecosystem/lib/node --flags || return 1
+node $pkgDir/deps/npm/cli.js config set binroot $destDir/ecosystem/bin --flags || return 1
+node $pkgDir/deps/npm/cli.js config set manroot $destDir/ecosystem/share/man --flags || return 1
 
 # Installation
 node $pkgDir/deps/npm/cli.js install $npmURL || return 1

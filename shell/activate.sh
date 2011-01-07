@@ -67,7 +67,7 @@ neco_activate () {
   fi
 
   neco_verify_root || return 1
-  neco_verify_active_ecosystem || return 1
+#  neco_verify_active_ecosystem || return 1
   neco_verify_ecosystem $neco_id || return 1
 
   activate="$NECO_ROOT/.neco/$neco_id/activate"
