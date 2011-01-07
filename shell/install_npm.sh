@@ -3,10 +3,10 @@
 pkgDir=$1
 destDir=$2
 npmVer=$3
-#npmPrefix='http://registry.npmjs.org/npm/-/npm-'
-npmPrefix='https://github.com/isaacs/npm/tarball/v'
+npmPrefix='http://registry.npmjs.org/npm/-/npm-'
+#npmPrefix='http://github.com/isaacs/npm/tarball/v'
 npmSuffix='.tgz'
-npmURL=$npmPrefix$npmVer
+npmURL=$npmPrefix$npmVer$npmSuffix
 replace=$(echo $2 | sed 's/\//\\\//g' | sed 's/\./\\\./g')
 
 # If binary file not found under $destDir/bin/node, 
