@@ -48,11 +48,11 @@ neco_verify_ecosystem () {
 
 # Verify that the active ecosystem exists
 neco_verify_active_ecosystem () {
-    if [ !-n "${NODE_ECOSYSTEM}" ] && [ -e $HOME/.npmrc.neco.bak ]; then
+    if [ ! -n "${NODE_ECOSYSTEM}" ] && [ -e $HOME/.npmrc.neco.bak ]; then
         echo "Err: Another ecosystem has already in active" >&2
         return 1
-    elif [ -n "${NODE_ECOSYSTEM}}" ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
-        echo "Err: Another ecosystem has already in active">%s
+    elif [ -n "${NODE_ECOSYSTEM}" ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
+        echo "Err: Another ecosystem has already in active" >&2
         return 1
     fi
     return 0
