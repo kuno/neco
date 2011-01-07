@@ -76,7 +76,19 @@ if (isCMDValid(cmd) === false) {
         recordReady(config, function(exists, config) {
           if (exists) {
             config.cmd = cmd;
-            list.run(config);
+            if (process.argv.length >= 4) {
+              config.target = process.argv[3];
+              if (getEcosystem(config)) {
+                list.run(config);
+              } else {
+                error = 'The desired ecosystem '+config.target+' is not exists.';
+                suggestion = 'Find out all the existing ecosystem.';
+                example = 'neco list';
+                log('error', error, suggestion, example);
+              }
+            } else {
+              list.run(config);
+            }
           }
         });
       });
@@ -94,7 +106,7 @@ if (isCMDValid(cmd) === false) {
             if (getRelease(config)) {
               find.run(config);
             } else {
-              error = 'The desired release '+config.target+' is not available.'
+              error = 'The desired release '+config.target+' is not available.';
               suggestion = 'Find out all the aviable releases.';
               example = 'neco find [stable, latest, node-version]';
               log('error', error, suggestion, example);
