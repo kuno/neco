@@ -34,11 +34,12 @@ neco_deactivate () {
 
     if [ -n $_old_npm_config_userconfig ]; then
        npm_config_userconfig=$_old_npm_config_userconfig
+       unset _old_npm_config_userconfig
        export npm_config_userconfig
     else
-       npm_config_userconfig=$HOME/.npmrc
-       export npm_config_userconfig
+       export npm_config_userconfig=$HOME/.npmrc
     fi
+
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
         unset -f neco_deactivate
@@ -56,13 +57,10 @@ export NODE_VERSION
 export NECO_ID
 
 if [ -n $npm_config_userconfig ]; then
-    _old_npm_config_userconfig=$npm_config_userconfig
-    npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
-    export npm_config_userconfig
-    export _old_npm_config_userconfig
+    export _old_npm_config_userconfig=$npm_config_userconfig
+    export npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
 else
-    npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
-    export npm_config_userconfig
+    export npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
 fi
 
 
