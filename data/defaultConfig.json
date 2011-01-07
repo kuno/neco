@@ -1,5 +1,5 @@
 {
-"installNPM":false,
+"installNPM":true,
 "timeFormat":"GMT",
 "idLenStandard":8
 }
