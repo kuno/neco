@@ -58,6 +58,7 @@ if [ -n $npm_config_userconfig ]; then
     _old_npm_config_userconfig=$npm_config_userconfig
     npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
     export npm_config_userconfig
+    export _old_npm_config_userconfig
 else
     npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
     export npm_config_userconfig
@@ -68,15 +69,15 @@ _OLD_NECO_PATH="$PATH"
 PATH="$NODE_ECOSYSTEM/ecosystem/bin:$PATH"
 export PATH
 
-if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
-  mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
-  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+#if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
+#  mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
+#  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
 #elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
 #  rm -rf $HOME/.npmrc || return 1
 #  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
-else
-  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
-fi
+#else
+#  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+#fi
 
 if [ -z "$NODE_ECOSYSTEM_DISABLE_PROMPT" ] ; then
     _OLD_NECO_PS1="$PS1"
