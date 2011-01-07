@@ -23,10 +23,10 @@ neco_deactivate () {
     fi
 
 
-    if [ -L $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
-        rm -rf $HOME/.npmrc || return 1
-        mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
-    fi
+#    if [ -L $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
+#        rm -rf $HOME/.npmrc || return 1
+#        mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
+#    fi
 
     unset NODE_ECOSYSTEM
     unset NODE_VERSION
