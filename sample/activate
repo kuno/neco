@@ -22,6 +22,7 @@ neco_deactivate () {
         unset _OLD_NECO_PS1
     fi
 
+
     if [ -L $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
         rm -rf $HOME/.npmrc || return 1
         mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
@@ -30,6 +31,13 @@ neco_deactivate () {
     unset NODE_ECOSYSTEM
     unset NODE_VERSION
     unset NECO_ID
+
+    if [ -n $_old_npm_config_userconfig ]; then
+       npm_config_userconfig=$_old_npm_config_userconfig
+       export npm_config_userconfig
+    else
+       unset npm_config_userconfig
+    fi
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
         unset -f neco_deactivate
@@ -45,6 +53,16 @@ NODE_VERSION="0.2.0"
 export NODE_ECOSYSTEM
 export NODE_VERSION
 export NECO_ID
+
+if [ -n $npm_config_userconfig ]; then
+    _old_npm_config_userconfig=$npm_config_userconfig
+    npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
+    export npm_config_userconfig
+else
+    npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
+    export npm_config_userconfig
+fi
+
 
 _OLD_NECO_PATH="$PATH"
 PATH="$NODE_ECOSYSTEM/ecosystem/bin:$PATH"
