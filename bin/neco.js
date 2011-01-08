@@ -44,7 +44,7 @@ if (isCMDValid(cmd) === false) {
             log('message', message, suggestion, example);
           } else {
             id = argv[3];
-            target = argv[4] || 'stable'; // defaut target stable 
+            target = argv[4] || 'stable'; // defaut target is stable 
             config.id = id;
             config.cmd = cmd;
             config.target = target;
