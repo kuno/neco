@@ -13,7 +13,7 @@ isIDValid = require('../lib/checker.js').isIDValid,
 isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive,
 getRelease = require('../lib/assistant.js').getRelease,
-getEcosystem = require('../lib/assistant.js').getEcosystem,
+isEcosystemExist = require('../lib/assistant.js').getEcosystem,
 getConfiguration = require('../lib/config.js').getConfiguration;
 
 var envReady = require('../lib/inception.js').envReady,
@@ -23,7 +23,8 @@ activateReady = require('../lib/inception.js').activateReady;
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;  
 
-var configuration = getConfiguration(), id, cmd = process.argv[2];
+var configuration = getConfiguration(), 
+argv = process.argv, id, target, cmd = argv[2];
 
 if (isCMDValid(cmd) === false) {
   message = 'Not a valid command';
@@ -36,18 +37,20 @@ if (isCMDValid(cmd) === false) {
     envReady(configuration, function(config) {
       activateReady(config, function(config) {
         recordReady(config, function(exists, config) {
-          if (process.argv.length < 4) {
+          if (argv.length < 4) {
             message = 'Missing ID';
             suggestion = 'Please specific at least one ID( and the version of node, if you will).';
             example = 'neco create <id> [stable, latest, node-version]';
             log('message', message, suggestion, example);
           } else {
-            config.id = process.argv[3];
+            id = argv[3];
+            target = argv[4] || 'stable'; // defaut target stable 
+            config.id = id;
             config.cmd = cmd;
-            config.target = process.argv[4] || 'stable';
+            config.target = target;
 
             if (isIDValid(config) === false) {
-              message = 'The given id '+config.id+' is one of the reserved words in neco.';
+              message = 'The given id '+id+' is one of the reserved words in neco.';
               suggestion = 'Please choose another one.';
               log('message', message, suggestion);
 
@@ -77,12 +80,13 @@ if (isCMDValid(cmd) === false) {
         recordReady(config, function(exists, config) {
           if (exists) {
             config.cmd = cmd;
-            if (process.argv.length >= 4) {
-              config.target = process.argv[3];
-              if (getEcosystem(config)) {
+            if (argv.length >= 4) {
+              target = argv[3];
+              config.target = target;
+              if (isEcosystemExist(config)) {
                 list.run(config);
               } else {
-                error = 'The desired ecosystem '+config.target+' is not exists.';
+                error = 'The desired ecosystem '+target+' is not exists.';
                 suggestion = 'Find out all the existing ecosystem.';
                 example = 'neco list';
                 log('error', error, suggestion, example);
@@ -102,12 +106,13 @@ if (isCMDValid(cmd) === false) {
       activateReady(config, function(config) {
         recordReady(config, function(exists, config) {
           config.cmd = cmd;
-          if (process.argv.length >= 4) {
-            config.target = process.argv[3];
+          if (argv.length >= 4) {
+            target = argv[3];
+            config.target = target;
             if (getRelease(config)) {
               find.run(config);
             } else {
-              error = 'The desired release '+config.target+' is not available.';
+              error = 'The desired release '+target+' is not available.';
               suggestion = 'Find out all the aviable releases.';
               example = 'neco find [stable, latest, node-version]';
               log('error', error, suggestion, example);
@@ -131,7 +136,7 @@ if (isCMDValid(cmd) === false) {
       activateReady(config, function(config) {
         recordReady(config, function(exists, config) {
           if (exists) {
-            if (process.argv.length < 4) {
+            if (argv.length < 4) {
               message = 'Missing ID';
               suggestion = 'Please specify the id of the ecosystem you want to activate.';
               example = 'neco activate <id>';
@@ -166,8 +171,8 @@ if (isCMDValid(cmd) === false) {
       activateReady(config, function(config) {
         recordReady(config, function(exists, config) {
           if (exists) {
-            if (process.argv.length >= 4) {
-              id = process.argv[3];
+            if (argv.length >= 4) {
+              id = argv[3];
               config.id = id;
               config.cmd = cmd;
               if (isActive(config) === false) {
