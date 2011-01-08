@@ -1,4 +1,5 @@
 {
+"version":"0.0.2",
 "installNPM":true,
 "timeFormat":"GMT",
 "idLenStandard":8
