@@ -7,23 +7,23 @@ create = require('../cmd/create.js'),
 activate = require('../cmd/activate.js'),
 deactivate = require('../cmd/deactivate.js');
 
-var log = require('../lib/display.js').log;
-
 var isIDUnique = require('../lib/checker.js').isIDUnique,
 isIDExsit = require('../lib/checker.js').isIDExsit,
 isIDValid = require('../lib/checker.js').isIDValid,
 isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive,
 getRelease = require('../lib/assistant.js').getRelease,
-getEcosystem = require('../lib/assistant.js').getEcosystem;
+getEcosystem = require('../lib/assistant.js').getEcosystem,
+getConfiguration = require('../lib/config.js').getConfiguration;
 
-var getConfiguration = require('../lib/config.js').getConfiguration, 
-envReady = require('../lib/inception.js').envReady,
+var envReady = require('../lib/inception.js').envReady,
 recordReady = require('../lib/inception.js').recordReady,
 activateReady = require('../lib/inception.js').activateReady;
 
+var log = require('../lib/display.js').log;  
+var message, warning, error, suggestion, example;  
+
 var configuration = getConfiguration(), id, cmd = process.argv[2];
-var message, warning, error, suggestion, example;
 
 if (isCMDValid(cmd) === false) {
   message = 'Not a valid command';
@@ -49,7 +49,7 @@ if (isCMDValid(cmd) === false) {
             if (isIDValid(config) === false) {
               message = 'The given id '+config.id+' is one of the reserved words in neco.';
               suggestion = 'Please choose another one.';
-              log('message', message, suggestion, example);
+              log('message', message, suggestion);
 
             } else {
               if (!exists) {
@@ -191,7 +191,7 @@ if (isCMDValid(cmd) === false) {
     });
   }
 
-  // Subcommand destory
+  // Subcommand remove
   else if (cmd === 'remove') {
     envReady(configuration, function(config) {
       activateReady(config, function(config) {
