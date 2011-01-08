@@ -55,11 +55,8 @@ export NODE_ECOSYSTEM
 export NODE_VERSION
 export NECO_ID
 
-if [ -n "${npm_config_userconfig}" ]; then
-    export old_npm_config_userconfig=$npm_config_userconfig
-else
-    export old_npm_config_userconfig=$HOME/.npmrc
-fi
+export old_npm_config_userconfig=$npm_config_userconfig
+export old_npm_config_userconfig=$HOME/.npmrc
 
 export npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
 
