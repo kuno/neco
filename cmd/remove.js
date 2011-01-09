@@ -47,10 +47,12 @@ function editRecord(config, next) {
       fs.readFile(recordFile, 'utf8', function(err, data) {
         if (err) {throw err;}
         ecosystem = getEcosystem(config);
+        console.log(ecosystem);
         record = JSON.parse(data);
         index = record.ecosystems.indexOf(getEcosystem(config));
         record.ecosystems.splice(index, 1);
         recordData = JSON.stringify(record);
+        console.log(recordData);
         fs.writeFile(recordFile, recordData, 'utf8', function(err) {
           error = err;
           next(error, config);
