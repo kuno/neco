@@ -121,7 +121,7 @@ function makeRecord(config) {
     }
 
     // Write into records file
-    fs.writeFile(recordFile, record, 'utf8', function(err) {
+    fs.writeFile(recordFile, recordData, 'utf8', function(err) {
       if (err) {throw err;}
       message = 'New node ecosystem has been created sucessfully!';
       log('message', message);
