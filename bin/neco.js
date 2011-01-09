@@ -14,7 +14,7 @@ isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive,
 getRelease = require('../lib/assistant.js').getRelease,
 isEcosystemExist = require('../lib/assistant.js').getEcosystem,
-getconfig = require('../lib/config.js').getConfiguration;
+getconfig = require('../lib/cfg.js').getConfiguration;
 
 var envReady = require('../lib/inception.js').envReady,
 recordReady = require('../lib/inception.js').recordReady,
@@ -34,39 +34,43 @@ if (isCMDValid(cmd) === false) {
 } else {
   // Subcommand create
   if (cmd === 'create') {
-    envReady(config, activateReady(cfg, recordReady(cfg, function(exists, cfg) {
-      if (argv.length < 4) {
-        message = 'Missing ID';
-        suggestion = 'Please specific at least one ID( and the version of node, if you will).';
-        example = 'neco create <id> [stable, latest, node-version]';
-        log('message', message, suggestion, example);
-      } else {
-        id = argv[3];
-        target = argv[4] || 'stable'; // defaut target is stable 
-        cfg.id = id;
-        cfg.cmd = cmd;
-        cfg.target = target;
+    envReady(config, function(cfg) {
+      activateReady(cfg, function(cfg) {
+        recordReady(cfg, function(exists, cfg) {
+          if (argv.length < 4) {
+            message = 'Missing ID';
+            suggestion = 'Please specific at least one ID( and the version of node, if you will).';
+            example = 'neco create <id> [stable, latest, node-version]';
+            log('message', message, suggestion, example);
+          } else {
+            id = argv[3];
+            target = argv[4] || 'stable'; // defaut target is stable 
+            cfg.id = id;
+            cfg.cmd = cmd;
+            cfg.target = target;
 
-        if (isIDValid(cfg) === false) {
-          message = 'The given id '+id+' is one of the reserved words in neco.';
-          suggestion = 'Please choose another one.';
-          log('message', message, suggestion);
-
-        } else {
-          if (!exists) {
-            create.run(cfg);
-          } else {  
-            if (isIDUnique(cfg) === false) {
-              message = 'The given id '+id+' has already been used.';
-              suggestion = 'Please choose another one instead.';
+            if (isIDValid(cfg) === false) {
+              message = 'The given id '+id+' is one of the reserved words in neco.';
+              suggestion = 'Please choose another one.';
               log('message', message, suggestion);
+
             } else {
-              create.run(cfg);
+              if (!exists) {
+                create.run(cfg);
+              } else {  
+                if (isIDUnique(cfg) === false) {
+                  message = 'The given id '+cfg.id+' has already been used.';
+                  suggestion = 'Please choose another one instead.';
+                  log('message', message, suggestion);
+                } else {
+                  create.run(cfg);
+                }
+              }
             }
           }
-        }
-      }
-    })));
+        });
+      });
+    });
   }
 
   // Subcommand list
