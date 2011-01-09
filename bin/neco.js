@@ -11,8 +11,8 @@ var isIDUnique = require('../lib/checker.js').isIDUnique,
 isIDExsit = require('../lib/checker.js').isIDExsit,
 isIDValid = require('../lib/checker.js').isIDValid,
 isCMDValid = require('../lib/checker.js').isCMDValid,
-isActive = require('../lib/checker.js').isActive,
-getRelease = require('../lib/assistant.js').getRelease,
+isEcosystemActive = require('../lib/checker.js').isActive,
+isReleaseExist = require('../lib/assistant.js').getRelease,
 isEcosystemExist = require('../lib/assistant.js').getEcosystem,
 getconfig = require('../lib/config.js').getConfig;
 
@@ -100,7 +100,7 @@ if (isCMDValid(cmd) === false) {
           if (argv.length >= 4) {
             target = argv[3];
             config.target = target;
-            if (getRelease(cfg)) {
+            if (isReleaseExist(cfg)) {
               find.run(cfg);
             } else {
               error = 'The desired release '+target+' is not available.';
@@ -137,7 +137,7 @@ if (isCMDValid(cmd) === false) {
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
-            if (isActive(cfg) === true) {
+            if (isEcosystemActive(cfg) === true) {
               warning = 'The node ecosystem with id '+id+' is already active.';
               suggstion = 'Please use type deact in your shell to deactivate it.';
               log('warning', warning, suggestion, example);
@@ -175,7 +175,7 @@ if (isCMDValid(cmd) === false) {
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco list';
               log('warning', warning, suggestion, example);
-            } else if (isActive(cfg) === false) {
+            } else if (isEcosystemActive(cfg) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
               suggestion = 'Use neco activate command to activate it first.';
               example = 'neco_activate '+ id;
