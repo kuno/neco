@@ -119,6 +119,7 @@ if (isCMDValid(cmd) === false) {
 
   // Subcommand help
   else if (cmd === 'help') {
+    config = getconfig();
     help.run(config);
   }
 
