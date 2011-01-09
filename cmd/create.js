@@ -9,7 +9,7 @@ getSuitedNPM = require('../lib/assistant.js').getSuitedNPM,
 notSmaller = require('../lib/utils.js').compareVersions,
 findlongestID = require('../lib/utils.js').findlongestID,
 writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile,
-writeEcoSystemConfigFile = require('../lib/assistant.js').writeEcoSystemConfigFile,
+writeEcosystemConfigFile = require('../lib/assistant.js').writeEcosystemConfigFile,
 getNodeInstallScript = require('../lib/assistant.js').getNodeInstallScript,
 getNPMInstallScript = require('../lib/assistant.js').getNPMInstallScript,
 getActivateInstallScript = require('../lib/assistant.js').getActivateInstallScript;
@@ -127,7 +127,7 @@ function makeRecord(config) {
       log('message', message);
       writeGlobalConfigFile(config, function(err, config) {
         if (err) {throw err;}
-        writeEcoSystemConfigFile(config);
+        writeEcosystemConfigFile(config);
       });
     });
   });
