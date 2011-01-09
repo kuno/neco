@@ -206,6 +206,7 @@ if (isCMDValid(cmd) === false) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
             if (isIDExsit(cfg) === false) {
+              cosole.log(cfg.id);
               message = 'The given id '+id+' is not exist.';
               suggestion = 'Find out all existing ecosystem.';
               example = 'neco list'
@@ -213,7 +214,7 @@ if (isCMDValid(cmd) === false) {
             } else if (isEcosystemActive(cfg) === true) {
               message = 'The given ecosystem with id '+id+' is in active.';
               suggestion = 'Please deactivate it first.';
-              example = 'neco_deactivate'
+              example = 'neco activate'
               log('message', message, suggestion, example);
             } else { 
               remove.run(cfg);
