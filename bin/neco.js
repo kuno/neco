@@ -14,7 +14,7 @@ isCMDValid = require('../lib/checker.js').isCMDValid,
 isActive = require('../lib/checker.js').isActive,
 getRelease = require('../lib/assistant.js').getRelease,
 isEcosystemExist = require('../lib/assistant.js').getEcosystem,
-getconfig = require('../lib/config.js').getConfiguration;
+getconfig = require('../lib/config.js').getConfig;
 
 var envReady = require('../lib/inception.js').envReady,
 recordReady = require('../lib/inception.js').recordReady,
@@ -72,7 +72,6 @@ if (isCMDValid(cmd) === false) {
     envReady(config, function(cfg) {
       activateReady(cfg, function(cfg) {
         recordReady(cfg, function(exists, cfg) {
-          if (exists)  {
             if (argv.length >= 4) {
               target = argv[3];
               cfg.target = target;  
