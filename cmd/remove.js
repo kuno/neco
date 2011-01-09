@@ -12,7 +12,6 @@ function removeDir(config, next) {
   var error, remove, targetDir;
   targetDir = path.join(config.root, '.neco', config.id);
 
-  console.log(targetDir);
   path.exists(targetDir, function(exists) {
     if (!exists) {
       error = new Error('Target directory '+targetDir+' not exists.');
@@ -27,7 +26,7 @@ function removeDir(config, next) {
       });
       remove.on('exit', function(code) {
         if (code !== 0) {
-          err = new Error('Remove exists with code '+code);
+          err = new Error('Remove exit with code '+code);
           next(error, config);
         } else {
           next(error, config);
@@ -47,13 +46,10 @@ function editRecord(config, next) {
     } else {
       fs.readFile(recordFile, 'utf8', function(err, data) {
         if (err) {throw err;}
-        ecosystem = getEcosystem(config);
-        console.log(ecosystem);
         record = JSON.parse(data);
         index = record.ecosystems.indexOf(getEcosystem(config));
         record.ecosystems.splice(index, 1);
         recordData = JSON.stringify(record);
-        console.log(recordData);
         fs.writeFile(recordFile, recordData, 'utf8', function(err) {
           error = err;
           next(error, config);
