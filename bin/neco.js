@@ -200,7 +200,7 @@ if (isCMDValid(cmd) === false) {
       log('message', message, suggestion, example);
     } else {
       id = argv[3];
-      config = getconfig(id);
+      config = getconfig();
       config.id = id, config.cmd = cmd;
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
