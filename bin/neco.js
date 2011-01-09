@@ -21,9 +21,9 @@ recordReady = require('../lib/inception.js').recordReady,
 activateReady = require('../lib/inception.js').activateReady;
 
 var log = require('../lib/display.js').log;  
-var message, warning, error, suggestion, example;  
+var message, warning, error, suggestion, example;
 
-argv = process.argv, id, target, cmd = argv[2];
+var argv = process.argv, id, target, cmd = argv[2];
 
 if (isCMDValid(cmd) === false) {
   message = 'Not a valid command';
