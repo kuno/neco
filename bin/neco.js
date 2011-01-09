@@ -23,7 +23,6 @@ activateReady = require('../lib/inception.js').activateReady;
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;  
 
-var config = getconfig(), 
 argv = process.argv, id, target, cmd = argv[2];
 
 if (isCMDValid(cmd) === false) {
@@ -40,8 +39,9 @@ if (isCMDValid(cmd) === false) {
       example = 'neco create <id> [stable, latest, node-version]';
       log('message', message, suggestion, example);
     } else {
-      id = argv[3], target = argv[4] || 'stable'; // defaut target is stable 
-      cfg.id = id, cfg.cmd = cmd, cfg.target = target;
+      id = argv[3], target = argv[4] || 'stable'; // defaut target is stable
+      config = getconfig();
+      config.id = id, config.cmd = cmd, config.target = target;
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {  
