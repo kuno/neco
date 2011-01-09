@@ -52,13 +52,13 @@ if (isCMDValid(cmd) === false) {
                 message = 'The given id '+id+' is one of the reserved words in neco.';
                 suggestion = 'Please choose another one.';
                 log('message', message, suggestion);
-              } 
-              if (isIDUnique(cfg) === false) {
+              } else if (isIDUnique(cfg) === false) {
                 message = 'The given id '+cfg.id+' has already been used.';
                 suggestion = 'Please choose another one instead.';
                 log('message', message, suggestion);
-              } 
-              create.run(cfg);
+              } else { 
+                create.run(cfg);
+              }
             }
           });
         });
@@ -175,14 +175,14 @@ if (isCMDValid(cmd) === false) {
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco list';
               log('warning', warning, suggestion, example);
-            } 
-            if (isActive(cfg) === false) {
+            } else if (isActive(cfg) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
               suggestion = 'Use neco activate command to activate it first.';
               example = 'neco activate '+ id;
               log('warning', warning, suggestion, example);
-            } 
-            deactivate.run(cfg);
+            } else { 
+              deactivate.run(cfg);
+            }
           });
         });
       });
