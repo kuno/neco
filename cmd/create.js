@@ -116,7 +116,9 @@ function makeRecord(config) {
     newEcosystem = {id:id, cd:date,nv:version, npm:npmVer};
     record.ecosystems = ecosystems.concat(newEcosystem);
     recordData = JSON.stringify(record);
-    config.idLenStandard = findlongestID(config);
+    if (config.id.length > config.idLenStandard) {
+      config.idLenStandard = config.id.length;
+    }
 
     // Write into records file
     fs.writeFile(recordFile, record, 'utf8', function(err) {
