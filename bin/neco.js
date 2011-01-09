@@ -126,7 +126,7 @@ if (isCMDValid(cmd) === false) {
     if (argv.length < 4) {
       message = 'Missing ID';
       suggestion = 'Please specify the id of the ecosystem you want to activate.';
-      example = 'neco activate <id>';
+      example = 'neco_activate <id>';
       log('message', message, suggestion, example);
     } else {
       id = process.argv[3];
@@ -178,7 +178,7 @@ if (isCMDValid(cmd) === false) {
             } else if (isActive(cfg) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
               suggestion = 'Use neco activate command to activate it first.';
-              example = 'neco activate '+ id;
+              example = 'neco_activate '+ id;
               log('warning', warning, suggestion, example);
             } else { 
               deactivate.run(cfg);
