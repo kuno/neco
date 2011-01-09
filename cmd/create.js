@@ -7,7 +7,8 @@ getDateTime = require('../lib/assistant.js').getDateTime,
 getRelease = require('../lib/assistant.js').getRelease,
 getSuitedNPM = require('../lib/assistant.js').getSuitedNPM,
 notSmaller = require('../lib/utils.js').compareVersions,
-writeConfigFiles = require('../lib/assistant.js').writeConfigFiles,
+writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFiles,
+writeEcoSystemConfigFile = require('../lib/assistant.js').writeEcoSystemConfigFiles,
 getNodeInstallScript = require('../lib/assistant.js').getNodeInstallScript,
 getNPMInstallScript = require('../lib/assistant.js').getNPMInstallScript,
 getActivateInstallScript = require('../lib/assistant.js').getActivateInstallScript;
@@ -120,7 +121,10 @@ function makeRecord(config) {
       if (err) {throw err;}
       message = 'New node ecosystem has been created sucessfully!';
       log('message', message);
-      writeConfigFiles(config);
+      writeGlobalConfigFile(config, function(err, config) {
+        if (err) {throw err;}
+        writeEcoSystemConfigFile(config);
+      });
     });
   });
 }

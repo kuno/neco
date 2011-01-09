@@ -3,9 +3,10 @@ path = require('path'),
 spawn = require('child_process').spawn,
 findlongestID = require('../lib/utils.js').findlongestID,
 getEcosystem = require('../lib/assistant.js').getEcosystem,    
-writeConfigFiles = require('../lib/assistant.js').writeConfigFiles;
+writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile;
 
 var log = require('../lib/display.js').log;
+var message ,warning, error, suggestion, example;
 
 function removeDir(config, next) {
   var error, remove, targetDir;
@@ -63,8 +64,13 @@ function editRecord(config, next) {
 }
 
 function editConfig(config) {
+  var id = config.id;
   config.idLenStandard = findlongestID(config);
-  writeConfigFiles(config);
+  writeGlobalConfigFile(config, function(err, config) {
+    if (err) {throw err;}
+    message = 'ecosystem '+id+' has been removed sucessfully.';
+    log('message', message);
+  });
 }
 
 exports.run = function(config) {
