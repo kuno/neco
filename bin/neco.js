@@ -209,7 +209,7 @@ if (isCMDValid(cmd) === false) {
               suggestion = 'Find out all existing ecosystem.';
               example = 'neco list'
               log('message', message, suggestion, example);
-            } else if (isEcosystemActive(cfg) === false) {
+            } else if (isEcosystemActive(cfg) === true) {
               message = 'The given ecosystem with id '+id+' is in active.';
               suggestion = 'Please deactivate it first.';
               example = 'neco_deactivate'
