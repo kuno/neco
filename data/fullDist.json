@@ -1,6 +1,6 @@
 {
   "stable":"0.2.5",
-  "unstable":"0.3.3"
+  "unstable":"0.3.4"
     "latest":"latest",
     "history":[
     {"version":"latest","link":"http://nodejs.org/dist/node-latest.tar.gz","released":"31-Dec-2010 05:02","size":4010320},
