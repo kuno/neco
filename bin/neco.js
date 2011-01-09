@@ -202,6 +202,7 @@ if (isCMDValid(cmd) === false) {
       id = argv[3];
       config = getconfig(id);
       config.id = id, config.cmd = cmd;
+      console.log(config.id);
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
