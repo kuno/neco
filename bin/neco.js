@@ -205,7 +205,7 @@ if (isCMDValid(cmd) === false) {
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
-            if (isIDExsit(cfg) === false || isEcosystemActive(cfg) == true) {
+            if (isEcosystemExist(cfg) === false || isEcosystemActive(cfg) == true) {
               console.log('not');
               if (isIDExsit(cfg) === false) {
                 message = 'The given id '+id+' is not exist.';
