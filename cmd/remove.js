@@ -1,24 +1,75 @@
 var fs = require('fs'),
 path = require('path'),
-spawn = require('child_process').spawn;
+spawn = require('child_process').spawn,
+findlongestID = require('../lib/utils.js').findlongestID,
+getEcosystem = require('../lib/assistant.js').getEcosystem,    
+writeConfigFiles = require('../lib/assistant.js').writeConfigFiles;
+
+var log = require('../lib/display.js').log;
 
 function removeDir(config, next) {
-  var error, cmd, targetDir;
+  var error, remove, targetDir;
   targetDir = path.join(config.root, '.neco', config.id);
 
   console.log(targetDir);
+  path.exists(targetDir, function(exists) {
+    if (!exists) {
+      error = new Error('Target directory '+targetDir+' not exists.');
+      next(error, next);
+    } else {
+      remove = spawn('rm', ['-rf', targetDir]);
+      remove.stdout.on('data', function(data) {
+        log('stdout', data);
+      });
+      remove.stderr.on('data', function(data) {
+        log('stdout', data);
+      });
+      remove.on('exist', function(code) {
+        if (code !== 0) {
+          err = new Error('Remove exists with code '+code);
+          next(error, config);
+        } else {
+          next(error, config);
+        }
+      });
+    }
+  });
 }
 
-function editRecordFile(config, next) {
+function editRecord(config, next) {
+  var error, record, ecosystem, ecosystems, 
+  id = config.id, recordFile = config.recordFile;
+  path.exists(recordFile, function(exists) {
+    if (!exists) {
+      error = new Error('Record file dose not exists.');
+      next(error, config);
+    } else {
+      fs.readFile(recordFile, 'utf8', function(err, data) {
+        if (err) {throw err;}
+        ecosystem = getEcosystem(config);
+        record = JSON.parse(data);
+        record.ecosystems.splice(record.ecosystems.indexOf(ecosystem));
+        data = JSON.stringify(record);
+        fs.writeFile(recordFile, data, 'utf8', function(err) {
+          error = err;
+          next(error, config);
+        });
+      });
+    }
+  });
 }
 
-function editConfigFile(config) {
+function editConfig(config) {
+  config.idLenStandard = findlongestID(config);
+  writeConfigFiles(config);
 }
 
 exports.run = function(config) {
   removeDir(config, function(err) {
     if (err) {throw err;}
-    editRecord(config);
+    editRecord(config, function(err, config) {
+      if (err) {throw err;}
+      editConfig(config);
+    });
   });
 };
-
