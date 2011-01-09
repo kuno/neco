@@ -34,26 +34,21 @@ if (isCMDValid(cmd) === false) {
 } else {
   // Subcommand create
   if (cmd === 'create') {
-    envReady(config, function(cfg) {
-      activateReady(cfg, function(cfg) {
-        recordReady(cfg, function(exists, cfg) {
-          if (argv.length < 4) {
-            message = 'Missing ID';
-            suggestion = 'Please specific at least one ID( and the version of node, if you will).';
-            example = 'neco create <id> [stable, latest, node-version]';
-            log('message', message, suggestion, example);
-          } else {
-            id = argv[3];
-            target = argv[4] || 'stable'; // defaut target is stable 
-            cfg.id = id;
-            cfg.cmd = cmd;
-            cfg.target = target;
-
+    if (argv.length < 4) {
+      message = 'Missing ID';
+      suggestion = 'Please specific at least one ID( and the version of node, if you will).';
+      example = 'neco create <id> [stable, latest, node-version]';
+      log('message', message, suggestion, example);
+    } else {
+      id = argv[3], target = argv[4] || 'stable'; // defaut target is stable 
+      cfg.id = id, cfg.cmd = cmd, cfg.target = target;
+      envReady(config, function(cfg) {
+        activateReady(cfg, function(cfg) {
+          recordReady(cfg, function(exists, cfg) {  
             if (isIDValid(cfg) === false) {
               message = 'The given id '+id+' is one of the reserved words in neco.';
               suggestion = 'Please choose another one.';
               log('message', message, suggestion);
-
             } else {
               if (!exists) {
                 create.run(cfg);
