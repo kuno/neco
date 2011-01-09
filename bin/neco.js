@@ -178,8 +178,8 @@ if (isCMDValid(cmd) === false) {
             } 
             if (isActive(cfg) === false) {
               warning = 'The node ecosystem with id '+id+' is not active.';
-              suggestion = 'Use neco activate command to activate one first.';
-              example = 'neco activate <id>';
+              suggestion = 'Use neco activate command to activate it first.';
+              example = 'neco activate '+ id;
               log('warning', warning, suggestion, example);
             } 
             deactivate.run(cfg);
