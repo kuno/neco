@@ -206,7 +206,9 @@ if (isCMDValid(cmd) === false) {
       envReady(config, function(cfg) {
         console.log('env'+cfg.id);
         activateReady(cfg, function(cfg) {
+          console.log('activate'+cfg.id);
           recordReady(cfg, function(exists, cfg) {
+            console.log('record'+cfg.id);
             if (isIDExsit(cfg) === null || isEcosystemActive(cfg) == true) {
               console.log('not');
               if (isIDExsit(cfg) === false) {
