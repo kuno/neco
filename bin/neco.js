@@ -202,29 +202,20 @@ if (isCMDValid(cmd) === false) {
       id = argv[3];
       config = getconfig(id);
       config.id = id, config.cmd = cmd;
-      console.log(config.id);
       envReady(config, function(cfg) {
-        console.log('env'+cfg.id);
         activateReady(cfg, function(cfg) {
-          console.log('activate'+cfg.id);
           recordReady(cfg, function(exists, cfg) {
-            console.log('record'+cfg.id);
-            if (isIDExsit(cfg) === null || isEcosystemActive(cfg) == true) {
-              console.log('not');
-              if (isIDExsit(cfg) === false) {
-                message = 'The given id '+id+' is not exist.';
-                suggestion = 'Find out all existing ecosystem.';
-                example = 'neco list'
-                log('message', message, suggestion, example);
-              } else if (isEcosystemActive(cfg) === true) {
-                message = 'The given ecosystem with id '+id+' is in active.';
-                suggestion = 'Please deactivate it first.';
-                example = 'neco activate'
-                log('message', message, suggestion, example);
-              }
-            } else {
-              console.log('neco.js');
-              console.log(cfg.id);
+            if (isIDExsit(cfg) === false) {
+              message = 'The given id '+id+' is not exist.';
+              suggestion = 'Find out all existing ecosystem.';
+              example = 'neco list'
+              log('message', message, suggestion, example);
+            } else if (isEcosystemActive(cfg) === true) {
+              message = 'The given ecosystem with id '+id+' is in active.';
+              suggestion = 'Please deactivate it first.';
+              example = 'neco_deactivate'
+              log('message', message, suggestion, example);
+            } else { 
               remove.run(cfg);
             }
           });
