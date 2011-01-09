@@ -200,12 +200,12 @@ if (isCMDValid(cmd) === false) {
       log('message', message, suggestion, example);
     } else {
       id = argv[3];
-      config = getconfig();
+      config = getconfig(id);
       config.id = id, config.cmd = cmd;
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
-            if (isIDExsit(cfg) === false || isEcosystemActive(cfg) == true) {
+            if (isIDExsit(cfg) === null || isEcosystemActive(cfg) == true) {
               console.log('not');
               if (isIDExsit(cfg) === false) {
                 message = 'The given id '+id+' is not exist.';
