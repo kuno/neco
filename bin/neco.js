@@ -72,11 +72,11 @@ if (isCMDValid(cmd) === false) {
     envReady(config, function(cfg) {
       activateReady(cfg, function(cfg) {
         recordReady(cfg, function(exists, cfg) {
+          console.log('run');
             if (argv.length >= 4) {
               target = argv[3];
               cfg.target = target;  
               if (isEcosystemExist(cfg)) {
-                console.log('run');
                 list.run(cfg);
               } else {
                 error = 'The desired ecosystem '+target+' is not exists.';
