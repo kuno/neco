@@ -37,7 +37,7 @@ function removeDir(config, next) {
 }
 
 function editRecord(config, next) {
-  var error, record, ecosystem, ecosystems, 
+  var error, index, record, ecosystem, recordData, 
   id = config.id, recordFile = config.recordFile;
   path.exists(recordFile, function(exists) {
     if (!exists) {
@@ -48,9 +48,10 @@ function editRecord(config, next) {
         if (err) {throw err;}
         ecosystem = getEcosystem(config);
         record = JSON.parse(data);
-        record.ecosystems.splice(record.ecosystems.indexOf(ecosystem));
-        data = JSON.stringify(record);
-        fs.writeFile(recordFile, data, 'utf8', function(err) {
+        index = record.ecosystems.indexOf(getEcosystem(config));
+        record.ecosystems.splice(index, 1);
+        recordData = JSON.stringify(record);
+        fs.writeFile(recordFile, recordData, 'utf8', function(err) {
           error = err;
           next(error, config);
         });
