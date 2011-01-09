@@ -76,6 +76,7 @@ if (isCMDValid(cmd) === false) {
               target = argv[3];
               cfg.target = target;  
               if (isEcosystemExist(cfg)) {
+                console.log('run');
                 list.run(cfg);
               } else {
                 error = 'The desired ecosystem '+target+' is not exists.';
