@@ -74,7 +74,7 @@ if (isCMDValid(cmd) === false) {
         recordReady(cfg, function(exists, cfg) { 
            if (argv.length >= 4) {
             target = argv[3];
-            config.target = target;  
+            cfg.target = target;  
             if (isEcosystemExist(cfg)) {
               list.run(cfg);
             } else {
@@ -83,6 +83,8 @@ if (isCMDValid(cmd) === false) {
               example = 'neco list';
               log('error', error, suggestion, example);
             }
+          } else {
+            list.run(cfg);
           }
         });
       });
