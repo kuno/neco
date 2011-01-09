@@ -42,27 +42,23 @@ if (isCMDValid(cmd) === false) {
       id = argv[3], target = argv[4] || 'stable'; // defaut target is stable
       config = getconfig();
       config.id = id, config.cmd = cmd, config.target = target;
-      envReady(config, function(cfg) {
-        activateReady(cfg, function(cfg) {
-          recordReady(cfg, function(exists, cfg) {
-            if (!exists) {
-              create.run(cfg);
-            } else {
-              if (isIDValid(cfg) === false) {
-                message = 'The given id '+id+' is one of the reserved words in neco.';
-                suggestion = 'Please choose another one.';
-                log('message', message, suggestion);
-              } else if (isIDUnique(cfg) === false) {
-                message = 'The given id '+cfg.id+' has already been used.';
-                suggestion = 'Please choose another one instead.';
-                log('message', message, suggestion);
-              } else {
-                create.run(cfg);
-              }
-            }
-          });
-        });
-      });
+      envReady(config, activateReady(cfg, recordReady(cfg, function(exists, cfg) {
+        if (!exists) {
+          create.run(cfg);
+        } else {
+          if (isIDValid(cfg) === false) {
+            message = 'The given id '+id+' is one of the reserved words in neco.';
+            suggestion = 'Please choose another one.';
+            log('message', message, suggestion);
+          } else if (isIDUnique(cfg) === false) {
+            message = 'The given id '+cfg.id+' has already been used.';
+            suggestion = 'Please choose another one instead.';
+            log('message', message, suggestion);
+          } else {
+            create.run(cfg);
+          }
+        }
+      })));
     }
   }
 
@@ -73,21 +69,21 @@ if (isCMDValid(cmd) === false) {
       activateReady(cfg, function(cfg) {
         recordReady(cfg, function(exists, cfg) {
           if (exists)  {
-          if (argv.length >= 4) {
-            target = argv[3];
-            cfg.target = target;  
-            if (isEcosystemExist(cfg)) {
-              list.run(cfg);
+            if (argv.length >= 4) {
+              target = argv[3];
+              cfg.target = target;  
+              if (isEcosystemExist(cfg)) {
+                list.run(cfg);
+              } else {
+                error = 'The desired ecosystem '+target+' is not exists.';
+                suggestion = 'Find out all the existing ecosystem.';
+                example = 'neco list';
+                log('error', error, suggestion, example);
+              }
             } else {
-              error = 'The desired ecosystem '+target+' is not exists.';
-              suggestion = 'Find out all the existing ecosystem.';
-              example = 'neco list';
-              log('error', error, suggestion, example);
+              list.run(cfg);
             }
-          } else {
-            list.run(cfg);
           }
-        }
         });
       });
     });
