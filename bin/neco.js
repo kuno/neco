@@ -205,9 +205,9 @@ if (isCMDValid(cmd) === false) {
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
-            if (!isEcosystemExist(cfg) || isEcosystemActive(cfg) == true) {
+            if (isIDExsit(cfg) === false || isEcosystemActive(cfg) == true) {
               console.log('not');
-              if (!isEcosystemActive(cfg)) {
+              if (isIDExsit(cfg) === false) {
                 message = 'The given id '+id+' is not exist.';
                 suggestion = 'Find out all existing ecosystem.';
                 example = 'neco list'
