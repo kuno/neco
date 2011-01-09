@@ -71,12 +71,12 @@ if (isCMDValid(cmd) === false) {
   // Subcommand list
   else if (cmd === 'list') {
     config = getconfig(), config.cmd = cmd;
-    if (argv.length >= 4) {
-      target = argv[3];
-      config.target = target;  
-      envReady(config, function(cfg) {
-        activateReady(cfg, function(cfg) {
-          recordReady(cfg, function(exists, cfg) {
+    envReady(config, function(cfg) {
+      activateReady(cfg, function(cfg) {
+        recordReady(cfg, function(exists, cfg) { 
+          if (argv.length >= 4) {
+            target = argv[3];
+            config.target = target;  
             if (exists) {
               if (isEcosystemExist(cfg)) {
                 list.run(cfg);
@@ -89,21 +89,21 @@ if (isCMDValid(cmd) === false) {
             } else {
               list.run(cfg);
             }
-          }
+          });
         });
       });
-    });
+    }
   }
 
   // Subcommand find
   else if (cmd === 'find') {
     config = getconfig(), config.cmd = cmd;
-    if (argv.length >= 4) {
-      target = argv[3];
-      config.target = target;
-      envReady(config, function(cfg) {
-        activateReady(cfg, function(cfg) {
-          recordReady(cfg, function(exists, cfg) {
+    envReady(config, function(cfg) {
+      activateReady(cfg, function(cfg) {
+        recordReady(cfg, function(exists, cfg) {    
+          if (argv.length >= 4) {
+            target = argv[3];
+            config.target = target;
             if (getRelease(cfg)) {
               find.run(cfg);
             } else {
