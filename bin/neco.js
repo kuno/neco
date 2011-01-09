@@ -4,6 +4,7 @@ var list = require('../cmd/list.js'),
 find = require('../cmd/find.js'),
 help = require('../cmd/help.js'),
 create = require('../cmd/create.js'),
+remove = require('../cmd/remove.js'),
 activate = require('../cmd/activate.js'),
 deactivate = require('../cmd/deactivate.js');
 
@@ -190,15 +191,36 @@ if (isCMDValid(cmd) === false) {
   }
 
   // Subcommand remove
-  else if (cmd === 'remove') {
-    envReady(config, function(cfg) {
-      activateReady(cfg, function(cfg) {
-        recordReady(cfg, function(exists, cfg) {
-          if (exists) {
-          }
+  else  if (cmd === 'remove') {
+    if (argv.length < 4) {
+      message = 'Missing ID';
+      suggestion = 'Please specific the ID of the ecosystem that you want ot removed.';
+      example = 'neco remove <id>';
+      log('message', message, suggestion, example);
+    } else {
+      id = argv[3];
+      config = getconfig(id);
+      config.id = id, config.cmd = cmd;
+      envReady(config, function(cfg) {
+        activateReady(cfg, function(cfg) {
+          recordReady(cfg, function(exists, cfg) {
+            if (isIDExsit(cfg) === false) {
+              message = 'The given id '+id+' is not exist.';
+              suggestion = 'Find out all existing ecosystem.';
+              example = 'neco list'
+              log('message', message, suggestion, example);
+            } else if (isEcosystemActive(cfg) === false) {
+              message = 'The given ecosystem with id '+id+' is in active.';
+              suggestion = 'Please deactivate it first.';
+              example = 'neco_deactivate'
+              log('message', message, suggestion, example);
+            } else { 
+              remove.run(cfg);
+            }
+          });
         });
       });
-    });
+    }
   }
 
 }
