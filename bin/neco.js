@@ -62,10 +62,10 @@ if (isCMDValid(cmd) === false) {
                 }
               }
             }
-          }
+          });
         });
       });
-    });
+    }
   }
 
   // Subcommand list
