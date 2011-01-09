@@ -24,7 +24,7 @@ function removeDir(config, next) {
       remove.stderr.on('data', function(data) {
         log('stdout', data);
       });
-      remove.on('exist', function(code) {
+      remove.on('exit', function(code) {
         if (code !== 0) {
           err = new Error('Remove exists with code '+code);
           next(error, config);
