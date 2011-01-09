@@ -9,6 +9,9 @@ exports.run = function(config) {
     console.log('  create      -  create new node ecosystem');
     console.log('      Useage: neco create <id> [node-version]');
     console.log('');
+    console.log('  remove      -  removed installed ecosystem');
+    console.log('       Usage:  neco remove <id>');
+    console.log('');
     console.log('  list        -  list all installed node ecosystem');
     console.log('      Usage:  neco list');
     console.log('');
