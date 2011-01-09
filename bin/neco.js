@@ -219,7 +219,8 @@ if (isCMDValid(cmd) === false) {
                 log('message', message, suggestion, example);
               }
             } else {
-              console.log('run');
+              console.log('neco.js');
+              console.log(cfg.id);
               remove.run(cfg);
             }
           });
