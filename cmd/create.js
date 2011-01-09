@@ -7,6 +7,7 @@ getDateTime = require('../lib/assistant.js').getDateTime,
 getRelease = require('../lib/assistant.js').getRelease,
 getSuitedNPM = require('../lib/assistant.js').getSuitedNPM,
 notSmaller = require('../lib/utils.js').compareVersions,
+findlongestID = require('../lib/utils.js').findlongestID,
 writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile,
 writeEcoSystemConfigFile = require('../lib/assistant.js').writeEcoSystemConfigFile,
 getNodeInstallScript = require('../lib/assistant.js').getNodeInstallScript,
@@ -98,7 +99,7 @@ function installActivate(config, callback) {
 function makeRecord(config) {
   var error, npmVer = config.npmVer || 'none',
   id = config.id, version = config.release.version,
-  record, createdDate, ecosystems, newEcosystem, 
+  record, recordData, createdDate, ecosystems, newEcosystem, 
   recordFile = path.join(config.root, '.neco', 'record.json'), 
   date = getDateTime(config);
 
@@ -114,7 +115,8 @@ function makeRecord(config) {
 
     newEcosystem = {id:id, cd:date,nv:version, npm:npmVer};
     record.ecosystems = ecosystems.concat(newEcosystem);
-    record = JSON.stringify(record);
+    recordData = JSON.stringify(record);
+    config.idLenStandard = findlongestID(config);
 
     // Write into records file
     fs.writeFile(recordFile, record, 'utf8', function(err) {
