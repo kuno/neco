@@ -206,6 +206,7 @@ if (isCMDValid(cmd) === false) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
             if (isIDExsit(cfg) === false || isEcosystemActive(cfg) == true) {
+              console.log('not');
               if (isIDExsit(cfg) === false) {
                 message = 'The given id '+id+' is not exist.';
                 suggestion = 'Find out all existing ecosystem.';
@@ -217,7 +218,8 @@ if (isCMDValid(cmd) === false) {
                 example = 'neco activate'
                 log('message', message, suggestion, example);
               }
-            } else { 
+            } else {
+              console.log('run');
               remove.run(cfg);
             }
           });
