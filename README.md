@@ -23,9 +23,9 @@ So, neco will always be alpha or beta, until nodejs 0.4.x series was been releas
 
 neco will release a new version after a  week of a new nodejs 0.3.x release.
 
-###Next Release###
+####Next Release:
 
-####0.0.3-alpha, at 2011-1-15#### 
+#####0.0.3-alpha, at 2011-1-15 
 
 ##Usage:##
 
