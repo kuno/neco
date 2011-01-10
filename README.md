@@ -11,7 +11,7 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
 
 ##Install##
 
-    npm install neco (note: neco needs latest version of nodejs, right now it's 0.3.4)
+    npm install neco (note: neco needs latest version of nodejs, right now it's 0.3.3)
 
 
 
@@ -23,6 +23,9 @@ So, neco will always be alpha or beta, until nodejs 0.4.x series was been releas
 
 neco will release a new version after a  week of a new nodejs 0.3.x release.
 
+###Next Release###
+
+####0.0.3-alpha, at 2011-1-15#### 
 
 ##Usage:##
 
