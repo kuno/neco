@@ -24,17 +24,18 @@ fi
 #else
 #  cp $pkgDir/sample/npmrc $HOME/.npmrc || return 1
 #fi
-
+# Make global and user config
+export npm_config_globalconfig=$destDir/ecosystem/etc/npmrc || return 1
 export npm_config_userconfig=$destDir/npmrc || return 1
+install -m666 $pkgDir/sample/npmrc $destDir/ecosystem/etc/npmrc || return 1 
+#node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc --flags || return 1
+install -m666 $pkgDir/sample/npmrc $destDir/npmrc || return 1
+#node $pkgDir/deps/npm/cli.js config set userconfig $destDir/npmrc --flags || return 1
+
 # Replace with root, binroot, manroot with destDir
 sed -i -e "s/^root.*/root\ =\ $replace\/ecosystem\/lib\/node/g" $pkgDir/sample/npmrc || return 1
 sed -i -e "s/^binroot.*/binroot\ =\ $replace\/ecosystem\/bin/g" $pkgDir/sample/npmrc || return 1
 sed -i -e "s/^manroot.*/manroot\ = \ $replace\/ecosystem\/share\/man/g" $pkgDir/sample/npmrc || return 1  
-# Make config suited for installation
-install -m666 $pkgDir/sample/npmrc $destDir/ecosystem/etc/npmrc || return 1 
-node $pkgDir/deps/npm/cli.js config set globalconfig $destDir/ecosystem/etc/npmrc --flags || return 1
-install -m666 $pkgDir/sample/npmrc $destDir/npmrc || return 1
-node $pkgDir/deps/npm/cli.js config set userconfig $destDir/npmrc --flags || return 1
 
 node $pkgDir/deps/npm/cli.js config set root $destDir/ecosystem/lib/node --flags || return 1
 node $pkgDir/deps/npm/cli.js config set binroot $destDir/ecosystem/bin --flags || return 1
