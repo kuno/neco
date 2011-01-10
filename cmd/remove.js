@@ -1,7 +1,6 @@
 var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
-findlongestID = require('../lib/utils.js').findlongestID,
 getEcosystem = require('../lib/assistant.js').getEcosystem,    
 writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile;
 
@@ -61,7 +60,6 @@ function editRecord(config, next) {
 
 function editConfig(config) {
   var id = config.id;
-  config.idLenStandard = findlongestID(config);
   writeGlobalConfigFile(config, function(err, config) {
     if (err) {throw err;}
     message = 'ecosystem '+id+' has been removed sucessfully.';
