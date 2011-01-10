@@ -35,3 +35,4 @@
 * added md5sum check for every node achive?
 * automatialy switch between ecosystems
 * added command line arguments parse?
+* update to nodejs 0.3.4, npm 0.2.14-x
