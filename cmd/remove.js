@@ -1,6 +1,7 @@
 var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
+removeEcosystem = require('../lib/utils.js').removeEcosystem,
 getEcosystem = require('../lib/assistant.js').getEcosystem,    
 writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile;
 
@@ -46,8 +47,7 @@ function editRecord(config, next) {
       fs.readFile(recordFile, 'utf8', function(err, data) {
         if (err) {throw err;}
         record = JSON.parse(data);
-        index = record.ecosystems.indexOf(getEcosystem(config));
-        record.ecosystems.splice(index, 1);
+        record.ecosystems = removeEcosystem(record.ecosystems, id);
         recordData = JSON.stringify(record);
         fs.writeFile(recordFile, recordData, 'utf8', function(err) {
           error = err;
