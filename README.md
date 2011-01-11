@@ -17,13 +17,13 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
 
 ##Roadmap##
 
+####Next Release: 0.0.3-alpha, at 2011-1-15, depends on nodejs v0.3.4
+
 Becuase neco heavily depends on the new os module from nodejs 0.3.x, which is an unstalbe branch.
 
 So, neco will always be alpha or beta, until nodejs 0.4.x series was been released.
 
 neco will release a new version after a  week of a new nodejs 0.3.x release.
-
-####Next Release: 0.0.3-alpha, at 2011-1-15, depends on nodejs v0.3.4 
 
 
 ##Usage:##
