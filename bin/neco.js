@@ -14,7 +14,7 @@ idValid = require('../lib/validation.js').idValid,
 cmdValid = require('../lib/validation.js').cmdValid,
 ecosystemActive = require('../lib/validation.js').ecosystemActive,
 releaseExist = require('../lib/assistant.js').getRelease,
-isEcosystemExist = require('../lib/assistant.js').getEcosystem,
+ecosystemExist = require('../lib/assistant.js').getEcosystem,
 getconfig = require('../lib/config.js').getConfig;
 
 var envReady = require('../lib/inception.js').envReady,
