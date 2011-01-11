@@ -8,12 +8,12 @@ remove = require('../cmd/remove.js'),
 activate = require('../cmd/activate.js'),
 deactivate = require('../cmd/deactivate.js');
 
-var isIDUnique = require('../lib/checker.js').isIDUnique,
-isIDExsit = require('../lib/checker.js').isIDExsit,
-isIDValid = require('../lib/checker.js').isIDValid,
-isCMDValid = require('../lib/checker.js').isCMDValid,
-isEcosystemActive = require('../lib/checker.js').isActive,
-isReleaseExist = require('../lib/assistant.js').getRelease,
+var idUnique = require('../lib/validation.js').idUnique,
+idExsit = require('../lib/validation.js').idExsit,
+idValid = require('../lib/validation.js').idValid,
+cmdValid = require('../lib/validation.js').cmdValid,
+ecosystemActive = require('../lib/validation.js').ecosystemActive,
+releaseExist = require('../lib/assistant.js').getRelease,
 isEcosystemExist = require('../lib/assistant.js').getEcosystem,
 getconfig = require('../lib/config.js').getConfig;
 
@@ -26,7 +26,7 @@ var message, warning, error, suggestion, example;
 
 var argv = process.argv, id, target, cmd = argv[2];
 
-if (isCMDValid(cmd) === false) {
+if (cmdValid(cmd) === false) {
   message = 'Not a valid command';
   suggestion = 'Available commands: help, create, list, find, activate, deactivate';
   example = 'neco create <id>, neco list';
@@ -49,11 +49,11 @@ if (isCMDValid(cmd) === false) {
             if (!exists) {
               create.run(cfg);
             } else {
-              if (isIDValid(cfg) === false) {
+              if (!idValid(cfg)) {
                 message = 'The given id '+id+' is one of the reserved words in neco.';
                 suggestion = 'Please choose another one.';
                 log('message', message, suggestion);
-              } else if (isIDUnique(cfg) === false) {
+              } else if (!idUnique(cfg)) {
                 message = 'The given id '+cfg.id+' has already been used.';
                 suggestion = 'Please choose another one instead.';
                 log('message', message, suggestion);
@@ -76,7 +76,7 @@ if (isCMDValid(cmd) === false) {
           if (argv.length >= 4) {
             target = argv[3];
             cfg.target = target;  
-            if (isEcosystemExist(cfg)) {
+            if (ecosystemExist(cfg)) {
               list.run(cfg);
             } else {
               error = 'The desired ecosystem '+target+' is not exists.';
@@ -139,11 +139,11 @@ if (isCMDValid(cmd) === false) {
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
-            if (isEcosystemActive(cfg) === true) {
+            if (ecosystemActive(cfg)) {
               warning = 'The node ecosystem with id '+id+' is already active.';
               suggstion = 'Please use type deact in your shell to deactivate it.';
               log('warning', warning, suggestion, example);
-            } else if (isIDExsit(cfg) == false) {
+            } else if (!idExsit(cfg)) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco create <id> [node-version]';
@@ -172,12 +172,12 @@ if (isCMDValid(cmd) === false) {
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
-            if (isIDExsit(cfg) == false) {
+            if (!idExsit(cfg)) {
               warning = 'The node ecosystem with id '+id+' is not exists.';
               suggestion = 'You can use neco list command to find out all existing ecosystem.';
               example = 'neco list';
               log('warning', warning, suggestion, example);
-            } else if (isEcosystemActive(cfg) === false) {
+            } else if (!ecosystemActive(cfg)) {
               warning = 'The node ecosystem with id '+id+' is not active.';
               suggestion = 'Use neco activate command to activate it first.';
               example = 'neco_activate '+ id;
@@ -205,12 +205,12 @@ if (isCMDValid(cmd) === false) {
       envReady(config, function(cfg) {
         activateReady(cfg, function(cfg) {
           recordReady(cfg, function(exists, cfg) {
-            if (!isIDExsit(cfg)) {
+            if (!idExsit(cfg)) {
               message = 'The given id '+id+' is not exist.';
               suggestion = 'Find out all existing ecosystem.';
               example = 'neco list'
               log('message', message, suggestion, example);
-            } else if (isEcosystemActive(cfg) === true) {
+            } else if (ecosystemActive(cfg)) {
               message = 'The given ecosystem with id '+id+' is in active.';
               suggestion = 'Please deactivate it first.';
               example = 'neco_deactivate'
