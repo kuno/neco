@@ -48,9 +48,9 @@ neco_deactivate () {
 # unset irrelavent variables
 neco_deactivate nondestructive
 
-NECO_ID="test9006"
-NODE_ECOSYSTEM="/home/kuno/utopia/.neco/test9006"
-NODE_VERSION="0.2.6"
+NECO_ID="test3"
+NODE_ECOSYSTEM="/tmp/.neco/test3"
+NODE_VERSION="0.1.100"
 export NODE_ECOSYSTEM
 export NODE_VERSION
 export NECO_ID
