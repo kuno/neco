@@ -75,25 +75,17 @@ if (cmdValid(cmd) === false) {
 
   // Subcommand list
   else if (cmd === 'list') {
-    console.log('list');
-    /*
     parseGlobalConfig(function(config) {
-      console.log('parseGlobalConfig');
       config.cmd = cmd;
       parseUserConfig(config, function(config) {
-        console.log('parseUserConfig');
         envReady(config, function(config) {
-          console.log('envReady');
           activateReady(config, function(config) {
-            console.log('activateReady');
             recordReady(config, function(exists, config) {
-              console.log('recordReady');
               if (argv.length >= 4) {
                 target = argv[3];
                 config.target = target;  
                 if (ecosystemExist(config)) {
-                  console.log('ecosystem exists!');
-               //   list.run(config);
+                  list.run(config);
                 } else {
                   error = 'The desired ecosystem '+target+' is not exists.';
                   suggestion = 'Find out all the existing ecosystem.';
@@ -101,14 +93,13 @@ if (cmdValid(cmd) === false) {
                   log('error', error, suggestion, example);
                 }
               } else {
-                console.log(config);
-               // list.run(config);
+                list.run(config);
               }
             });
           });
         });
       });
-    }); */
+    });
   }
 
   // Subcommand find
