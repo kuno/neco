@@ -38,7 +38,7 @@ if (cmd === undefined) {
 
 } else if (cmdValid(cmd) === false) {
   error = 'Not a valid command';
-  suggestion = 'Available commands: howto, create, list, find, activate, deactivate';
+  suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
   example = 'neco hwoto, neco create <id>, neco list';
   log('error', error, suggestion, example);
 } else {
