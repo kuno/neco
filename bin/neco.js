@@ -92,12 +92,12 @@ if (cmd === undefined) {
             activateReady(config, function(config) {
               recordReady(config, function(exists, config) {
                 if (argv.length >= 4) {
-                  target = argv[3];
-                  config.target = target;
+                  id = argv[3];
+                  config.id = target;
                   if (ecosystemExist(config)) {
                     list.run(config);
                   } else {
-                    error = 'The desired ecosystem '+target+' is not exists.';
+                    error = 'The desired ecosystem '+id+' is not exists.';
                     suggestion = 'Find out all the existing ecosystem.';
                     example = 'neco list';
                     log('error', error, suggestion, example);
