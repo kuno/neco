@@ -3,6 +3,10 @@ unset NECO_ROOT
 export NECO_ROOT=/tmp
 export PATH=$PWD/../bin:$PATH
 
+if [ -e /tmp/.neco ]; then
+  rm -rf /tmp/.neco
+fi
+
 neco.js
 
 if [ -e ../data/dist.json.bak ]; then
