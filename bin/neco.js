@@ -29,11 +29,17 @@ var message, warning, error, suggestion, example;
 
 var argv = process.argv, id, target, cmd = argv[2];
 
-if (cmdValid(cmd) === undefined) {
-  message = 'Missing command';
+if (cmd === undefined) {
+  error = 'Missing command';
   suggestion = 'Available commands: howto, create, list, find, activate, deactivate';
   example = 'neco create <id>, neco list';
-  log('message', message, suggestion, example);
+  log('error', error, suggestion, example);
+
+} else if (cmdValid(cmd) === false) {
+  error = 'Not a valid command';
+  suggestion = 'Available commands: howto, create, list, find, activate, deactivate';
+  example = 'neco create <id>, neco list';
+  log('error', error, suggestion, example);
 } else {
   // Subcommand create
   if (cmd === 'create') {
