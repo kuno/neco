@@ -2,7 +2,7 @@
 
 var list = require('../cmd/list.js'),
 find = require('../cmd/find.js'),
-help = require('../cmd/help.js'),
+howto = require('../cmd/howto.js'),
 create = require('../cmd/create.js'),
 remove = require('../cmd/remove.js'),
 activate = require('../cmd/activate.js'),
@@ -31,7 +31,7 @@ var argv = process.argv, id, target, cmd = argv[2];
 
 if (cmdValid(cmd) === false) {
   message = 'Not a valid command';
-  suggestion = 'Available commands: help, create, list, find, activate, deactivate';
+  suggestion = 'Available commands: howto, create, list, find, activate, deactivate';
   example = 'neco create <id>, neco list';
   log('message', message, suggestion, example);
 } else {
@@ -135,7 +135,7 @@ if (cmdValid(cmd) === false) {
   else if (cmd === 'howto') {
     parseGlobalConfig(function(config) {
       parseUserConfig(config, function(config) {
-        help.run(config);
+        howto.run(config);
       });
     });
   }
