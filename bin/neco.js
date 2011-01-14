@@ -201,15 +201,15 @@ if (cmd === undefined) {
               activateReady(config, function(config) {
                 recordReady(config, function(exists, config) {
                   if (!idExsit(config)) {
-                    warning = 'The node ecosystem with id '+id+' is not exists.';
+                    error = 'The node ecosystem with id '+id+' is not exists.';
                     suggestion = 'You can use neco list command to find out all existing ecosystem.';
                     example = 'neco list';
-                    log('warning', warning, suggestion, example);
+                    log('error', error, suggestion, example);
                   } else if (!ecosystemActive(config)) {
-                    warning = 'The node ecosystem with id '+id+' is not active.';
+                    error = 'The node ecosystem with id '+id+' is not active.';
                     suggestion = 'Use neco activate command to activate it first.';
                     example = 'neco_activate '+ id;
-                    log('warning', warning, suggestion, example);
+                    log('error', error, suggestion, example);
                   } else { 
                     deactivate.run(config);
                   }
