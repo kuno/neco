@@ -79,6 +79,7 @@ if (cmdValid(cmd) === false) {
       config.cmd = cmd;
       parseUserConfig(config, function(config) {
         envReady(config, function(config) {
+          console.log('envReady');
           activateReady(config, function(config) {
             console.log('activateReady');
             recordReady(config, function(exists, config) {
