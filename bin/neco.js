@@ -237,7 +237,7 @@ if (cmd === undefined) {
   else  if (cmd === 'remove') {
     if (argv.length < 4) {
       message = 'Missing ID';
-      suggestion = 'Please specific the ID of the ecosystem that you want ot removed.';
+      suggestion = 'Please specific the ID of the ecosystem that you want to remove.';
       example = 'neco remove <id>';
       log('message', message, suggestion, example);
     } else {
