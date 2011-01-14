@@ -45,8 +45,8 @@ if (cmdValid(cmd) === false) {
     } else {
       id = argv[3], target = argv[4] || 'stable'; // defaut target is stable
       parseGlobalConfig(function(config) {
+        config.id = id, config.cmd = cmd, config.target = target; 
         parseUserConfig(config, function(config) {
-          config.id = id, config.cmd = cmd, config.target = target;
           envReady(config, function(config) {
             activateReady(config, function(config) {
               recordReady(config, function(exists, config) {
@@ -75,24 +75,28 @@ if (cmdValid(cmd) === false) {
 
   // Subcommand list
   else if (cmd === 'list') {
-    config = getconfig(), config.cmd = cmd;
-    envReady(config, function(config) {
-      activateReady(config, function(config) {
-        recordReady(config, function(exists, config) {
-          if (argv.length >= 4) {
-            target = argv[3];
-            config.target = target;  
-            if (ecosystemExist(config)) {
-              list.run(config);
-            } else {
-              error = 'The desired ecosystem '+target+' is not exists.';
-              suggestion = 'Find out all the existing ecosystem.';
-              example = 'neco list';
-              log('error', error, suggestion, example);
-            }
-          } else {
-            list.run(config);
-          }
+    parseGlobalConfig(function(config) {
+      config.cmd = cmd;
+      parseUserConfig(config, function(config) {
+        envReady(config, function(config) {
+          activateReady(config, function(config) {
+            recordReady(config, function(exists, config) {
+              if (argv.length >= 4) {
+                target = argv[3];
+                config.target = target;  
+                if (ecosystemExist(config)) {
+                  list.run(config);
+                } else {
+                  error = 'The desired ecosystem '+target+' is not exists.';
+                  suggestion = 'Find out all the existing ecosystem.';
+                  example = 'neco list';
+                  log('error', error, suggestion, example);
+                }
+              } else {
+                list.run(config);
+              }
+            });
+          });
         });
       });
     });
@@ -100,33 +104,40 @@ if (cmdValid(cmd) === false) {
 
   // Subcommand find
   else if (cmd === 'find') {
-    config = getconfig(), config.cmd = cmd;
-    envReady(config, function(config) {
-      activateReady(config, function(config) {
-        recordReady(config, function(exists, config) {    
-          if (argv.length >= 4) {
-            target = argv[3];
-            config.target = target;
-            if (isReleaseExist(config)) {
-              find.run(config);
-            } else {
-              error = 'The desired release '+target+' is not available.';
-              suggestion = 'Find out all the aviable releases.';
-              example = 'neco find [stable, latest, node-version]';
-              log('error', error, suggestion, example);
-            }
-          } else {
-            find.run(config);
-          }
+    parseGlobalConfig(function(config) {
+      config.cmd = cmd;  
+      parseUserConfig(config, function(config) {
+        envReady(config, function(config) {
+          activateReady(config, function(config) {
+            recordReady(config, function(exists, config) {    
+              if (argv.length >= 4) {
+                target = argv[3];
+                config.target = target;
+                if (isReleaseExist(config)) {
+                  find.run(config);
+                } else {
+                  error = 'The desired release '+target+' is not available.';
+                  suggestion = 'Find out all the aviable releases.';
+                  example = 'neco find [stable, latest, node-version]';
+                  log('error', error, suggestion, example);
+                }
+              } else {
+                find.run(config);
+              }
+            });
+          });
         });
       });
     });
   }
 
   // Subcommand help
-  else if (cmd === 'help') {
-    config = getconfig();
-    help.run(config);
+  else if (cmd === 'howto') {
+    parseGlobalConfig(function(config) {
+      parseUserConfig(config, function(config) {
+        help.run(config);
+      });
+    });
   }
 
   // Subcommand activate
@@ -138,25 +149,29 @@ if (cmdValid(cmd) === false) {
       log('message', message, suggestion, example);
     } else {
       id = process.argv[3];
-      config = getconfig(id);
-      config.id = id;
-      config.cmd = cmd;
 
-      envReady(config, function(config) {
-        activateReady(config, function(config) {
-          recordReady(config, function(exists, config) {
-            if (ecosystemActive(config)) {
-              warning = 'The node ecosystem with id '+id+' is already active.';
-              suggstion = 'Please use type deact in your shell to deactivate it.';
-              log('warning', warning, suggestion, example);
-            } else if (!idExsit(config)) {
-              warning = 'The node ecosystem with id '+id+' is not exists.';
-              suggestion = 'You can use neco list command to find out all existing ecosystem.';
-              example = 'neco create <id> [node-version]';
-              log('warning', warning, suggestion, example);
-            } else {
-              activate.run(config);
-            }
+      parseGlobalConfig(function(config) {
+        config.id = id, config.cmd = cmd;
+        parseEcosystemConfig(config, function(config) {
+          parseUserConfig(config, function(config) {
+            envReady(config, function(config) {
+              activateReady(config, function(config) {
+                recordReady(config, function(exists, config) {
+                  if (ecosystemActive(config)) {
+                    warning = 'The node ecosystem with id '+id+' is already active.';
+                    suggstion = 'Please use type deact in your shell to deactivate it.';
+                    log('warning', warning, suggestion, example);
+                  } else if (!idExsit(config)) {
+                    warning = 'The node ecosystem with id '+id+' is not exists.';
+                    suggestion = 'You can use neco list command to find out all existing ecosystem.';
+                    example = 'neco create <id> [node-version]';
+                    log('warning', warning, suggestion, example);
+                  } else {
+                    activate.run(config);
+                  }
+                });
+              });
+            });
           });
         });
       });
@@ -172,25 +187,29 @@ if (cmdValid(cmd) === false) {
       log('message', message, suggestion, example);
     } else {
       id = process.argv[3];
-      config = getconfig(id);
-      config.id = id;
-      config.cmd = cmd;    
-      envReady(config, function(config) {
-        activateReady(config, function(config) {
-          recordReady(config, function(exists, config) {
-            if (!idExsit(config)) {
-              warning = 'The node ecosystem with id '+id+' is not exists.';
-              suggestion = 'You can use neco list command to find out all existing ecosystem.';
-              example = 'neco list';
-              log('warning', warning, suggestion, example);
-            } else if (!ecosystemActive(config)) {
-              warning = 'The node ecosystem with id '+id+' is not active.';
-              suggestion = 'Use neco activate command to activate it first.';
-              example = 'neco_activate '+ id;
-              log('warning', warning, suggestion, example);
-            } else { 
-              deactivate.run(config);
-            }
+      parseGlobalConfig(function(config) {
+        config.id = id, config.cmd = cmd;  
+        parseEcosystemConfig(config, function(config) {
+          parseUserConfig(config, function(config) {
+            envReady(config, function(config) {
+              activateReady(config, function(config) {
+                recordReady(config, function(exists, config) {
+                  if (!idExsit(config)) {
+                    warning = 'The node ecosystem with id '+id+' is not exists.';
+                    suggestion = 'You can use neco list command to find out all existing ecosystem.';
+                    example = 'neco list';
+                    log('warning', warning, suggestion, example);
+                  } else if (!ecosystemActive(config)) {
+                    warning = 'The node ecosystem with id '+id+' is not active.';
+                    suggestion = 'Use neco activate command to activate it first.';
+                    example = 'neco_activate '+ id;
+                    log('warning', warning, suggestion, example);
+                  } else { 
+                    deactivate.run(config);
+                  }
+                });
+              });
+            });
           });
         });
       });
@@ -206,24 +225,29 @@ if (cmdValid(cmd) === false) {
       log('message', message, suggestion, example);
     } else {
       id = argv[3];
-      config = getconfig(id);
-      config.id = id, config.cmd = cmd;
-      envReady(config, function(config) {
-        activateReady(config, function(config) {
-          recordReady(config, function(exists, config) {
-            if (!idExsit(config)) {
-              message = 'The given id '+id+' is not exist.';
-              suggestion = 'Find out all existing ecosystem.';
-              example = 'neco list'
-              log('message', message, suggestion, example);
-            } else if (ecosystemActive(config)) {
-              message = 'The given ecosystem with id '+id+' is in active.';
-              suggestion = 'Please deactivate it first.';
-              example = 'neco_deactivate'
-              log('message', message, suggestion, example);
-            } else { 
-              remove.run(config);
-            }
+      parseGlobalConfig(function(config) {
+        config.id = id, config.cmd = cmd;
+        parseEcosystemConfig(config, function(config) {
+          parseUserConfig(config, function(config) {
+            envReady(config, function(config) {
+              activateReady(config, function(config) {
+                recordReady(config, function(exists, config) {
+                  if (!idExsit(config)) {
+                    message = 'The given id '+id+' is not exist.';
+                    suggestion = 'Find out all existing ecosystem.';
+                    example = 'neco list'
+                    log('message', message, suggestion, example);
+                  } else if (ecosystemActive(config)) {
+                    message = 'The given ecosystem with id '+id+' is in active.';
+                    suggestion = 'Please deactivate it first.';
+                    example = 'neco_deactivate'
+                    log('message', message, suggestion, example);
+                  } else { 
+                    remove.run(config);
+                  }
+                });
+              });
+            });
           });
         });
       });
