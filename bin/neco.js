@@ -94,7 +94,7 @@ if (cmd === undefined) {
                 if (argv.length >= 4) {
                   target = argv[3];
                   config.target = target;
-                  if (ecosystemExist(config) {
+                  if (ecosystemExist(config)) {
                     list.run(config);
                   } else {
                     error = 'The desired ecosystem '+target+' is not exists.';
