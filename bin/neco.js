@@ -76,6 +76,7 @@ if (cmdValid(cmd) === false) {
   // Subcommand list
   else if (cmd === 'list') {
     parseGlobalConfig(function(config) {
+      console.log('parseGlobalConfig');
       config.cmd = cmd;
       parseUserConfig(config, function(config) {
         console.log('parseUserConfig');
