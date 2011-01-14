@@ -85,7 +85,7 @@ if (cmdValid(cmd) === false) {
                 target = argv[3];
                 config.target = target;  
                 if (ecosystemExist(config)) {
-                  list.run(config);
+               //   list.run(config);
                 } else {
                   error = 'The desired ecosystem '+target+' is not exists.';
                   suggestion = 'Find out all the existing ecosystem.';
@@ -93,7 +93,7 @@ if (cmdValid(cmd) === false) {
                   log('error', error, suggestion, example);
                 }
               } else {
-                list.run(config);
+               // list.run(config);
               }
             });
           });
