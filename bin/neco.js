@@ -29,8 +29,8 @@ var message, warning, error, suggestion, example;
 
 var argv = process.argv, id, target, cmd = argv[2];
 
-if (cmdValid(cmd) === false) {
-  message = 'Not a valid command';
+if (cmdValid(cmd) === undefined) {
+  message = 'Missing command';
   suggestion = 'Available commands: howto, create, list, find, activate, deactivate';
   example = 'neco create <id>, neco list';
   log('message', message, suggestion, example);
