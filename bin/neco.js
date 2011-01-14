@@ -94,6 +94,7 @@ if (cmdValid(cmd) === false) {
                   log('error', error, suggestion, example);
                 }
               } else {
+                console.log(config);
                // list.run(config);
               }
             });
