@@ -78,6 +78,7 @@ if (cmdValid(cmd) === false) {
     parseGlobalConfig(function(config) {
       config.cmd = cmd;
       parseUserConfig(config, function(config) {
+        console.log('parseUserConfig');
         envReady(config, function(config) {
           console.log('envReady');
           activateReady(config, function(config) {
