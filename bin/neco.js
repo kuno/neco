@@ -21,6 +21,7 @@ parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
 parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
 
 var envReady = require('../lib/inception.js').envReady,
+rootReady = require('../lib/inception.js').rootReady,
 recordReady = require('../lib/inception.js').recordReady,
 activateReady = require('../lib/inception.js').activateReady;
 
