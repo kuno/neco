@@ -80,6 +80,7 @@ if (cmdValid(cmd) === false) {
       parseUserConfig(config, function(config) {
         envReady(config, function(config) {
           activateReady(config, function(config) {
+            console.log('activateReady');
             recordReady(config, function(exists, config) {
               console.log('recordReady');
               if (argv.length >= 4) {
