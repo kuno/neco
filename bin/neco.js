@@ -8,6 +8,15 @@ remove = require('../cmd/remove.js'),
 activate = require('../cmd/activate.js'),
 deactivate = require('../cmd/deactivate.js');
 
+var parseUserConfig = require('../lib/config.js').parseUserConfig,
+parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
+parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig; 
+
+var envReady = require('../lib/inception.js').envReady,
+rootReady = require('../lib/inception.js').rootReady,
+recordReady = require('../lib/inception.js').recordReady,
+activateReady = require('../lib/inception.js').activateReady;  
+
 var idUnique = require('../lib/validation.js').idUnique,
 idExsit = require('../lib/validation.js').idExsit,
 idValid = require('../lib/validation.js').idValid,
@@ -15,15 +24,6 @@ cmdValid = require('../lib/validation.js').cmdValid,
 ecosystemActive = require('../lib/validation.js').ecosystemActive,
 releaseExist = require('../lib/assistant.js').getRelease,
 ecosystemExist = require('../lib/assistant.js').getEcosystem;
-
-var parseUserConfig = require('../lib/config.js').parseUserConfig,
-parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
-parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
-
-var envReady = require('../lib/inception.js').envReady,
-rootReady = require('../lib/inception.js').rootReady,
-recordReady = require('../lib/inception.js').recordReady,
-activateReady = require('../lib/inception.js').activateReady;
 
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;
@@ -66,7 +66,7 @@ if (cmd === undefined) {
                       suggestion = 'Please choose another one.';
                       log('message', message, suggestion);
                     } else if (!idUnique(config)) {
-                      message = 'The given id '+config.id+' has already been used.';
+                      message = 'The given id '+id+' has already been used.';
                       suggestion = 'Please choose another one instead.';
                       log('message', message, suggestion);
                     } else { 
@@ -92,8 +92,7 @@ if (cmd === undefined) {
             activateReady(config, function(config) {
               recordReady(config, function(exists, config) {
                 if (argv.length >= 4) {
-                  id = argv[3];
-                  config.id = target;
+                  id = argv[3], config.id = target;
                   if (ecosystemExist(config)) {
                     list.run(config);
                   } else {
@@ -123,8 +122,7 @@ if (cmd === undefined) {
             activateReady(config, function(config) {
               recordReady(config, function(exists, config) {    
                 if (argv.length >= 4) {
-                  target = argv[3];
-                  config.target = target;
+                  target = argv[3], config.target = target;
                   if (releaseExist(config)) {
                     find.run(config);
                   } else {
@@ -162,7 +160,6 @@ if (cmd === undefined) {
       log('message', message, suggestion, example);
     } else {
       id = process.argv[3];
-
       parseGlobalConfig(function(config) {
         config.id = id, config.cmd = cmd;
         parseEcosystemConfig(config, function(config) {
