@@ -50,7 +50,7 @@ neco will release a new version after a  week of a new nodejs 0.3.x release.
     deactivate  -  show how to deactivate an active node ecosystem
         Usage:  neco deactivate <id>
 
-    howto        -  show usage information
-        Usage:  neco help
+    howto       -  show usage information
+        Usage:  neco howto
 
 Git repository: http://github.com/kuno/neco
