@@ -31,7 +31,7 @@ var argv = process.argv, id, target, cmd = argv[2];
 
 if (cmd === undefined) {
   error = 'Missing command';
-  suggestion = 'Available commands: howto, create, list, find, activate, deactivate';
+  suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
   example = 'neco howto, neco create <id>, neco list';
   log('error', error, suggestion, example);
 
