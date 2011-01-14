@@ -35,6 +35,9 @@ neco will release a new version after a  week of a new nodejs 0.3.x release.
     create      -  create a new node ecosystem
         Usage:  neco create <id> [node-version]
 
+    remove      -  remove an existing ecosystem
+        Usage:  neco remove <id>
+
     list        -  list all installed node ecosystems
         Usage:  neco list
 
@@ -45,9 +48,9 @@ neco will release a new version after a  week of a new nodejs 0.3.x release.
         Usage:  neco activate <id>
 
     deactivate  -  show how to deactivate an active node ecosystem
-        Usage:  neco deactivate [id]
+        Usage:  neco deactivate <id>
 
-    help        -  show help information
+    howto        -  show usage information
         Usage:  neco help
 
 Git repository: http://github.com/kuno/neco
