@@ -81,6 +81,7 @@ if (cmdValid(cmd) === false) {
         envReady(config, function(config) {
           activateReady(config, function(config) {
             recordReady(config, function(exists, config) {
+              console.log('recordReady');
               if (argv.length >= 4) {
                 target = argv[3];
                 config.target = target;  
