@@ -9,11 +9,12 @@ var log = require("./log")
   , readJson = require("./read-json")
   , fs = require("./graceful-fs")
   , chain = require("./chain")
+  , asyncMap = require("./async-map")
 
 function lifecycle (pkg, stage, wd, cb) {
   while (pkg && pkg._data) pkg = pkg._data
-  if (!pkg) return cb(new Error("Invalid package data"))
   if (typeof wd === "function") cb = wd , wd = null
+  if (!pkg) return cb(new Error("Invalid package data"))
   log(pkg._id, stage)
 
   // set the env variables, then run scripts as a child process.
@@ -32,10 +33,69 @@ function lifecycle (pkg, stage, wd, cb) {
   }
 
   chain
-    ( packageLifecycle && [runPackageLifecycle, pkg, env, wd]
+    ( [addDepsToEnv, pkg, env]
+    , packageLifecycle && [runPackageLifecycle, pkg, env, wd]
     , [runHookLifecycle, pkg, env, wd]
     , cb
     )
+}
+
+// attempt to resolve installed deps, and attach to env.
+// if it fails, then just leave it blank.
+function addDepsToEnv (pkg, env, cb_) {
+  if (pkg._resolvedDeps && pkg._bundledDeps) {
+    return cb(null, pkg._resolvedDeps, pkg._bundledDeps)
+  }
+  else readDeps(pkg, cb)
+  function cb (er, deps, bundled) {
+    if (er) return cb_(er)
+    pkg._bundledDeps = bundled
+    var bundledir = path.join(npm.dir, pkg.name, pkg.version
+                             ,"package", "node_modules", ".npm")
+    deps.forEach(add(npm.dir, "npm_dependency_"))
+    bundled.forEach(add(bundledir, "npm_dependency_"))
+    bundled.forEach(add(bundledir, "npm_bundle_"))
+    function add (root, prefix) { return function (d) {
+      env[prefix+(d.name)] = d.version
+      env[prefix+(d.name)+"_path"] =
+        path.join(root, d.name, d.version, "package")
+    }}
+    cb_()
+  }
+}
+
+function readDeps (pkg, cb) {
+  var pkgdir = path.join(npm.dir, pkg.name, pkg.version)
+    , depdir = path.join(pkgdir, "dependson")
+    , bundledir = path.join(pkgdir, "package", "node_modules", ".npm")
+  fs.readdir(depdir, function (er, dn) {
+    done(er ? [] : dn.map(function (dn) {
+      dn = dn.split("@")
+      var n = dn.shift()
+        , v = dn.join("@")
+      return {name:n, version:v}
+    }))
+  }, cb)
+  fs.readdir(bundledir, function (er, bn) {
+    if (er) return done(null, [])
+    asyncMap(bn || [], function (bn, cb) {
+      fs.readlink(path.join(bundledir, bn, "active"), function (er, a) {
+        if (er || !a) return cb()
+        cb(null, {name: bn, version: a.replace(/^\.\//, "")})
+      })
+    }, function (er, b) {
+      return done(null, b || [])
+    })
+  })
+  var deps
+    , bundled
+  function done (d, b) {
+    deps = deps || d
+    bundled = bundled || b
+    if (deps && bundled) {
+      return cb(null, deps, bundled)
+    }
+  }
 }
 
 function validWd (d) {
@@ -123,41 +183,40 @@ function makeEnv (data, prefix, env) {
   if (prefix !== "npm_package_") return env
   prefix = "npm_config_"
   var conf = npm.config.get()
+    , pkgConfig = {}
+    , pkgVerConfig = {}
+    , namePref = data.name + ":"
+    , verPref = data.name + "@" + data.version + ":"
   for (var i in conf) if (i.charAt(0) !== "_") {
-    var envKey = (prefix+i).replace(/[^a-zA-Z0-9_]/g, '_')
-    env[envKey] = String(conf[i])
+    var value = String(conf[i])
+    if (i.indexOf(namePref) === 0) {
+      pkgConfig[ i.substr(namePref.length) ] = value
+    } else if (i.indexOf(verPref) === 0) {
+      pkgVerConfig[ i.substr(verPref.length) ] = value
+    }
+    var envKey = (prefix+i)
+    env[envKey] = value
   }
+  prefix = "npm_package_config_"
+  ;[pkgConfig, pkgVerConfig].forEach(function (conf) {
+    for (var i in conf) {
+      var envKey = (prefix+i)
+      env[envKey] = conf[i]
+    }
+  })
   return env
 }
 
-function cmd (stage, req) { return function (args, cb_) {
-  var d = args.length
-  function cb (er) {
-    if (er) return cb_(er)
-    if (-- d === 0) return cb_()
+function cmd (stage) {
+  function CMD (args, cb) {
+    chain(args.map(function (p) {
+      return [npm.commands, "run-script", [p, stage]]
+    }).concat(cb))
   }
-  args.forEach(function (arg) {
-    var pkg = arg.split("@")
-      , name = pkg.shift()
-      , ver = pkg.join("@") || "active"
-      , wd = path.join(npm.dir, name, ver, "package")
-      , json = path.join(wd, "package.json")
-    readJson(json, function (er, data) {
-      if (er) return log.er(cb, "Couldn't find "+name + "@" + ver)(er)
-      if (ver && ver !== data.version) {
-        data.version = ver
-        data._id = data.name+"@"+ver
-      }
-      if ( !data.scripts
-          || !(stage in data.scripts)
-          && !("pre"+stage in data.scripts)) {
-        log("Nothing to do", stage)
-        return cb(req ? new Error("Nothing to do") : null)
-      }
-      lifecycle(data, "pre"+stage, wd, function (er) {
-        if (er) return log.er(cb, "Failed pre"+stage)(er)
-        lifecycle(data, stage, wd, cb)
-      })
-    })
-  })
-}}
+  CMD.usage = "npm "+stage+" <name>[@<version>] [<name>[@<version>] ...]"
+  CMD.completion = function (args, index, cb) {
+    var installedPkgs = require("./utils/completion/installed-packages")
+    installedPkgs(args, index, true, true, cb)
+  }
+  return CMD
+}

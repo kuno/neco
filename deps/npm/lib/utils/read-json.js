@@ -11,6 +11,8 @@ var fs = require("./graceful-fs")
   , npm = require("../../npm")
   , cache = {}
   , timers = {}
+  , loadPackageDefaults = require("./load-package-defaults")
+
 function readJson (jsonFile, opts, cb) {
   if (typeof cb !== "function") cb = opts, opts = {}
   if (cache.hasOwnProperty(jsonFile)) {
@@ -23,7 +25,9 @@ function readJson (jsonFile, opts, cb) {
     if (er) opts.wscript = false
     else opts.wscript = data.toString().match(/(^|\n)def build\b/)
                       && data.toString().match(/(^|\n)def configure\b/)
-    fs.readFile(jsonFile, processJson(opts, cb))
+    fs.readFile(jsonFile, processJson(opts, function (er, data) {
+      loadPackageDefaults(data, path.dirname(jsonFile), cb)
+    }))
   })
 }
 function processJson (opts, cb) {
@@ -78,10 +82,10 @@ function processObject (opts, cb) { return function (er, json) {
     throw e
   }
   json.name = json.name.trim()
-  if (json.name.charAt(0) === "." || json.name.match(/[\/@\s\+%]/)) {
+  if (json.name.charAt(0) === "." || json.name.match(/[\/@\s\+%:]/)) {
     var msg = "Invalid name: "
             + JSON.stringify(json.name)
-            + " may not start with '.' or contain /, @, +, or whitespace"
+            + " may not start with '.' or contain %/@+: or whitespace"
       , e = new Error(msg)
     if (cb) return cb(e)
     throw e
@@ -167,8 +171,8 @@ function processObject (opts, cb) { return function (er, json) {
     // arbitrary
     var keys = Object.keys(cache)
       , l = keys.length
-    if (l > 10000) for (var i = 5000; i < l; i ++) {
-     delete cache[keys[i]]
+    if (l > 10000) for (var i = 0; i < l - 5000; i ++) {
+      delete cache[keys[i]]
     }
   }
   if (cb) cb(null,json)
@@ -210,7 +214,8 @@ function testEngine (json) {
       var e = json.engines[i].trim()
       if (e.substr(0, 4) === "node") {
         json.engines.node = e.substr(4)
-        break
+      } else if (e.substr(0, 3) === "npm") {
+        json.engines.npm = e.substr(3)
       }
     }
   }
@@ -219,8 +224,11 @@ function testEngine (json) {
     log.warn( json.engines.node
             , "not a valid range.  Please see `npm help json`" )
   }
-  json._nodeSupported = semver.satisfies( nodeVer
-                                        , json.engines.node || "undefined" )
+
+  json._engineSupported = semver.satisfies(nodeVer, json.engines.node||"null")
+  if (json.engines.hasOwnProperty("npm") && json._engineSupported) {
+    json._engineSupported = semver.satisfies(npm.version, json.engines.npm)
+  }
   return json
 }
 

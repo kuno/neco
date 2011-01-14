@@ -12,6 +12,8 @@ var npm = require("../../../npm")
   , ini = require("../ini")
   , Buffer = require("buffer").Buffer
   , fs = require("../graceful-fs")
+  , rm = require("../rm-rf")
+  , asyncMap = require("../async-map")
 
 function request (method, where, what, etag, nofollow, cb) {
   log.verbose(where||"/", method)
@@ -31,7 +33,8 @@ function request (method, where, what, etag, nofollow, cb) {
                    || where.match(adduserChange)
                    || method === "DELETE"
   if (!where.match(/^https?:\/\//)) {
-    where = where.split("/").map(function (p) {
+    if (where.charAt(0) !== "/") where = "/" + where
+    where = "." + where.split("/").map(function (p) {
       p = p.trim()
       if (p.match(/^org.couchdb.user/)) {
         return p.replace(/\//g, encodeURIComponent("/"))
@@ -140,6 +143,22 @@ function request (method, where, what, etag, nofollow, cb) {
           er = new Error(
             parsed.error + " " + (parsed.reason || "") + ": " + w)
         }
+      } else if (method !== "HEAD" && method !== "GET") {
+        // invalidate cache
+        // This is irrelevant for commands that do etag caching, but
+        // ls and view also have a timed cache, so this keeps the user
+        // from thinking that it didn't work when it did.
+        // Note that failure is an acceptable option here, since the
+        // only result will be a stale cache for some helper commands.
+        var path = require("path")
+          , p = url.parse(where).pathname.split("/")
+          , _ = "/"
+          , caches = p.map(function (part) {
+              return _ = path.join(_, part)
+            }).map(function (cache) {
+              return path.join(npm.cache, cache, ".cache.json")
+            })
+        asyncMap(caches, rm, function () {})
       }
       return cb(er, parsed, data, response)
     })

@@ -40,8 +40,9 @@ var fs = require("./graceful-fs")
   , ini = require("./ini-parser")
   , base64 = require("./base64")
   , ProtoList = require("./proto-list")
-  , defaultConfig = require("./default-config")
+  , defaultConfig
   , configList = new ProtoList()
+  , parseArgs = require("./parse-args")
   , TRANS =
     { "default" : 4
     , "global" : 3
@@ -51,9 +52,11 @@ var fs = require("./graceful-fs")
     }
 
 exports.configList = configList
-
-configList.push(defaultConfig)
+configList.push({loglevel:"info"})
 function resolveConfigs (cli, cb) {
+  defaultConfig = defaultConfig || require("./default-config")
+  configList.pop()
+  configList.push(defaultConfig)
   var cl = configList
     , dc = cl.pop()
   if (!cb) cb = cli, cli = {}
@@ -99,19 +102,24 @@ function parseEnv (env) {
   return conf
 }
 function unParseField (f, k) {
-  var isPath = k.match(/root$/i)
+  // type can be an array or single thing.
+  var isPath = -1 !== [].concat(parseArgs.types[k]).indexOf(path)
   if (isPath) {
-    if (process.env.HOME.substr(-1) === "/") {
-      process.env.HOME = process.env.HOME(0, process.env.HOME.length-1)
-    }
-    if (f.indexOf(process.env.HOME) === 0) {
-      f = "~"+f.substr(process.env.HOME.length)
+    if (typeof process.env.HOME !== 'undefined') {
+      if (process.env.HOME.substr(-1) === "/") {
+        process.env.HOME = process.env.HOME(0, process.env.HOME.length-1)
+      }
+      if (f.indexOf(process.env.HOME) === 0) {
+        f = "~"+f.substr(process.env.HOME.length)
+      }
     }
   }
   return f
 }
 function parseField (f, k) {
-  var isPath = k.match(/root$/i)
+  if (typeof f !== "string" && !(f instanceof String)) return f
+  // type can be an array or single thing.
+  var isPath = -1 !== [].concat(parseArgs.types[k]).indexOf(path)
   f = (""+f).trim()
   if (f === "") f = true
   if (isPath) {
@@ -265,9 +273,12 @@ function rmConfigfile (configfile, cb) {
   })
 }
 function snapshot (which) {
-  return (!which) ? configList.snapshot
-       : configList.list[TRANS[which]] ? configList.list[TRANS[which]]
-       : undefined
+  var x = (!which) ? configList.snapshot
+        : configList.list[TRANS[which]] ? configList.list[TRANS[which]]
+        : undefined
+  if (!x) return
+  Object.keys(x).forEach(function (k) { if (k.match(/^_/)) delete x[k] })
+  return x
 }
 function get (key, which) {
   return (!key) ? snapshot(which)
