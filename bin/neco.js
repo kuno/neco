@@ -14,11 +14,11 @@ idValid = require('../lib/validation.js').idValid,
 cmdValid = require('../lib/validation.js').cmdValid,
 ecosystemActive = require('../lib/validation.js').ecosystemActive,
 releaseExist = require('../lib/assistant.js').getRelease,
-ecosystemExist = require('../lib/assistant.js').getEcosystem,
-parseUserConfig = require('../lib/config.js').parseUserConfig,
+ecosystemExist = require('../lib/assistant.js').getEcosystem;
+
+var parseUserConfig = require('../lib/config.js').parseUserConfig,
 parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
-parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig,
-getconfig = require('../lib/config.js').getConfig;
+parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
 
 var envReady = require('../lib/inception.js').envReady,
 recordReady = require('../lib/inception.js').recordReady,
