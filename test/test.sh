@@ -1,65 +1,24 @@
 #!/usr/bin/env sh
 
-if [ -d /tmp/neco/test ]; then
-  rm -rf /tmp/neco || return 1
-fi
+unset $NECO_ROOT
 
-if [ -n "$NECO_ROOT" ]; then
-  OLD_NECO_ROOT="$NECO_ROOT"
-  unset NECO_ROOT
-  export OLD_NECO_ROOT
-fi
+neco
 
-node ../bin/nc.js
+export NECO_ROOT=/tmp
 
-mkdir -p /tmp/neco/test/.neco || return 1
+neco create test0 stable
 
-export NECO_ROOT=/tmp/neco/test
+neco create test1 latest
 
-if [ -d "$OLD_NECO_ROOT".neco/source ]; then
-  ln -s "$OLD_NECO_ROOT".neco/source /tmp/neco/test/.neco || return 1
-fi
+neco create test2 
 
-node ../bin/nc.js help
+neco create test3 0.1.100
 
-node ../bin/nc.js list
+neco remove test0
 
-node ../bin/nc.js create new
+neco remove test1
 
-node ../bin/nc.js create test0
-
-node ../bin/nc.js create test1 stable
-
-node ../bin/nc.js create test2 latest
-
-node ../bin/nc.js create test3 0.2.0
-
-node ../bin/nc.js activate
-
-node ../bin/nc.js activate nonexists
-
-node ../bin/nc.js activate test1
-
-#deactivate
-
-node ../bin/nc.js activate test1
-
-node ../bin/nc.js deactivate
-
-node ../bin/nc.js deactivate nonexists
-
-node ../bin/nc.js deactivate test1
-
-#deactivate
-
-node ../bin/nc.js list
-
-if [ -n "$OLD_NECO_ROOT" ]; then
-  NECO_ROOT="$OLD_NECO_ROOT"
-  export NECO_ROOT
-  unset OLD_NECO_ROOT
-fi
-
-#rm -rf /tmp/neco || return 1
+neco remove test2
 
 exit 0
+
