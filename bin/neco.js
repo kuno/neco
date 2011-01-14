@@ -123,7 +123,7 @@ if (cmd === undefined) {
                   find.run(config);
                 } else {
                   error = 'The desired release '+target+' is not available.';
-                  suggestion = 'Find out all the aviable releases.';
+                  suggestion = 'Find out all the available releases.';
                   example = 'neco find [stable, latest, node-version]';
                   log('error', error, suggestion, example);
                 }
