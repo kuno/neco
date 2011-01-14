@@ -22,7 +22,7 @@ exports.run = function(config) {
     console.log('      Usage:  neco activate <id>');
     console.log('');
     console.log('  deactivate  -  show how to deactivate an active node ecosystem');
-    console.log('      Usage:  neco deactivate [id]');
+    console.log('      Usage:  neco deactivate <id>');
     console.log('');
     console.log('  howto        -  show usage information');
     console.log('      Usage:  neco howto');
