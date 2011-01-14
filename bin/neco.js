@@ -119,7 +119,7 @@ if (cmd === undefined) {
               if (argv.length >= 4) {
                 target = argv[3];
                 config.target = target;
-                if (isReleaseExist(config)) {
+                if (releaseExist(config)) {
                   find.run(config);
                 } else {
                   error = 'The desired release '+target+' is not available.';
