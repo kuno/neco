@@ -24,7 +24,7 @@ exports.run = function(config) {
     console.log('  deactivate  -  show how to deactivate an active node ecosystem');
     console.log('      Usage:  neco deactivate [id]');
     console.log('');
-    console.log('  howto        -  show help information');
+    console.log('  howto        -  show usage information');
     console.log('      Usage:  neco howto');
     console.log('');
     console.log('Git repository: http://github.com/kuno/neco');
