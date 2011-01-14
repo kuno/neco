@@ -85,6 +85,7 @@ if (cmdValid(cmd) === false) {
                 target = argv[3];
                 config.target = target;  
                 if (ecosystemExist(config)) {
+                  console.log('ecosystem exists!');
                //   list.run(config);
                 } else {
                   error = 'The desired ecosystem '+target+' is not exists.';
