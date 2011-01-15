@@ -20,3 +20,13 @@
 4, completed neco_activate and neco_deactivate shell function(modefied from
 python virtualenv and virtualenvwrapper package)
 5, added find command
+
+###0.0.3-alpha, 2011-01-15###
+1, depends on nodejs v0.3.4
+2, update npm to 0.2.14-6
+3, customize installing scripts for different platforms
+4, neco_activate and neco_deactivate shell function now are rougthly useful
+5, rename help command to howto
+6, added remove command
+7, added find command
+8, variant bugs fix

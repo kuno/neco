@@ -18,13 +18,13 @@
     "bugs":
     {
       "mail":"neokuno@gmail.com",
-      "web":""
+      "web":"http://github.com/kuno/neco/issues"
     },
     "directories": 
     {
-      "bin":"./bin","doc":"/.docs","man":"./man", "lib":"./lib", 
+      "bin":"./bin","docs":"/.docs","man":"./man", "lib":"./lib", 
       "cmd":"./cmd","data":"./data","deps":"./deps","include":"./include",
-      "sample":"./sample","shell":"./shell"
+      "sample":"./sample","shell":"./shell", "test":"./test"
     },
     "bin":{"neco":"./bin/neco.js"},
     "main":"neco",
