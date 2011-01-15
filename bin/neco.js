@@ -156,7 +156,7 @@ if (cmd === undefined) {
     if (argv.length < 4) {
       message = 'Missing ID';
       suggestion = 'Please specify the id of the ecosystem you want to activate.';
-      example = 'neco_activate <id>';
+      example = 'neco activate <id>';
       log('message', message, suggestion, example);
     } else {
       id = process.argv[3];
