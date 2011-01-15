@@ -41,6 +41,7 @@ fi
 make || return 1
 
 mkdir -p $destDir/ecosystem/{bin,etc,lib,include,share,man}
+mkdir -p $destDir/ecosystem/share/{node,licenses/node}
 
 if [ -e tools/waf-light ]; then
   tools/waf-light install --destdir=$destDir
