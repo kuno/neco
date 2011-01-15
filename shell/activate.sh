@@ -28,92 +28,96 @@
 
 # Verify that the NECO_ROOT directory exists
 neco_verify_root () {
-    if [ ! -d "$NECO_ROOT" ]; then
-        [ "$1" != "-q" ] && echo "ERR: Ecosystem directory '$NECO_ROOT' does not exist.  Create it or set NECO_ROOT to an existing directory." 1>&2
-        return 1
-    fi
-    return 0
+  if [ ! -d "$NECO_ROOT" ]; then
+    [ "$1" != "-q" ] && echo "Err: Ecosystem directory '$NECO_ROOT' does not exist.  Create it or set NECO_ROOT to an existing directory." 1>&2
+    return 1
+  fi
+  return 0
 }
 
 # Verify that the requested environment exists
 neco_verify_ecosystem () {
-    typeset eco_name="$1"
-    if [ ! -d "$NECO_ROOT/.neco/$eco_name" ]; then
-       echo "ERR: Ecosystem '$eco_name' does not exist. Create it with 'neco create $env_name'." >&2
-       return 1
-    fi
-    return 0
+  typeset neco_id="$1"
+  if [ ! -d "$NECO_ROOT/.neco/$neco_id" ]; then
+    echo "Err: Ecosystem '$neco_id' does not exist. Create it with 'neco create $env_name'." >&2
+    return 1
+  fi
+  return 0
 }
 
 
-# Verify that the active environment exists
+# Verify that the active ecosystem exists
 neco_verify_active_ecosystem () {
-    if [ -n "${NODE_ECOSYSTEM}" ] || [ -e $HOME/.npmrc.neco.bak ]; then
-        echo "ERR: Anohter ecosystem has already in active" >&2
-        return 1
-    fi
+  if [ ! -n "${NODE_ECOSYSTEM}" ] && [ -n $npm_config_userconfig ]; then
+    echo "Err: Another ecosystem has already in active in other shell." >&2
+    return 1
+  elif [ -n "${NODE_ECOSYSTEM}" ] && [ ! -n $npm_config_userconfig ]; then
+    echo "Err: Another ecosystem has already in active" >&2
+    return 1
+  else
     return 0
+  fi
 }
 
 neco_activate () {
-	typeset eco_name="$1"
-	if [ "$eco_name" = "" ]
-    then
-        return 1
-    fi
+  typeset neco_id="$1"
+  if [ "$neco_id" = "" ]
+  then
+    return 1
+  fi
 
-    neco_verify_root || return 1
-    neco_verify_active_ecosystem || return 1
-    neco_verify_ecosystem $eco_name || return 1
-    
-    activate="$NECO_ROOT/.neco/$eco_name/activate"
-    if [ ! -f "$activate" ]
-    then
-        echo "ERR: Ecosystem '$NECO_ROOT/.neco/$eco_name' does not contain an activate script." >&2
-        return 1
-    fi
-    
-    # Deactivate any current environment "destructively"
-    # before switching so we use our override function,
-    # if it exists.
-    type neco_deactivate >/dev/null 2>&1
-    if [ $? -eq 0 ]
-    then
-        neco_deactivate
-        unset -f neco_deactivate >/dev/null 2>&1
-    fi
+  neco_verify_root || return 1
+#  neco_verify_active_ecosystem || return 1
+  neco_verify_ecosystem $neco_id || return 1
 
-    source "$activate"
-    
-    # Save the deactivate function from virtualenv under a different name
-#    old_neco_deactivate=`typeset -f neco_deactivate | sed 's/neco_deactivate/old_neco_deactivate/g'`
-#    eval "$old_neco_deactivate"
-#    unset -f neco_deactivate >/dev/null 2>&1
+  activate="$NECO_ROOT/.neco/$neco_id/activate"
+  if [ ! -f "$activate" ]
+  then
+    echo "Err: Ecosystem '$NECO_ROOT/.neco/$neco_id' does not contain an activate script." >&2
+    return 1
+  fi
 
-    # Replace the deactivate() function with a wrapper.
-#    eval 'neco_deactivate () {
+  # Deactivate any current environment "destructively"
+  # before switching so we use our override function,
+  # if it exists.
+  type neco_deactivate >/dev/null 2>&1
+  if [ $? -eq 0 ]
+  then
+    neco_deactivate
+    unset -f neco_deactivate >/dev/null 2>&1
+  fi
 
-        # Call the local hook before the global so we can undo
-        # any settings made by the local postactivate first.
-        
-#        old_ecosytem=$(basename "$NODE_ECOSYSTEM")
-        
-        # Call the original function.
-#        old_neco_deactivate $1
+  source "$activate"
+
+  # Save the deactivate function from virtualenv under a different name
+  #    old_neco_deactivate=`typeset -f neco_deactivate | sed 's/neco_deactivate/old_neco_deactivate/g'`
+  #    eval "$old_neco_deactivate"
+  #    unset -f neco_deactivate >/dev/null 2>&1
+
+  # Replace the deactivate() function with a wrapper.
+  #    eval 'neco_deactivate () {
+
+  # Call the local hook before the global so we can undo
+  # any settings made by the local postactivate first.
+
+  #        old_ecosytem=$(basename "$NODE_ECOSYSTEM")
+
+  # Call the original function.
+  #        old_neco_deactivate $1
 
 
-#        if [ ! "$1" = "nondestructive" ]
-#        then
-            # Remove this function
-#            unset -f old_neco_deactivate >/dev/null 2>&1
-#            unset -f neco_deactivate >/dev/null 2>&1
-#        fi
+  #        if [ ! "$1" = "nondestructive" ]
+  #        then
+  # Remove this function
+  #            unset -f old_neco_deactivate >/dev/null 2>&1
+  #            unset -f neco_deactivate >/dev/null 2>&1
+  #        fi
 
-#    }'
-    
-    #virtualenvwrapper_run_hook "post_activate"
-    
-	return 0
+  #    }'
+
+  #virtualenvwrapper_run_hook "post_activate"
+
+  return 0
 }
 
 

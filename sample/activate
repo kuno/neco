@@ -22,14 +22,23 @@ neco_deactivate () {
         unset _OLD_NECO_PS1
     fi
 
-    if [ -L $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
-        rm -rf $HOME/.npmrc || return 1
-        mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
-    fi
+
+#    if [ -L $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
+#        rm -rf $HOME/.npmrc || return 1
+#        mv $HOME/.npmrc.neco.bak $HOME/.npmrc  || return 1
+#    fi
 
     unset NODE_ECOSYSTEM
     unset NODE_VERSION
     unset NECO_ID
+
+    if [ -n "${old_npm_config_userconfig}" ]; then
+       export npm_config_userconfig=$old_npm_config_userconfig
+       unset old_npm_config_userconfig
+    else
+       export npm_config_userconfig=$HOME/.npmrc
+    fi
+
     if [ ! "$1" = "nondestructive" ] ; then
     # Self destruct!
         unset -f neco_deactivate
@@ -39,26 +48,32 @@ neco_deactivate () {
 # unset irrelavent variables
 neco_deactivate nondestructive
 
-NECO_ID="test3"
-NODE_ECOSYSTEM="/tmp/neco/test/.neco/test3"
-NODE_VERSION="0.2.0"
+NECO_ID="test0"
+NODE_ECOSYSTEM="/tmp/.neco/test0"
+NODE_VERSION="0.2.6"
 export NODE_ECOSYSTEM
 export NODE_VERSION
 export NECO_ID
+
+export old_npm_config_userconfig=$npm_config_userconfig
+export old_npm_config_userconfig=$HOME/.npmrc
+
+export npm_config_userconfig=$NODE_ECOSYSTEM/npmrc
+
 
 _OLD_NECO_PATH="$PATH"
 PATH="$NODE_ECOSYSTEM/ecosystem/bin:$PATH"
 export PATH
 
-if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
-  mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
-  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+#if [ -e $HOME/.npmrc ] && [ ! -e $HOME/.npmrc.neco.bak ]; then
+#  mv $HOME/.npmrc $HOME/.npmrc.neco.bak || return  1
+#  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
 #elif [ -e $HOME/.npmrc ] && [ -e $HOME/.npmrc.neco.bak ]; then
 #  rm -rf $HOME/.npmrc || return 1
 #  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
-else
-  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
-fi
+#else
+#  ln -s $NODE_ECOSYSTEM/npmrc $HOME/.npmrc
+#fi
 
 if [ -z "$NODE_ECOSYSTEM_DISABLE_PROMPT" ] ; then
     _OLD_NECO_PS1="$PS1"

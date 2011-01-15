@@ -135,10 +135,18 @@ function ls_ (req, depth, cb) {
   if (typeof cb !== "function") cb = depth, depth = 1
   mkdir(npm.cache, function (er) {
     if (er) return log.er(cb, "no cache dir")(er)
-    find(path.join(npm.cache, req), null, depth, function (er, files) {
+    function dirFilter (f, type) {
+      return type !== "dir" ||
+        ( f && f !== npm.cache + "/" + req
+         && f !== npm.cache + "/" + req + "/" )
+    }
+    find(path.join(npm.cache, req), dirFilter, depth, function (er, files) {
       if (er) return cb(er)
       return cb(null, files.map(function (f) {
-        return f.substr(npm.cache.length + 1)
+        f = f.substr(npm.cache.length + 1)
+        f = f.substr((f === req ? path.dirname(req) : req).length)
+             .replace(/^\//, '')
+        return f
       }))
     })
   })
@@ -252,7 +260,10 @@ function addLocalTarball (p, cb) {
     to.on("error", errHandler)
     to.on("close", function () {
       if (errState) return
-      addTmpTarball(tmp, cb)
+      fs.chmod(tmp, 0644, function (er) {
+        if (er) return cb(er)
+        addTmpTarball(tmp, cb)
+      })
     })
     sys.pump(from, to)
   })
@@ -302,7 +313,7 @@ function addLocalDirectory (p, cb) {
       , tmptgz = path.join(tmp, "tmp.tgz")
       , placed = path.join(npm.cache, data.name, data.version, "package.tgz")
       , tgz = path.basename(p) === "package" ? placed : tmptgz
-    packTar(tgz, p, function (er) {
+    packTar(tgz, p, data, function (er) {
       if (er) return log.er(cb,"couldn't pack "+p+ " to "+tgz)(er)
       addLocalTarball(tgz, cb)
     })
@@ -358,41 +369,70 @@ function unpackTar (tarball, unpackTarget, cb) {
         )
   })
 }
-function packTar (targetTarball, folder, cb) {
-  log.verbose(folder+" "+targetTarball, "packTar")
+
+var publishEverythingWarning = {}
+function packTar (targetTarball, folder, pkg, cb) {
   if (folder.charAt(0) !== "/") folder = path.join(process.cwd(), folder)
   if (folder.slice(-1) === "/") folder = folder.slice(0, -1)
+  if (typeof pkg === "function") {
+    cb = pkg, pkg = null
+    return readJson(path.join(folder, "package.json"), function (er, pkg) {
+      if (er) return log.er(cb, "Couldn't find package.json in "+folder)(er)
+      packTar(targetTarball, folder, pkg, cb)
+    })
+  }
+  log.verbose(folder+" "+targetTarball, "packTar")
   var parent = path.dirname(folder)
     , addFolder = path.basename(folder)
     , ignore = path.join(folder, ".npmignore")
     , defaultIgnore = path.join(__dirname, "utils", "default.npmignore")
-    , include = path.join(folder, ".npminclude")
+    , customIgnore = false
+
   cb = log.er(cb, "Failed creating the tarball.\n"
              + "This is very rare. Perhaps the 'gzip' or 'tar' configs\n"
              + "are set improperly?\n")
 
   fs.stat(ignore, function (er) {
     if (er) ignore = defaultIgnore
-    fs.stat(include, function (er) {
-      if (er) include = false
-      mkdir(path.dirname(targetTarball), function (er) {
-        if (er) return log.er(cb, "Could not create "+targetTarball)(er)
-        // tar xf - --strip-components=1 -C {unpackTarget} \
-        //   | gzip {tarball} > targetTarball
-        var target = fs.createWriteStream(targetTarball)
-          , unPacked = false
-          , args = [ "-cvf", "-", "--exclude", ".git", "-X", ignore]
-        if (include) args.push("-T", include)
-        args.push(addFolder)
-        var tar = spawn(npm.config.get("tar"), args, null, false, parent)
-          , gzip = spawn( npm.config.get("gzipbin"), ["--stdout"]
-                        , null, false, parent )
-          , errState
-        pipe(tar, gzip, function (er) {
-          if (errState) return
-          if (er) return cb(errState = er)
-        })
-        sys.pump(gzip.stdout, target, function (er, ok) {
+    else customIgnore = true
+    mkdir(path.dirname(targetTarball), function (er) {
+      if (er) return log.er(cb, "Could not create "+targetTarball)(er)
+      // tar xf - --strip-components=1 -C {unpackTarget} \
+      //   | gzip {tarball} > targetTarball
+      var target = fs.createWriteStream(targetTarball)
+        , unPacked = false
+        , args = [ "-cvf", "-", "--exclude", ".git", "-X", ignore]
+        , tarEnv = {}
+      for (var i in process.env) {
+        tarEnv = process.env
+      }
+      tarEnv.COPY_EXTENDED_ATTRIBUTES_DISABLE = 1
+      if (!pkg.files
+          && !publishEverythingWarning[pkg._id]
+          && !customIgnore) {
+        publishEverythingWarning[pkg._id] = true
+        log.warn("Adding entire directory to tarball. Please add a\n"
+                +".npmignore or specify a 'files' array in the package.json"
+                ,"publish-everything "+pkg._id)
+      }
+      if (!pkg.files) pkg.files = [""]
+      args.push.apply(args, pkg.files.map(function (f) {
+        // the second path.join is to prevent escapes.
+        return path.join(addFolder, path.join("/", f))
+      }))
+      var tar = spawn(npm.config.get("tar"), args, tarEnv, false, parent)
+        , gzip = spawn( npm.config.get("gzipbin"), ["--stdout"]
+                      , null, false, parent )
+        , errState
+      pipe(tar, gzip, function (er) {
+        if (errState) return
+        if (er) return cb(errState = er)
+      })
+      sys.pump(gzip.stdout, target)
+      target.on("close", function (er, ok) {
+        if (errState) return
+        if (er) return cb(errState = er)
+        fs.chmod(targetTarball, 0644, function (er) {
           if (errState) return
           return cb(errState = er)
         })

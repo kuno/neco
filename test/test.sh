@@ -1,65 +1,41 @@
 #!/usr/bin/env sh
+unset NECO_ROOT
+export NECO_ROOT=/tmp
+export PATH=$PWD/../bin:$PATH
 
-if [ -d /tmp/neco/test ]; then
-  rm -rf /tmp/neco || return 1
+if [ -e /tmp/.neco ]; then
+  rm -rf /tmp/.neco
 fi
 
-if [ -n "$NECO_ROOT" ]; then
-  OLD_NECO_ROOT="$NECO_ROOT"
-  unset NECO_ROOT
-  export OLD_NECO_ROOT
+neco.js
+
+if [ -e ../data/dist.json.bak ]; then
+  mv ../data/dist.json.bak ../data/dist.json
+else 
+  cp ../data/dist.json ../data/dist.json.bak
+  cp ./testDist.json ../data/dist.json
 fi
 
-node ../bin/nc.js
+neco.js create test0 stable
 
-mkdir -p /tmp/neco/test/.neco || return 1
+neco.js create test1 latest
 
-export NECO_ROOT=/tmp/neco/test
+neco.js create test2 
 
-if [ -d "$OLD_NECO_ROOT".neco/source ]; then
-  ln -s "$OLD_NECO_ROOT".neco/source /tmp/neco/test/.neco || return 1
+neco.js create test3 0.1.100
+
+neco.js remove test0
+
+neco.js remove test1
+
+neco.js remove test2
+
+neco js remove test3
+
+if [ -e ../data/dist.json.bak ] && [ -e ../data/dist.json ]; then
+  mv ../data/dist.json.bak ../data/dist.json
 fi
-
-node ../bin/nc.js help
-
-node ../bin/nc.js list
-
-node ../bin/nc.js create new
-
-node ../bin/nc.js create test0
-
-node ../bin/nc.js create test1 stable
-
-node ../bin/nc.js create test2 latest
-
-node ../bin/nc.js create test3 0.2.0
-
-node ../bin/nc.js activate
-
-node ../bin/nc.js activate nonexists
-
-node ../bin/nc.js activate test1
-
-#deactivate
-
-node ../bin/nc.js activate test1
-
-node ../bin/nc.js deactivate
-
-node ../bin/nc.js deactivate nonexists
-
-node ../bin/nc.js deactivate test1
-
-#deactivate
-
-node ../bin/nc.js list
-
-if [ -n "$OLD_NECO_ROOT" ]; then
-  NECO_ROOT="$OLD_NECO_ROOT"
-  export NECO_ROOT
-  unset OLD_NECO_ROOT
-fi
-
-#rm -rf /tmp/neco || return 1
+rm -rf NECO_ROOT/.neco || return 1
 
 exit 0
+

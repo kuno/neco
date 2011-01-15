@@ -1,3 +1,3 @@
-binroot = /tmp/neco/test/.neco/test2/ecosystem/bin
-manroot =  /tmp/neco/test/.neco/test2/ecosystem/share/man
-root = /tmp/neco/test/.neco/test2/ecosystem/lib/node
+binroot = /tmp/.neco/test0/ecosystem/bin
+manroot =  /tmp/.neco/test0/ecosystem/share/man
+root = /tmp/.neco/test0/ecosystem/lib/node

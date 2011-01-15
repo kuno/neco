@@ -42,6 +42,7 @@ var registry = require("./utils/registry")
   , fs = require("./utils/graceful-fs")
   , cache = require("./cache")
   , asyncMap = require("./utils/async-map")
+  , chain = require("./utils/chain")
 
 function install (pkglist, cb) {
   log.verbose(pkglist, "install")
@@ -71,17 +72,19 @@ function install (pkglist, cb) {
 
   var reg = Object.create(installedPackages)
     , seen = {}
+    , bundles = {}
   log.verbose(mustInstall, "must install")
   asyncMap(pkglist, function (pkg, cb) {
-    install_(pkg, reg, seen, mustInstall.indexOf(pkg) !== -1, pkglist, cb)
+    install_(pkg, reg, seen, mustInstall.indexOf(pkg) !== -1,
+             pkglist, bundles, cb)
   }, function (er) {
     if (er) return cb(er)
-    buildAll(reg, cb)
+    buildAll(reg, bundles, cb)
   })
 }
 
 // call the cb with the "next" thing(s) to look up for this one, or nothing
-function install_ (pkg, reg, seen, mustHave, pkglist, cb) {
+function install_ (pkg, reg, seen, mustHave, pkglist, bundles, cb) {
   log.verbose(pkg, "install_")
   if (seen[pkg]) return cb() // repeat, skip it
   seen[pkg] = true
@@ -89,7 +92,7 @@ function install_ (pkg, reg, seen, mustHave, pkglist, cb) {
   // it's a local thing or a url if it has a / in it.
   if (pkg.indexOf("/") !== -1 || pkg === ".") {
     log.silly(pkg, "install local")
-    return cache.add(pkg, finisher(pkg, reg, pkglist, cb))
+    return cache.add(pkg, finisher(pkg, reg, pkglist, bundles, cb))
   }
 
   // now we know it's not a URL or file,
@@ -114,7 +117,7 @@ function install_ (pkg, reg, seen, mustHave, pkglist, cb) {
   if (exact) {
     log.verbose("exact", pkg)
     // just pull the data out of the cache to ensure it's there
-    return cache.read(name, exact, finisher(pkg, reg, pkglist, cb))
+    return cache.read(name, exact, finisher(pkg, reg, pkglist, bundles, cb))
   }
 
   getData(name, function (er, data) {
@@ -127,7 +130,8 @@ function install_ (pkg, reg, seen, mustHave, pkglist, cb) {
         "Tag not found: "+data.name+"@"+tag
         +"\nValid install targets for "+data.name+": "
         +installTargets(data)))
-      install_(data.name+"@"+tags[tag], reg, seen, mustHave, pkglist, cb)
+      install_(data.name+"@"+tags[tag], reg, seen, mustHave
+              , pkglist, bundles, cb)
     } else {
       log(pkg, "range")
       // prefer the default tag version.
@@ -141,12 +145,13 @@ function install_ (pkg, reg, seen, mustHave, pkglist, cb) {
         "No satisfying version found for '"+data.name+"'@'"+range+"'"
         +"\nValid install targets for "+data.name+": "
         +installTargets(data)))
-      install_(data.name+"@"+satis, reg, seen, mustHave, pkglist, cb)
+      install_(data.name+"@"+satis, reg, seen, mustHave
+              , pkglist, bundles, cb)
     }
   })
 }
 function installTargets (data) {
-  return Object.keys(data["dist-tags"])
+  return Object.keys(data["dist-tags"] || {})
     .concat(Object.keys(data.versions))
     .map(JSON.stringify)
     .join(", ") || "(none)"
@@ -154,7 +159,7 @@ function installTargets (data) {
 
 function getData (name, cb) {
   var data = npm.get(name)
-  if (data) return cb(null, data)
+  if (data && data["dist-tags"]) return cb(null, data)
   registry.get(name, function (er, data) {
     if (er) return cb(er)
     if (!data._id) data._id = name
@@ -162,10 +167,13 @@ function getData (name, cb) {
       try {
         readJson.processJson(data.versions[ver])
       } catch (ex) {
-        log(ver, "ignoring invalid version")
+        log(data.name+"@"+ver, "ignoring invalid version")
         delete data.versions[ver]
       }
     }
+    if (!data["dist-tags"]) return cb(new Error(
+      (data._id || data.name) +
+      " Invalid package data. Lacking 'dist-tags' hash."))
     filterNodeVersion(data)
     npm.set(data)
     cb(null, data)
@@ -181,9 +189,11 @@ function findSatisfying (pkg, name, range, mustHave, reg) {
          )
 }
 
-function finisher (pkg, reg, pkglist, cb) { return function (er, data) {
+function finisher (pkg, reg, pkglist, bundles, cb) {
+    return function (er, data) {
+  if (!cb) throw new Error("no cb in finisher")
   if (er) return log.er(cb, "Error installing "+pkg)(er)
-  if (!data._nodeSupported) cb(
+  if (!data._engineSupported) return cb(
     data.name+"@"+data.version+" not compatible with your version of node\n"+
     "Requires: node@"+data.engines.node+"\n"+
     "You have: node@"+process.version)
@@ -191,20 +201,26 @@ function finisher (pkg, reg, pkglist, cb) { return function (er, data) {
   if (!reg.hasOwnProperty(data.name)) {
     reg[data.name] = Object.create(reg[data.name] || Object.prototype)
   }
-  if (!reg[data.name].hasOwnProperty(data.version)) {
-    reg[data.name][data.version] = {}
-  }
   reg[data.name][data.version] = data
 
   // also add the dependencies.
+  // any dependencies that are URLs get added to a bundle list
   if (!pkglist) pkglist = []
   getDeps(data, function (er, deps) {
+    if (er) return cb(er)
     if (!Array.isArray(pkglist)) pkglist = [pkglist]
     pkglist.push.apply(pkglist, Object.keys(deps).map(function (dep) {
       var v = deps[dep].trim()
         , d = dep.trim()
+        , u = url.parse(v)
+      log.silly(u, "url.parse "+v)
+      if (u && u.protocol && u.host) {
+        bundles[data._id] = bundles[data._id] || []
+        bundles[data._id].push(u.href)
+        return false
+      }
       return v ? d + "@" + v : d
-    }))
+    }).filter(function (dep) { return dep }))
     cb()
   })
 }}
@@ -229,7 +245,7 @@ function getDeps (data, cb) {
 function filterNodeVersion (data) {
   var supported = []
   Object.keys(data.versions).forEach(function (v) {
-    if (!data.versions[v]._nodeSupported) {
+    if (!data.versions[v]._engineSupported) {
       log.verbose(data.versions[v]._id, "not supported on node@"+process.version)
       delete data.versions[v]
     } else supported.push(data.versions[v]._id)
@@ -247,7 +263,7 @@ function filterNodeVersion (data) {
   }
 }
 
-function buildAll (installed, cb) {
+function buildAll (installed, bundles, cb) {
   var list = []
   Object.keys(installed).forEach(function (i) {
     Object.keys(installed[i]).forEach(function (v) {
@@ -256,7 +272,9 @@ function buildAll (installed, cb) {
   })
   log.verbose(list, "install list")
   cb = rollbackFailure(list, cb)
+  if (!list.length) return log.info("Nothing to do", "install", cb)
   var buildList = []
+
   asyncMap(list, function (i, cb) {
     var target = path.join(npm.dir, i[0], i[1])
     cache.unpack(i[0], i[1], target, cb)
@@ -264,13 +282,34 @@ function buildAll (installed, cb) {
   }, function (er) {
     if (er) return cb(er)
     log.verbose(list.join("\n"), "unpacked, building")
-    if (buildList.length) npm.commands.build(buildList, cb)
-    else {
-      log.info("Nothing to do", "install")
-      cb()
-    }
+    // now everything's been unpacked.
+    // install any bundles that were requested with a url dep.
+    // MUST install ALL bundles before building anything
+    log.silly(bundles, "installing bundles")
+    chain( [installBundles, bundles]
+         , [npm.commands.build, buildList]
+         , cb )
   })
 }
+
+function installBundles (bundles, cb) {
+  // bundles is {name:[some, pkg, urls],...}
+  // bundle install each of them one at at time.
+  // This global config state thing sucks a lot. Need
+  // a more clean FP-style approach to the whole bundle thing.
+  var bundlePkgs = Object.keys(bundles)
+  if (!bundlePkgs.length) return cb()
+  chain(bundlePkgs.map(function (host) { return function (cb) {
+    var urls = bundles[host]
+      , _ = host.split("@")
+      , name = _.shift()
+      , ver = _.join("@")
+      , pkgDir = path.join(npm.dir, name, ver, "package")
+    log.info(urls, "bundling for "+host)
+    npm.commands.bundle(["install"].concat(urls), pkgDir, cb)
+  }}).concat(cb))
+}
+
 function rollbackFailure (installList, cb) { return function (er) {
   if (!er) return log.verbose(installList.map(function (i) {
     return i.join("@")

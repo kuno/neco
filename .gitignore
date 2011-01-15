@@ -32,3 +32,6 @@ fabfile.*
 
 # tar file
 *.tar.gz
+
+# testing report file
+test/report.txt

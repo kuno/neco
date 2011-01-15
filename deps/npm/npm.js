@@ -20,6 +20,7 @@ var EventEmitter = require("events").EventEmitter
   , path = require("path")
   , mkdir = require("./lib/utils/mkdir-p")
   , abbrev = require("./lib/utils/abbrev")
+  , which = require("./lib/utils/which")
 
 npm.commands = {}
 npm.ELIFECYCLE = {}
@@ -79,16 +80,20 @@ var commandCache = {}
               , "bundle"
               , "outdated"
               , "init"
-              , "completion"
               , "deprecate"
               , "version"
               , "edit"
               , "explore"
               , "docs"
               , "faq"
+              , "run-script"
+              , "set"
+              , "get"
+              , "xmas"
               ]
   , plumbing = [ "build"
                , "update-dependents"
+               , "completion"
                ]
   , fullList = npm.fullList = cmdList.concat(aliasNames).filter(function (c) {
       return plumbing.indexOf(c) === -1
@@ -112,15 +117,31 @@ npm.deref = function (c) {
   return a
 }
 var loaded = false
+  , loading = false
+  , loadListeners = []
 npm.load = function (conf, cb_) {
   if (!cb_ && typeof conf === "function") cb_ = conf , conf = {}
-  function cb (er) { return cb_(er, npm) }
+  loadListeners.push(cb_)
   if (loaded) return cb()
-  loaded = true
+  if (loading) return
+  loading = true
+  function cb (er) {
+    loaded = true
+    loadListeners.forEach(function (cb) {
+      cb(er, npm)
+    })
+    loadListeners.length = 0
+  }
   log.waitForConfig()
-  ini.resolveConfigs(conf, function (er) {
-    if (er) return cb(er)
-    mkdir(npm.tmp, cb)
+  which(process.argv[0], function (er, node) {
+    if (!er && node !== process.execPath) {
+      log.verbose("node symlink", node)
+      process.execPath = node
+    }
+    ini.resolveConfigs(conf, function (er) {
+      if (er) return cb(er)
+      mkdir(npm.tmp, cb)
+    })
   })
 }
 

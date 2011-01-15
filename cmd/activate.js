@@ -2,8 +2,9 @@ var path = require('path'),
 color = require('ansi-color').set;
 
 exports.run = function(config) {
-  var act = path.join(config.pkgDir, 'shell/activate.sh');
-  var shell = color('source '+act, 'bold+yellow');
+  var shell = color('source '+config.globalActivateFile, 'bold+yellow');
+  var deactivate = color('neco_deactivate', 'bold+yellow');
   console.log('add \''+shell+'\' to your .bashrc or .zshrc file, :)');
   console.log('Then run '+color('neco_activate '+config.id, 'bold+yellow')+' in you shell.');
+  console.log('To deactivate it, run \''+deactivate+'\' in you shell.');
 };
