@@ -29,7 +29,7 @@
     },
     "bin":{"neco":"./bin/neco.js"},
     "main":"neco",
-    "engines": {"node":"0.3.4"},
+    "engines": {"node":">=0.3.4"},
     "scripts":{},
     "licenses":
       [
