@@ -30,3 +30,9 @@ python virtualenv and virtualenvwrapper package)
 6, added remove command
 7, added find command
 8, variant bugs fix
+
+###0.0.3-alpha1, 2011-01-18###
+1, added nodejs 0.3.5 to dist list
+2, fixed local testing bug
+3, parse global config file before package config file
+4, only clean config object after command excution
