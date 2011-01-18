@@ -36,3 +36,9 @@
 * automatialy switch between ecosystems
 * added command line arguments parse?
 * update to nodejs 0.3.4, npm 0.2.14-x
+
+###0.0.4###
+* depends on nodejs v0.3.5?
+* add upgrade command
+* add config command
+* add customize Error object
