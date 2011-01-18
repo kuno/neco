@@ -8,7 +8,8 @@ remove = require('../cmd/remove.js'),
 activate = require('../cmd/activate.js'),
 deactivate = require('../cmd/deactivate.js');
 
-var parseUserConfig = require('../lib/config.js').parseUserConfig,
+var parsePkgConfig = require('../lib/config.js').parsePkgConfig, 
+parseUserConfig = require('../lib/config.js').parseUserConfig,
 parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
 parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig; 
 
