@@ -42,3 +42,4 @@
 * add upgrade command
 * add config command
 * add customize Error object
+* add neco_workon shell function
