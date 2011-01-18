@@ -1,18 +1,21 @@
-{
+{ "releases":69,
   "stable":"0.2.6",
-  "latest":"0.3.4",
+  "unstable":"0.3.5"
+    "latest":"latest",
     "history":[
-    {"version":"0.1.100","link":"http://archive/node/node-v0.1.100.tar.gz","released":"13-Aug-2010 23:13","size":3813493},
+    {"version":"latest","link":"http://nodejs.org/dist/node-latest.tar.gz","released":"31-Dec-2010 05:02","size":4010320},
+    {"version":"0.1.100","link":"http://nodejs.org/dist/node-v0.1.100.tar.gz","released":"13-Aug-2010 23:13","size":3813493},
     {"version":"0.1.101","link":"http://nodejs.org/dist/node-v0.1.101.tar.gz","released":"13-Aug-2010 23:13","size":3825097},
     {"version":"0.1.102","link":"http://nodejs.org/dist/node-v0.1.102.tar.gz","released":"13-Aug-2010 23:09","size":3847409},
     {"version":"0.1.103","link":"http://nodejs.org/dist/node-v0.1.103.tar.gz","released":"13-Aug-2010 23:08","size":3843666},
     {"version":"0.1.104","link":"http://nodejs.org/dist/node-v0.1.104.tar.gz","released":"13-Aug-2010 23:09","size":3859322},
+    {"version":"0.1.14","link":"http://nodejs.org/dist/node-v0.1.14.tar.gz","released":"13-Aug-2010 23:07","size":3736523},
     {"version":"0.1.15","link":"http://nodejs.org/dist/node-v0.1.15.tar.gz","released":"13-Aug-2010 23:08","size":3766716},
     {"version":"0.1.16","link":"http://nodejs.org/dist/node-v0.1.16.tar.gz","released":"13-Aug-2010 23:13","size":3827870},
     {"version":"0.1.17","link":"http://nodejs.org/dist/node-v0.1.17.tar.gz","released":"13-Aug-2010 23:07","size":3826866},
     {"version":"0.1.18","link":"http://nodejs.org/dist/node-v0.1.18.tar.gz","released":"13-Aug-2010 23:12","size":3537137},
     {"version":"0.1.19","link":"http://nodejs.org/dist/node-v0.1.19.tar.gz","released":"13-Aug-2010 23:10","size":3574916},
-    {"version":"0.1.20","link":"http://nodejs.org/dist/node-v0.1.20.tar.gz","released":"13-Aug-2010 23:08","size":3575681},
+    {"version":"0.1.20","link":"http://nodejs.org/dist/node-v0.1.20tar.gz","released":"13-Aug-2010 23:08","size":3575681},
     {"version":"0.1.21","link":"http://nodejs.org/dist/node-v0.1.21.tar.gz","released":"13-Aug-2010 23:11","size":3597096},
     {"version":"0.1.22","link":"http://nodejs.org/dist/node-v0.1.22.tar.gz","released":"13-Aug-2010 23:10","size":3604861},
     {"version":"0.1.23","link":"http://nodejs.org/dist/node-v0.1.23.tar.gz","released":"13-Aug-2010 23:11","size":3605321},
@@ -42,11 +45,11 @@
     {"version":"0.2.3","link":"http://nodejs.org/dist/node-v0.2.3.tar.gz","released":"02-Oct-2010 13:07","size":3877908},
     {"version":"0.2.4","link":"http://nodejs.org/dist/node-v0.2.4.tar.gz","released":"24-Oct-2010 21:54","size":4002347},
     {"version":"0.2.5","link":"http://nodejs.org/dist/node-v0.2.5.tar.gz","released":"17-Nov-2010 05:49","size":4008314},
-    {"version":"0.2.6","link":"http://archive/node/node-v0.2.6.tar.gz","released":"31-Dec-2010 05:02","size":4010320},
     {"version":"0.3.0","link":"http://nodejs.org/dist/node-v0.3.0.tar.gz","released":"24-Oct-2010 22:09","size":4054239},
     {"version":"0.3.1","link":"http://nodejs.org/dist/node-v0.3.1.tar.gz","released":"17-Nov-2010 05:38","size":4147683},
     {"version":"0.3.2","link":"http://nodejs.org/dist/node-v0.3.2.tar.gz","released":"17-Dec-2010 17:55","size":4433878},
-    {"version":"0.3.3","link":"http://nodejs.org/dist/node-v0.3.3.tar.gz","released":"03-Jan-2011 02:36","size":4582669},
-    {"version":"0.3.4","link":"http://archive/node/node-v0.3.4.tar.gz","released":"08-Jan-2011 23:50","size":4610441}
+   {"version":"0.3.3","link":"http://nodejs.org/dist/node-v0.3.3.tar.gz","released":"03-Jan-2011 02:36","size":4582669},
+   {"version":"0.3.4","link":"http://nodejs.org/dist/node-v0.3.4.tar.gz","released":"08-Jan-2011 23:50","size":4610441},
+   {"version":"0.3.5","link":"http://nodejs.org/dist/node-v0.3.5.tar.gz","released":"16-Jan-2011 23:15","size":4655131}  
   ]
 }
