@@ -54,7 +54,7 @@ if (cmd === undefined) {
       id = argv[3], target = argv[4] || 'stable'; // defaut target is stable
       parseGlobalConfig(function(config) {
         config.id = id, config.cmd = cmd, config.target = target;
-        parsePkgConfig(config, function(config)
+        parsePkgConfig(config, function(config) {
         parseUserConfig(config, function(config) {
           envReady(config, function(config) {
             rootReady(config, function(config) {
@@ -89,7 +89,7 @@ if (cmd === undefined) {
 else if (cmd === 'list') {
   parseGlobalConfig(function(config) {
     config.cmd = cmd;
-    parsePkgConfig(config, function(config)
+    parsePkgConfig(config, function(config) {
     parseUserConfig(config, function(config) {
       envReady(config, function(config) {
         rootReady(config, function(config) {
@@ -121,7 +121,7 @@ else if (cmd === 'list') {
   else if (cmd === 'find') {
     parseGlobalConfig(function(config) {
       config.cmd = cmd;
-      parsePkgConfig(config, function(config)
+      parsePkgConfig(config, function(config) {
       parseUserConfig(config, function(config) {
         envReady(config, function(config) {
           rootReady(config, function(config) {
@@ -152,7 +152,7 @@ else if (cmd === 'list') {
 // Subcommand help
 else if (cmd === 'howto') {
   parseGlobalConfig(function(config) {
-    parsePkgConfig(config, function(config) 
+    parsePkgConfig(config, function(config) { 
     parseUserConfig(config, function(config) {
       howto.run(config);
     });
@@ -172,7 +172,7 @@ else if (cmd === 'howto') {
       parseGlobalConfig(function(config) {
         config.id = id, config.cmd = cmd;
         parseEcosystemConfig(config, function(config) {
-          parsePkgConfig(config, function(config)
+          parsePkgConfig(config, function(config) {
           parseUserConfig(config, function(config) {
             envReady(config, function(config) {
               rootReady(config, function(config) {
@@ -213,7 +213,7 @@ else if (cmd === 'deactivate') {
     parseGlobalConfig(function(config) {
       config.id = id, config.cmd = cmd;  
       parseEcosystemConfig(config, function(config) {
-        parsePkgConfig(config, function(config)
+        parsePkgConfig(config, function(config) {
         parseUserConfig(config, function(config) {
           envReady(config, function(config) {
             rootReady(config, function(config) {
@@ -255,7 +255,7 @@ else if (cmd === 'deactivate') {
       parseGlobalConfig(function(config) {
         config.id = id, config.cmd = cmd;
         parseEcosystemConfig(config, function(config) {
-          parsePkgConfig(config, function(config)
+          parsePkgConfig(config, function(config) {
           parseUserConfig(config, function(config) {
             envReady(config, function(config) {
               rootReady(config, function(config) {
