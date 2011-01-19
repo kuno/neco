@@ -54,7 +54,7 @@ function installNode(release, destDir, next) {
   });
 }
 
-function installNPM(npmVer, destDir, next) {
+function installNPM(destDir, npmVer, next) {
   var error, 
   pkgDir  = process.config.pkgDir,
   script  = getNPMInstallScript(), 
@@ -99,7 +99,7 @@ function installActivate(id, release, destDir, next) {
   });
 }
 
-function makeRecord(id, npmVer, release) {
+function makeRecord(id, release, npmVer) {
   var error,
   date    = getDateTime(),
   version = release.version,  
@@ -154,7 +154,7 @@ exports.run = function(id, target) {
       if (err) {throw err;} 
       if (process.config.installNPM && getSuitedNPM(release)) {
         npmVer = getSuitedNPM(release);
-        installNPM(npmVer, destDir, function(err) {
+        installNPM(destDir, npmVer, function(err) {
           if (err) {throw err;}
           installActivate(id, release, destDir, function(err) {
             if (err) {throw err;} 
@@ -162,7 +162,7 @@ exports.run = function(id, target) {
           });
         });
       } else {
-        installActivate(id, release, function(err) {
+        installActivate(id, release, destDir, function(err) {
           if (err) {throw err;}
           makeRecord(id, release, npmVer);
         });
