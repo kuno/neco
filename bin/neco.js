@@ -115,7 +115,7 @@ if (cmd === undefined) {
 
         // Subcommand help
         else if (cmd === 'howto') {
-          howto.run(config);
+          howto.run();
         }
 
         // Subcommand activate
