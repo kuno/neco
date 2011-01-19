@@ -151,18 +151,26 @@ exports.run = function(id, target) {
     }
 
     installNode(release, destDir, function(err) {
-      if (err) {throw err;} 
+      if (err) {throw err;}
+      message = 'Nodejs '+release.version+' has been installed sucessfully!';
+      log('message', message);  
       if (process.config.installNPM && getSuitedNPM(release)) {
         npmVer = getSuitedNPM(release);
         installNPM(destDir, npmVer, function(err) {
           if (err) {throw err;}
+          message = 'NPM '+npmVer+' has been installed sucessfully!';
+          log('message', message);  
           installActivate(id, release, destDir, function(err) {
-            if (err) {throw err;} 
+            if (err) {throw err;}
+            message = 'New activate file has been created sucessfully!';
+            log('message', message);  
             makeRecord(id, release, npmVer);
           });
         });
       } else {
         installActivate(id, release, destDir, function(err) {
+          message = 'New activate file has been created sucessfully!';
+          log('message', message);  
           if (err) {throw err;}
           makeRecord(id, release, npmVer);
         });

@@ -74,8 +74,12 @@ function editConfig(id) {
 exports.run = function(id) {
   removeDir(id, function(err) {
     if (err) {throw err;}
+    message = 'Target directory has been removeed sucessfully!';
+    log('message', message);  
     editRecord(id, function(err) {
       if (err) {throw err;}
+      message = 'Ecosystems record file has been edited sucessfully!';
+      log('message', message);  
       editConfig(id);
     });
   });
