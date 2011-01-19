@@ -66,7 +66,7 @@ function editConfig(id) {
   var config = process.config;
   writeGlobalConfigFile(config, function(err, config) {
     if (err) {throw err;}
-    message = 'ecosystem '+id+' has been removed sucessfully.';
+    message = 'Ecosystem '+id+' has been removed sucessfully!';
     log('message', message);
   });
 }
