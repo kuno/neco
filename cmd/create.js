@@ -77,11 +77,10 @@ function installNPM(npmVer, next) {
   });
 }
 
-function installActivate(id, release, next) {
+function installActivate(id, release, destDir, next) {
   var error, 
   version = release.version, 
   pkgDir  = process.config.pkgDir, 
-  destDir = process.config.destDir, 
   script  = getActivateInstallScript(),
   install = spawn('sh', [script, id, pkgDir, destDir, version]);
 

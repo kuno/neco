@@ -43,6 +43,11 @@ neco_deactivate () {
     # Self destruct!
         unset -f neco_deactivate
     fi
+
+    if [ -n "$_old_neco_pwd" ]; then
+    cd "$_old_neco_pwd" || return 1
+    unset _old_neco_pwd
+    fi
 }
 
 # unset irrelavent variables
