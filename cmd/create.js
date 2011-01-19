@@ -162,7 +162,7 @@ exports.run = function(id, target) {
           log('message', message);  
           installActivate(id, release, destDir, function(err) {
             if (err) {throw err;}
-            message = 'New activate file has been created sucessfully!';
+            message = 'New activate file has been installed sucessfully!';
             log('message', message);  
             makeRecord(id, release, npmVer);
           });
