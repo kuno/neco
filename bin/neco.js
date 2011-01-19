@@ -44,7 +44,7 @@ if (cmd === undefined) {
   log('error', error, suggestion, example);
 } else {
   parseGlobalConfig(function() { parsePkgConfig(function() {
-    parseUserConfig(function() {envReady(function() {
+    parseUserConfig(function() {envReady(cmd, function() {
       rootReady(function() { activateReady(function() {   
         // Subcommand create
         if (cmd === 'create') {
