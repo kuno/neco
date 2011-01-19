@@ -122,14 +122,13 @@ neco_activate () {
 
 neco_workon() {
    typeset neco_id="$1"
-   _old_neco_pwd=$(PWD)
 
   if [ "$neco_id" = "" ]; then
     return 1
   elif [ -L $NECO_ROOT/"$neco_id" ] || [ -d $NECO_ROOT/"$neco_id" ]; then
     neco_activate $neco_id || return 1
     cd $NECO_ROOT/"$neco_id" || return 1
-    export _old_neco_pwd
+    export _old_neco_pwd=$(PWD)
   else
     neco_activate $neco_id || return 1
   fi
