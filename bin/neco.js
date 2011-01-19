@@ -55,7 +55,7 @@ if (cmd === undefined) {
             log('message', message, suggestion, example);
           } else {
             id = argv[3], target = argv[4] || 'stable'; // defaut target is stable
-            recordReady(function(exists) {
+            recordReady(cmd, function(exists) {
               if (!exists) {
                 create.run(id, target);
               } else {
@@ -77,7 +77,7 @@ if (cmd === undefined) {
 
         // Subcommand list
         else if (cmd === 'list') {
-          recordReady(function(exists) {
+          recordReady(cmd, function(exists) {
             if (argv.length >= 4) {
               id = argv[3];
               if (ecosystemExist(id)) {
@@ -96,7 +96,7 @@ if (cmd === undefined) {
 
         // Subcommand find
         else if (cmd === 'find') {
-          recordReady(function(exists) {    
+          recordReady(cmd, function(exists) {    
             if (argv.length >= 4) {
               target = argv[3];
               if (releaseExist(target)) {
@@ -128,7 +128,7 @@ if (cmd === undefined) {
           } else {
             id = process.argv[3];
             parseEcosystemConfig(id, function() {
-              recordReady(function(exists) {
+              recordReady(cmd, function(exists) {
                 if (ecosystemActive(config)) {
                   warning = 'The node ecosystem with id '+id+' is already active.';
                   suggstion = 'Please use type deact in your shell to deactivate it.';
@@ -156,7 +156,7 @@ if (cmd === undefined) {
           } else {
             id = process.argv[3];
             parseEcosystemConfig(id, function() {
-              recordReady(function(exists) {
+              recordReady(cmd, function(exists) {
                 if (!idExsit(id)) {
                   error = 'The node ecosystem with id '+id+' is not exists.';
                   suggestion = 'You can use neco list command to find out all existing ecosystem.';
@@ -185,7 +185,7 @@ if (cmd === undefined) {
           } else {
             id = argv[3];
             parseEcosystemConfig(id, function() {
-              recordReady(function(exists) {
+              recordReady(cmd, function(exists) {
                 if (!idExsit(id)) {
                   message = 'The given id '+id+' is not exist.';
                   suggestion = 'Find out all existing ecosystem.';
