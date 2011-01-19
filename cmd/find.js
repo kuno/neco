@@ -8,7 +8,7 @@ exports.run = function(target) {
       config = process.config;
   fs.readFile(config.distFile, 'utf8', function(err, data) {
     if (err) {throw err;}
-    if (config.target) {
+    if (target) {
       release = getRelease(target);
       releases[0] = release;
     } else {
