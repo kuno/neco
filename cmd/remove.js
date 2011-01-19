@@ -8,9 +8,11 @@ writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile;
 var log = require('../lib/display.js').log;
 var message ,warning, error, suggestion, example;
 
-function removeDir(config, next) {
-  var error, remove, targetDir;
-  targetDir = path.join(config.root, '.neco', config.id);
+function removeDir(id, next) {
+  var error, 
+  remove,
+  root = process.config.root,
+  targetDir = path.join(root, '.neco', id);
 
   path.exists(targetDir, function(exists) {
     if (!exists) {
@@ -27,18 +29,20 @@ function removeDir(config, next) {
       remove.on('exit', function(code) {
         if (code !== 0) {
           err = new Error('Remove exit with code '+code);
-          next(error, config);
+          next(error);
         } else {
-          next(error, config);
+          next(error);
         }
       });
     }
   });
 }
 
-function editRecord(config, next) {
-  var error, index, record, ecosystem, recordData, 
-  id = config.id, recordFile = config.recordFile;
+function editRecord(id, next) {
+  var error, index, 
+  record, ecosystem, recordData, 
+  recordFile = config.recordFile;
+
   path.exists(recordFile, function(exists) {
     if (!exists) {
       error = new Error('Record file dose not exists.');
@@ -51,15 +55,15 @@ function editRecord(config, next) {
         recordData = JSON.stringify(record);
         fs.writeFile(recordFile, recordData, 'utf8', function(err) {
           error = err;
-          next(error, config);
+          next(error);
         });
       });
     }
   });
 }
 
-function editConfig(config) {
-  var id = config.id;
+function editConfig(id) {
+  var config = process.config;
   writeGlobalConfigFile(config, function(err, config) {
     if (err) {throw err;}
     message = 'ecosystem '+id+' has been removed sucessfully.';
@@ -67,12 +71,12 @@ function editConfig(config) {
   });
 }
 
-exports.run = function(config) {
-  removeDir(config, function(err) {
+exports.run = function(id) {
+  removeDir(id, function(err) {
     if (err) {throw err;}
-    editRecord(config, function(err, config) {
+    editRecord(id, function(err) {
       if (err) {throw err;}
-      editConfig(config);
+      editConfig(id);
     });
   });
 };
