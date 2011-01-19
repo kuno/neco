@@ -108,7 +108,7 @@ if (cmd === undefined) {
                 log('error', error, suggestion, example);
               }
             } else {
-              find.run();
+              find.run(target);
             }
           });
         }
