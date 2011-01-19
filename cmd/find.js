@@ -9,7 +9,7 @@ exports.run = function(target) {
   fs.readFile(config.distFile, 'utf8', function(err, data) {
     if (err) {throw err;}
     if (config.target) {
-      release = getRelease(config);
+      release = getRelease(target);
       releases[0] = release;
     } else {
       releases = JSON.parse(data).history;
