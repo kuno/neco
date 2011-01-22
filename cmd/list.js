@@ -4,6 +4,7 @@ getEcosystem = require('../lib/assistant.js').getEcosystem,
 show = require('../lib/display.js').showEcosystems;
 
 exports.run = function(id) {
+  var config = process.neco.config;
   var ecosystem, ecosystems = [];
   fs.readFile(config.recordFile, 'utf8', function(err, data) {
     if (err) {throw err;}
