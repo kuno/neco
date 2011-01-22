@@ -123,7 +123,7 @@ if (cmd === undefined) {
 
         // Subcommand help
         else if (cmd === 'howto') {
-          filterConfig(function(), {
+          filterConfig(function() {
             howto.run();
           });
         }
