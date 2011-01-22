@@ -28,8 +28,10 @@ ecosystemExist = require('../lib/assistant.js').getEcosystem;
 
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;
-
 var argv = process.argv, id, target, cmd = argv[2];
+
+// Set global varialbles namae space;
+process.neco = {};
 
 if (cmd === undefined) {
   error = 'Missing command';
