@@ -11,5 +11,5 @@ exports.spareGlobalProperties = ['cmd', 'target', 'release', 'releases',
                                  'ecosystems', 'ecosystem', 'pkgDir','id',
                                  'docsDir', 'shellDir', 'pkgActivateFile', 
                                  'idLenStandard', 'distFile', 'fullDistFile',
-                                 'npmVer', 'destDir'];
-exports.spareEcosystemProperties = ['version'];
+                                 'npmVer', 'destDir', 'pkgConfigFile'];
+exports.spareEcosystemProperties = ['version', 'pkgActivateFile'];
