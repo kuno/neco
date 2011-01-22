@@ -102,9 +102,10 @@ function installActivate(id, release, destDir, next) {
 
 function makeRecord(id, release, npmVer) {
   var error,
+  config  = process.neco.config,
   date    = getDateTime(),
   version = release.version,  
-  root    = process.config.root,
+  root    = config.root,
   recordFile = path.join(root, '.neco', 'record.json'), 
   record, recordData, createdDate, ecosystems, newEcosystem; 
 
@@ -136,8 +137,10 @@ function makeRecord(id, release, npmVer) {
 }
 
 exports.run = function(id, target) {
-  var npmVer, release = getRelease(target),
-  destDir = path.join(process.config.root, '.neco', id);
+  var npmVer,
+ config = process.neco.config,  
+  release = getRelease(target),
+  destDir = path.join(config.root, '.neco', id);
 
   if (!release) {
     error = 'The desired release '+target+' not found or neco can\'t handle it.';
