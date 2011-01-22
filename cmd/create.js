@@ -79,9 +79,10 @@ function installNPM(destDir, npmVer, next) {
 }
 
 function installActivate(id, release, destDir, next) {
-  var error, 
+  var error,
+ config = process.neco.config,  
   version = release.version, 
-  pkgDir  = process.config.pkgDir, 
+  pkgDir  = config.pkgDir, 
   script  = getActivateInstallScript(),
   install = spawn('sh', [script, id, pkgDir, destDir, version]);
 
