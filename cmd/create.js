@@ -158,7 +158,7 @@ exports.run = function(id, target) {
       if (err) {throw err;}
       message = 'Nodejs '+release.version+' has been installed sucessfully!';
       log('message', message);  
-      if (process.config.installNPM && getSuitedNPM(release)) {
+      if (config.installNPM && getSuitedNPM(release)) {
         npmVer = getSuitedNPM(release);
         installNPM(destDir, npmVer, function(err) {
           if (err) {throw err;}
