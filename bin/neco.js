@@ -9,7 +9,7 @@ activate = require('../cmd/activate.js'),
 deactivate = require('../cmd/deactivate.js');
 
 var filterConfig = require('../lib/config.js').filterConfig,
-parsePkgConfig = require('../lib/config.js').parsePkgConfig, 
+//parsePkgConfig = require('../lib/config.js').parsePkgConfig, 
 parseUserConfig = require('../lib/config.js').parseUserConfig,
 parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
 parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig; 
@@ -45,9 +45,9 @@ if (cmd === undefined) {
   example = 'neco hwoto, neco create <id>, neco list';
   log('error', error, suggestion, example);
 } else {
-  parseGlobalConfig(function() { parsePkgConfig(function() {
-    parseUserConfig(function() {envReady(cmd, function() {
-      rootReady(function() { upgradeReady(function() {   
+  parseGlobalConfig(function() { parseUserConfig(function() {
+    envReady(cmd, function() { rootReady(function() { 
+      upgradeReady(function() {   
         // Subcommand create
         if (cmd === 'create') {
           if (argv.length < 4) {
