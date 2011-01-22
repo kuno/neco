@@ -102,7 +102,7 @@ if (cmd === undefined) {
 
         // Subcommand find
         else if (cmd === 'find') {
-          filterConfig(function(), {
+          filterConfig(function() {
             recordReady(cmd, function(exists) {    
               if (argv.length >= 4) {
                 target = argv[3];
