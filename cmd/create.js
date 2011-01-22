@@ -56,8 +56,9 @@ function installNode(release, destDir, next) {
 }
 
 function installNPM(destDir, npmVer, next) {
-  var error, 
-  pkgDir  = process.config.pkgDir,
+  var error,
+ config = process.neco.config,  
+  pkgDir  = config.pkgDir,
   script  = getNPMInstallScript(), 
   install = spawn('sh', [script, pkgDir, destDir, npmVer]);
 
