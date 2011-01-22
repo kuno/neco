@@ -9,10 +9,8 @@ var log = require('../lib/display.js').log;
 var message ,warning, error, suggestion, example;
 
 function removeDir(id, next) {
-  var error, 
-  remove,
-  root = process.config.root,
-  targetDir = path.join(root, '.neco', id);
+  var error, remove, config = process.neco.config,
+  root = config.root, targetDir = path.join(root, '.neco', id);
 
   path.exists(targetDir, function(exists) {
     if (!exists) {
@@ -39,8 +37,8 @@ function removeDir(id, next) {
 }
 
 function editRecord(id, next) {
-  var error, index, 
-  record, ecosystem, recordData, 
+  var error, index, record, ecosystem, 
+  recordData, config = process.neco.config, 
   recordFile = config.recordFile;
 
   path.exists(recordFile, function(exists) {
@@ -63,7 +61,7 @@ function editRecord(id, next) {
 }
 
 function editConfig(id) {
-  var config = process.config;
+  var config = process.neco.config;
   writeGlobalConfigFile(config, function(err, config) {
     if (err) {throw err;}
     message = 'Ecosystem '+id+' has been removed sucessfully!';

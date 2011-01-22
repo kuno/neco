@@ -20,7 +20,8 @@ var message, warning, error, suggestion, example;
 
 function installNode(release, destDir, next) {
   var error, version, link, install,
-  root = process.config.root,
+  config = process.neco.config, 
+  root = config.root,
   script = getNodeInstallScript();
 
   path.exists(root, function(exists) {

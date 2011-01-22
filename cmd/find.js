@@ -5,7 +5,7 @@ getRelease = require('../lib/assistant.js').getRelease;
 
 exports.run = function(target) {
   var release, releases = [],
-      config = process.config;
+      config = process.neco.config;
   fs.readFile(config.distFile, 'utf8', function(err, data) {
     if (err) {throw err;}
     if (target) {
