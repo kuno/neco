@@ -20,10 +20,10 @@ function removeDir(id, next) {
     } else {
       remove = spawn('rm', ['-rf', targetDir]);
       remove.stdout.on('data', function(data) {
-        log('stdout', data);
+        log.emit('stdout', data);
       });
       remove.stderr.on('data', function(data) {
-        log('stdout', data);
+        log.emit('stdout', data);
       });
       remove.on('exit', function(code) {
         if (code !== 0) {
@@ -67,19 +67,19 @@ function editConfig(id) {
   writeLocalConfigFile(id, function(err, id) {
     if (err) {log.emit('error', err);}
     message = 'Ecosystem '+id+' has been removed sucessfully!';
-    log('message', message);
+    log.emit('message', message);
   });
 }
 
 exports.run = function(id) {
   removeDir(id, function(err) {
-    if (err) {log.on('error', err);}
+    if (err) {log.emit('error', err);}
     message = 'Target directory has been removeed sucessfully!';
-    log('message', message);  
+    log.emit('message', message);  
     editRecord(id, function(err) {
-      if (err) {log.on('error', err);}
+      if (err) {log.emit('error', err);}
       message = 'Ecosystems record file has been edited sucessfully!';
-      log('message', message);  
+      log.emit('message', message);  
       editConfig(id);
     });
   });

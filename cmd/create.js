@@ -37,10 +37,10 @@ function installNode(release, destDir, next) {
 
       install = spawn('sh', [script, version, link, destDir]);
       install.stdout.on('data', function(data) {
-        log('stdout',data);
+        log.emit('stdout',data);
       });
       install.stderr.on('data', function(data) {
-        log('stdout',data);
+        log.emit('stdout',data);
       });
 
       install.on('exit', function(code) {
@@ -63,10 +63,10 @@ function installNPM(destDir, npmVer, next) {
   install = spawn('sh', [script, pkgDir, destDir, npmVer]);
 
   install.stdout.on('data', function(data) {
-    log('stdout', data);
+    log.emit('stdout', data);
   });
   install.stderr.on('data', function(data) {
-    log('stdout', data);
+    log.emit('stdout', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {
@@ -87,10 +87,10 @@ function installActivate(id, release, destDir, next) {
   install = spawn('sh', [script, id, pkgDir, destDir, version]);
 
   install.stdout.on('data', function(data) {
-    log('stdout', data);
+    log.emit('stdout', data);
   });
   install.stderr.on('data', function(data) {
-    log('stdout', data);
+    log.emit('stdout', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {
@@ -129,7 +129,7 @@ function makeRecord(id, release, npmVer) {
     fs.writeFile(recordFile, recordData, 'utf8', function(err) {
       if (err) {throw err;}
       message = 'New node ecosystem has been created sucessfully!';
-      log('message', message);
+      log.emit('message', message);
       writeLocalConfigFile(id, function(err) {
         if (err) {throw err;}
         writeEcosystemConfigFile(id);
@@ -145,10 +145,10 @@ exports.run = function(id, target) {
   destDir = path.join(config.root, '.neco', id);
 
   if (!release) {
-    error = 'The desired release '+target+' not found or neco can\'t handle it.';
+    message = 'The desired release '+target+' not found or neco can\'t handle it.';
     suggestion = 'Try a newer version.';
     example = 'neco create <id> stable OR neco create <id> latest';
-    log('error', error, suggestion, example);
+    log.emit('message', message, suggestion, example);
   } else {
     // If the version of release smaller and equal to 0.1,9,
     // add 'v' prefix to version laterial
@@ -159,24 +159,24 @@ exports.run = function(id, target) {
     installNode(release, destDir, function(err) {
       if (err) {throw err;}
       message = 'Nodejs '+release.version+' has been installed sucessfully!';
-      log('message', message);  
+      log.emit('message', message);  
       if (config.installNPM && getSuitedNPM(release)) {
         npmVer = getSuitedNPM(release);
         installNPM(destDir, npmVer, function(err) {
           if (err) {throw err;}
           message = 'NPM '+npmVer+' has been installed sucessfully!';
-          log('message', message);  
+          log.emit('message', message);  
           installActivate(id, release, destDir, function(err) {
             if (err) {throw err;}
             message = 'New activate file has been installed sucessfully!';
-            log('message', message);  
+            log.emit('message', message);  
             makeRecord(id, release, npmVer);
           });
         });
       } else {
         installActivate(id, release, destDir, function(err) {
           message = 'New activate file has been created sucessfully!';
-          log('message', message);  
+          log.emit('message', message);  
           if (err) {throw err;}
           makeRecord(id, release, npmVer);
         });
