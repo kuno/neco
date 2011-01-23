@@ -1,6 +1,6 @@
 var fs = require('fs'),
 path = require('path'),
-show = require('../lib/display.js').showReleases,
+show = require('../lib/display.js').show,
 getRelease = require('../lib/assistant.js').getRelease;
 
 exports.run = function(target) {
@@ -15,6 +15,6 @@ exports.run = function(target) {
     } else {
       releases = JSON.parse(data).history;
     }
-    show(releases);
+    show.emit('releases', releases);
   });
 };

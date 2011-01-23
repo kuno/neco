@@ -1,7 +1,7 @@
 var fs = require('fs'),
 path = require('path'),
 getEcosystem = require('../lib/assistant.js').getEcosystem,
-show = require('../lib/display.js').showEcosystems;
+show = require('../lib/display.js').show;
 
 exports.run = function(id) {
   var config = process.neco.config;
@@ -14,6 +14,6 @@ exports.run = function(id) {
     } else {
       ecosystems = JSON.parse(data).ecosystems;
     }
-    show(ecosystems);
+    show.emit('ecosystems', ecosystems);
   });
 };
