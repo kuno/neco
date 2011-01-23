@@ -8,7 +8,7 @@ getRelease = require('../lib/assistant.js').getRelease,
 getSuitedNPM = require('../lib/assistant.js').getSuitedNPM,
 notSmaller = require('../lib/utils.js').compareVersions,
 findlongestID = require('../lib/utils.js').findlongestID,
-writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile,
+writeLocalConfigFile = require('../lib/assistant.js').writeLocalConfigFile,
 writeEcosystemConfigFile = require('../lib/assistant.js').writeEcosystemConfigFile,
 getNodeInstallScript = require('../lib/assistant.js').getNodeInstallScript,
 getNPMInstallScript = require('../lib/assistant.js').getNPMInstallScript,
@@ -57,7 +57,7 @@ function installNode(release, destDir, next) {
 
 function installNPM(destDir, npmVer, next) {
   var error,
- config = process.neco.config,  
+  config = process.neco.config,  
   pkgDir  = config.pkgDir,
   script  = getNPMInstallScript(), 
   install = spawn('sh', [script, pkgDir, destDir, npmVer]);
@@ -80,7 +80,7 @@ function installNPM(destDir, npmVer, next) {
 
 function installActivate(id, release, destDir, next) {
   var error,
- config = process.neco.config,  
+  config = process.neco.config,  
   version = release.version, 
   pkgDir  = config.pkgDir, 
   script  = getActivateInstallScript(),
@@ -130,7 +130,7 @@ function makeRecord(id, release, npmVer) {
       if (err) {throw err;}
       message = 'New node ecosystem has been created sucessfully!';
       log('message', message);
-      writeGlobalConfigFile(id, function(err) {
+      writeLocalConfigFile(id, function(err) {
         if (err) {throw err;}
         writeEcosystemConfigFile(id);
       });
@@ -140,7 +140,7 @@ function makeRecord(id, release, npmVer) {
 
 exports.run = function(id, target) {
   var npmVer,
- config = process.neco.config,  
+  config = process.neco.config,  
   release = getRelease(target),
   destDir = path.join(config.root, '.neco', id);
 

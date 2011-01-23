@@ -3,7 +3,7 @@ path = require('path'),
 spawn = require('child_process').spawn,
 removeEcosystem = require('../lib/utils.js').removeEcosystem,
 getEcosystem = require('../lib/assistant.js').getEcosystem,    
-writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile;
+writeLocalConfigFile = require('../lib/assistant.js').writeLocalConfigFile;
 
 var log = require('../lib/display.js').log;
 var message ,warning, error, suggestion, example;
@@ -37,8 +37,9 @@ function removeDir(id, next) {
 }
 
 function editRecord(id, next) {
-  var error, index, record, ecosystem, 
-  recordData, config = process.neco.config, 
+  var error, index, record, 
+  ecosystem, recordData, 
+  config = process.neco.config, 
   recordFile = config.recordFile;
 
   path.exists(recordFile, function(exists) {
@@ -62,7 +63,7 @@ function editRecord(id, next) {
 
 function editConfig(id) {
   var config = process.neco.config;
-  writeGlobalConfigFile(config, function(err, config) {
+  writeLocalConfigFile(id, function(err, id) {
     if (err) {throw err;}
     message = 'Ecosystem '+id+' has been removed sucessfully!';
     log('message', message);
