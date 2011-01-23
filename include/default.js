@@ -7,9 +7,13 @@ exports.verLenStandard = 7;
 exports.linkLenStandard = 43;
 exports.sizeLenStandard = 5;
 exports.npmVerLenStandard = 8;
-exports.spareGlobalProperties = ['cmd', 'target', 'release', 'releases', 
-                                 'ecosystems', 'ecosystem', 'pkgDir','id',
-                                 'docsDir', 'shellDir', 'pkgActivateFile', 
-                                 'idLenStandard', 'distFile', 'fullDistFile',
-                                 'npmVer', 'destDir', 'pkgConfigFile'];
-exports.spareEcosystemProperties = ['version', 'pkgActivateFile'];
+// spare Global Properties
+exports.sgps = ['cmd', 'target', 'release', 'releases', 'ecosystems', 
+                'ecosystem', 'pkgDir','npmVer','destDir', 'pkgDocsDir', 
+                'pkgShellDir', 'pkgDocsDir','pkgConfigFile', 'pkgActivateFile', 
+                'pkgDistFile', 'pkgFullDistFile', 'idLenStandard',
+                'globalConfig', 'globalDistFile', 'globalActivateFile'];
+// spare Ecosystem Properties 
+exports.seps = exports.sgps.concat(['version', 'localConfigFile', 'localDistFile',
+                                    'localActivateFile', 'timeFormat', 'root',
+                                    'recordFile', 'installNPM']);
