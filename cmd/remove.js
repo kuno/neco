@@ -1,6 +1,7 @@
 var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
+log = require('../display.js').log,
 removeEcosystem = require('../lib/utils.js').removeEcosystem,
 getEcosystem = require('../lib/assistant.js').getEcosystem,    
 writeLocalConfigFile = require('../lib/assistant.js').writeLocalConfigFile;
@@ -48,7 +49,7 @@ function editRecord(id, next) {
       next(error, config);
     } else {
       fs.readFile(recordFile, 'utf8', function(err, data) {
-        if (err) {throw err;}
+        if (err) {log.emit('error', err);}
         record = JSON.parse(data);
         record.ecosystems = removeEcosystem(record.ecosystems, id);
         recordData = JSON.stringify(record);
@@ -64,7 +65,7 @@ function editRecord(id, next) {
 function editConfig(id) {
   var config = process.neco.config;
   writeLocalConfigFile(id, function(err, id) {
-    if (err) {throw err;}
+    if (err) {log.emit('error', err);}
     message = 'Ecosystem '+id+' has been removed sucessfully!';
     log('message', message);
   });
@@ -72,11 +73,11 @@ function editConfig(id) {
 
 exports.run = function(id) {
   removeDir(id, function(err) {
-    if (err) {throw err;}
+    if (err) {log.on('error', err);}
     message = 'Target directory has been removeed sucessfully!';
     log('message', message);  
     editRecord(id, function(err) {
-      if (err) {throw err;}
+      if (err) {log.on('error', err);}
       message = 'Ecosystems record file has been edited sucessfully!';
       log('message', message);  
       editConfig(id);

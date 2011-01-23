@@ -17,3 +17,5 @@ exports.sgps = ['cmd', 'target', 'release', 'releases', 'ecosystems',
 exports.seps = exports.sgps.concat(['version', 'localConfigFile', 'localDistFile',
                                     'localActivateFile', 'timeFormat', 'root',
                                     'recordFile', 'installNPM']);
+
+exports.issues = 'http://github.com/kuno/neco/issues';

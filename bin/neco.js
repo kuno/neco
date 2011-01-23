@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require.paths.shift('../deps');
+
 var list = require('../cmd/list.js'),
 find = require('../cmd/find.js'),
 howto = require('../cmd/howto.js'),
@@ -34,15 +36,15 @@ var argv = process.argv, id, target, cmd = argv[2];
 process.neco = {};
 
 if (cmd === undefined) {
-  error = 'Missing command';
+  message = 'Missing command';
   suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
   example = 'neco howto, neco create <id>, neco list';
-  log.emit('error', error, suggestion, example);
+  log.emit('message', message, suggestion, example);
 } else if (!cmdValid(cmd)) {
-  error = 'Not a valid command';
+  message = 'Not a valid command';
   suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
   example = 'neco hwoto, neco create <id>, neco list';
-  log.emit('error', error, suggestion, example);
+  log.emit('message', message, suggestion, example);
 } else {
   parseGlobalConfig(function() { parseUserConfig(function() {
     envReady(cmd, function() { rootReady(function() { 
@@ -87,10 +89,10 @@ if (cmd === undefined) {
                 if (ecosystemExist(id)) {
                   list.run(id);
                 } else {
-                  error = 'The desired ecosystem '+id+' is not exists.';
+                  message = 'The desired ecosystem '+id+' is not exists.';
                   suggestion = 'Find out all the existing ecosystem.';
                   example = 'neco list';
-                  log.emit('error', error, suggestion, example);
+                  log.emit('message', message, suggestion, example);
                 }
               } else {
                 list.run()
@@ -108,10 +110,10 @@ if (cmd === undefined) {
                 if (releaseExist(target)) {
                   find.run(target);
                 } else {
-                  error = 'The desired release '+target+' is not available.';
+                  message = 'The desired release '+target+' is not available.';
                   suggestion = 'Find out all the available releases.';
                   example = 'neco find [stable, latest, node-version]';
-                  log.emit('error', error, suggestion, example);
+                  log.emit('message', message, suggestion, example);
                 }
               } else {
                 find.run(target);
@@ -170,15 +172,15 @@ if (cmd === undefined) {
               filterConfig(function() {
                 recordReady(cmd, function(exists) {
                   if (!idExsit(id)) {
-                    error = 'The node ecosystem with id '+id+' is not exists.';
+                    message = 'The node ecosystem with id '+id+' is not exists.';
                     suggestion = 'You can use neco list command to find out all existing ecosystem.';
                     example = 'neco list';
-                    log.emit('error', error, suggestion, example);
+                    log.emit('message', message, suggestion, example);
                   } else if (!ecosystemActive(id)) {
-                    error = 'The node ecosystem with id '+id+' is not active.';
+                    message = 'The node ecosystem with id '+id+' is not active.';
                     suggestion = 'Use neco activate command to activate it first.';
                     example = 'neco_activate '+ id;
-                    log.emit('error', error, suggestion, example);
+                    log.emit('message', message, suggestion, example);
                   } else { 
                     deactivate.run(id);
                   }
