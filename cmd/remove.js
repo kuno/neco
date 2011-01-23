@@ -1,7 +1,7 @@
 var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
-log = require('../display.js').log,
+log = require('../lib/display.js').log,
 removeEcosystem = require('../lib/utils.js').removeEcosystem,
 getEcosystem = require('../lib/assistant.js').getEcosystem,    
 writeLocalConfigFile = require('../lib/assistant.js').writeLocalConfigFile;
