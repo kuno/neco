@@ -141,7 +141,7 @@ if (cmd === undefined) {
             parseEcosystemConfig(id, function() {
               filterConfig(function() {
                 recordReady(cmd, function(exists) {
-                  if (ecosystemActive(config)) {
+                  if (ecosystemActive(id)) {
                     message = 'The node ecosystem with id '+id+' is already active.';
                     suggstion = 'Please use type deact in your shell to deactivate it.';
                     log.emit('exit', message, suggestion, example);
