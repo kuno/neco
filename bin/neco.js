@@ -39,12 +39,12 @@ if (cmd === undefined) {
   message = 'Missing command';
   suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
   example = 'neco howto, neco create <id>, neco list';
-  log.emit('message', message, suggestion, example);
+  log.emit('exit', message, suggestion, example);
 } else if (!cmdValid(cmd)) {
   message = 'Not a valid command';
   suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
   example = 'neco hwoto, neco create <id>, neco list';
-  log.emit('message', message, suggestion, example);
+  log.emit('exit', message, suggestion, example);
 } else {
   parseGlobalConfig(function() { parseUserConfig(function() {
     envReady(cmd, function() { rootReady(function() { 
@@ -55,7 +55,7 @@ if (cmd === undefined) {
             message = 'Missing ID';
             suggestion = 'Please specific at least one ID( and the version of node, if you will).';
             example = 'neco create <id> [stable, latest, node-version]';
-            log.emit('message', message, suggestion, example);
+            log.emit('exit', message, suggestion, example);
           } else {
             id = argv[3], target = argv[4] || 'stable'; // defaut target is stable
             filterConfig(function() {
@@ -66,7 +66,7 @@ if (cmd === undefined) {
                   if (!idValid(id)) {
                     message = 'The given id '+id+' is one of the reserved words in neco.';
                     suggestion = 'Please choose another one.';
-                    log.emit('message', message, suggestion);
+                    log.emit('exit', message, suggestion);
                   } else if (!idUnique(id)) {
                     message = 'The given id '+id+' has already been used.';
                     suggestion = 'Please choose another one instead.';
@@ -92,7 +92,7 @@ if (cmd === undefined) {
                   message = 'The desired ecosystem '+id+' is not exists.';
                   suggestion = 'Find out all the existing ecosystem.';
                   example = 'neco list';
-                  log.emit('message', message, suggestion, example);
+                  log.emit('exit', message, suggestion, example);
                 }
               } else {
                 list.run()
@@ -113,7 +113,7 @@ if (cmd === undefined) {
                   message = 'The desired release '+target+' is not available.';
                   suggestion = 'Find out all the available releases.';
                   example = 'neco find [stable, latest, node-version]';
-                  log.emit('message', message, suggestion, example);
+                  log.emit('exit', message, suggestion, example);
                 }
               } else {
                 find.run(target);
@@ -135,21 +135,21 @@ if (cmd === undefined) {
             message = 'Missing ID';
             suggestion = 'Please specify the id of the ecosystem you want to activate.';
             example = 'neco activate <id>';
-            log.emit('message', message, suggestion, example);
+            log.emit('exit', message, suggestion, example);
           } else {
             id = process.argv[3];
             parseEcosystemConfig(id, function() {
               filterConfig(function() {
                 recordReady(cmd, function(exists) {
                   if (ecosystemActive(config)) {
-                    warning = 'The node ecosystem with id '+id+' is already active.';
+                    message = 'The node ecosystem with id '+id+' is already active.';
                     suggstion = 'Please use type deact in your shell to deactivate it.';
-                    log.emit('warning', warning, suggestion, example);
+                    log.emit('exit', message, suggestion, example);
                   } else if (!idExsit(id)) {
-                    warning = 'The node ecosystem with id '+id+' is not exists.';
+                    messge = 'The node ecosystem with id '+id+' is not exists.';
                     suggestion = 'You can use neco list command to find out all existing ecosystem.';
                     example = 'neco create <id> [node-version]';
-                    log.emit('warning', warning, suggestion, example);
+                    log.emit('exit', message, suggestion, example);
                   } else {
                     activate.run(id);
                   }
@@ -165,7 +165,7 @@ if (cmd === undefined) {
             message = 'Missing ID';
             suggestion = 'Please specify the id of the ecosystem you want to deactivate.';
             example = 'neco deactivate <id>';
-            log.emit('message', message, suggestion, example);
+            log.emit('exit', message, suggestion, example);
           } else {
             id = process.argv[3];
             parseEcosystemConfig(id, function() {
@@ -175,12 +175,12 @@ if (cmd === undefined) {
                     message = 'The node ecosystem with id '+id+' is not exists.';
                     suggestion = 'You can use neco list command to find out all existing ecosystem.';
                     example = 'neco list';
-                    log.emit('message', message, suggestion, example);
+                    log.emit('exit', message, suggestion, example);
                   } else if (!ecosystemActive(id)) {
                     message = 'The node ecosystem with id '+id+' is not active.';
                     suggestion = 'Use neco activate command to activate it first.';
                     example = 'neco_activate '+ id;
-                    log.emit('message', message, suggestion, example);
+                    log.emit('exit', message, suggestion, example);
                   } else { 
                     deactivate.run(id);
                   }
@@ -196,7 +196,7 @@ if (cmd === undefined) {
             message = 'Missing ID';
             suggestion = 'Please specific the ID of the ecosystem that you want to remove.';
             example = 'neco remove <id>';
-            log.emit('message', message, suggestion, example);
+            log.emit('exit', message, suggestion, example);
           } else {
             id = argv[3];
             parseEcosystemConfig(id, function() {
@@ -206,12 +206,12 @@ if (cmd === undefined) {
                     message = 'The given id '+id+' is not exist.';
                     suggestion = 'Find out all existing ecosystem.';
                     example = 'neco list'
-                    log.emit('message', message, suggestion, example);
+                    log.emit('exit', message, suggestion, example);
                   } else if (ecosystemActive(id)) {
                     message = 'The given ecosystem with id '+id+' is in active.';
                     suggestion = 'Please deactivate it first.';
                     example = 'neco_deactivate'
-                    log.emit('message', message, suggestion, example);
+                    log.emit('exit', message, suggestion, example);
                   } else { 
                     remove.run(id);
                   }

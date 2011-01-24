@@ -67,7 +67,7 @@ function editConfig(id) {
   writeLocalConfigFile(id, function(err, id) {
     if (err) {log.emit('error', err);}
     message = 'Ecosystem '+id+' has been removed sucessfully!';
-    log.emit('message', message);
+    log.emit('exit', message);
   });
 }
 

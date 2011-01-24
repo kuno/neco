@@ -129,7 +129,7 @@ function makeRecord(id, release, npmVer) {
     fs.writeFile(recordFile, recordData, 'utf8', function(err) {
       if (err) {log.on('error', err);}
       message = 'New node ecosystem has been created sucessfully!';
-      log.emit('message', message);
+      log.emit('exit', message);
       writeLocalConfigFile(id, function(err) {
         if (err) {log.on('error', err);}
         writeEcosystemConfigFile(id);
