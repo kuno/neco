@@ -34,6 +34,10 @@ var argv = process.argv, id, target, cmd = argv[2];
 
 // Set global varialbles namae space;
 process.neco = {};
+// Try catch all errors
+process.on('uncaughException', function(err) {
+  log.emit('error', err);
+});
 
 if (cmd === undefined) {
   message = 'Missing command';
