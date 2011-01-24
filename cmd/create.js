@@ -127,11 +127,11 @@ function makeRecord(id, release, npmVer) {
 
     // Write into records file
     fs.writeFile(recordFile, recordData, 'utf8', function(err) {
-      if (err) {throw err;}
+      if (err) {log.on('error', err);}
       message = 'New node ecosystem has been created sucessfully!';
       log.emit('message', message);
       writeLocalConfigFile(id, function(err) {
-        if (err) {throw err;}
+        if (err) {log.on('error', err);}
         writeEcosystemConfigFile(id);
       });
     });
@@ -157,17 +157,17 @@ exports.run = function(id, target) {
     }
 
     installNode(release, destDir, function(err) {
-      if (err) {throw err;}
+      if (err) {log.on('error',err);}
       message = 'Nodejs '+release.version+' has been installed sucessfully!';
       log.emit('message', message);  
       if (config.installNPM && getSuitedNPM(release)) {
         npmVer = getSuitedNPM(release);
         installNPM(destDir, npmVer, function(err) {
-          if (err) {throw err;}
+          if (err) {log.on('error', err);}
           message = 'NPM '+npmVer+' has been installed sucessfully!';
           log.emit('message', message);  
           installActivate(id, release, destDir, function(err) {
-            if (err) {throw err;}
+            if (err) {log.on('error', err);}
             message = 'New activate file has been installed sucessfully!';
             log.emit('message', message);  
             makeRecord(id, release, npmVer);
@@ -177,7 +177,7 @@ exports.run = function(id, target) {
         installActivate(id, release, destDir, function(err) {
           message = 'New activate file has been created sucessfully!';
           log.emit('message', message);  
-          if (err) {throw err;}
+          if (err) {log.on('error', err);}
           makeRecord(id, release, npmVer);
         });
       }

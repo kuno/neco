@@ -1,5 +1,6 @@
 var fs = require('fs'),
 path = require('path'),
+log = require('../lib/display.js').lo9,
 show = require('../lib/display.js').show,
 getRelease = require('../lib/assistant.js').getRelease;
 
@@ -8,7 +9,7 @@ exports.run = function(target) {
   config = process.neco.config;
 
   fs.readFile(config.localDistFile, 'utf8', function(err, data) {
-    if (err) {throw err;}
+    if (err) {log.on('error', err);}
     if (target) {
       release = getRelease(target);
       releases[0] = release;
