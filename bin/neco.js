@@ -101,7 +101,7 @@ if (argv.cmd === undefined) {
                   log.emit('exit', message, suggestion, example);
                 }
               } else {
-                list.run()
+                list.run(argv)
               }
             });
           });
@@ -130,7 +130,7 @@ if (argv.cmd === undefined) {
         // Subcommand help
         else if (argv.cmd === 'howto') {
           filterConfig(function() {
-            howto.run();
+            howto.run(argv);
           });
         }
 
