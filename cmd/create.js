@@ -158,7 +158,7 @@ function makeConfigFiles(id, message, next) {
 exports.run = function(argv) {
   var config = process.neco.config, npmVer,
   id = argv.id, target = argv.target || 'stable',
-  message = argv.message, release = getRelease(target),
+  release = getRelease(target),
   destDir = path.join(config.root, '.neco', id);
 
   if (!release) {
@@ -213,7 +213,7 @@ exports.run = function(argv) {
                   if (err) {log.on('error', err);}
                   message = 'New node ecosystem has been created sucessfully!';
                   log.on('message', message);
-                  makeConfigFiles(id, message,  function(err) {
+                  makeConfigFiles(id, argv.m,  function(err) {
                     if (err) {log.on('error', err);}
                     message = 'New node ecosystem has been created sucessfully!';
                     log.on('message', message);
