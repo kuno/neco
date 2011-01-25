@@ -45,9 +45,9 @@ neco_deactivate () {
     fi
 
     if [ -n "$_old_neco_pwd" ]; then
-    dir=$(dirname $_old_neco_pwd)
-    name=$(basename $_old_neco_pwd)
-    cd $dir/$name || return 1
+    dir=$(dirname "$_old_neco_pwd")
+    name=$(basename "$_old_neco_pwd")
+    cd "$_old_neco_pwd" || return 1
     unset _old_neco_pwd
     fi
 }
@@ -55,8 +55,8 @@ neco_deactivate () {
 # unset irrelavent variables
 neco_deactivate nondestructive
 
-NECO_ID="test0"
-NODE_ECOSYSTEM="/tmp/.neco/test0"
+NECO_ID="project2003"
+NODE_ECOSYSTEM="/home/kuno/utopia/.neco/project2003"
 NODE_VERSION="0.2.6"
 export NODE_ECOSYSTEM
 export NODE_VERSION
