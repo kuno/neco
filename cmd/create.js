@@ -85,7 +85,7 @@ function makeAppDirectory(id, next) {
 
   fs.mkdir(appDir, mode=0777, function(err) {
     if (err) {log.emit('error', err);}
-    fs.link(appDir, appLink, function(err) {
+    fs.symlink(appDir, appLink, function(err) {
       next(err);
     });
   });
