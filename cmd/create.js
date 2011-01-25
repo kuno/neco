@@ -196,7 +196,7 @@ exports.run = function(argv) {
                     if (err) {log.emit('error', err);}
                     message = 'New node ecosystem has been created sucessfully!';
                     log.emit('message', message);
-                    makeConfigFiles(id, message,  function(err) {
+                    makeConfigFiles(id, argv.m,  function(err) {
                       if (err) {log.emit('error', err);}
                       message = 'New node ecosystem has been created sucessfully!';
                       log.emit('message', message);
