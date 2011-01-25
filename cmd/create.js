@@ -79,7 +79,7 @@ function installNPM(destDir, npmVer, next) {
 }
 
 function makeAppDirectory(id, next) {
-  var config = process.config,
+  var config = process.neco.config,
   root = config.root, appDir = path.join(root, '.neco', id, 'applicaton'),
   appLink = path.join(root, id);
 
