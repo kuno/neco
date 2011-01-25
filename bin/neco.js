@@ -77,7 +77,7 @@ if (argv.cmd === undefined) {
                   } else if (!idUnique(argv.id)) {
                     message = 'The given id '+argv.id+' has already been used.';
                     suggestion = 'Please choose another one instead.';
-                    log('message', message, suggestion);
+                    log.emit('message', message, suggestion);
                   } else { 
                     create.run(argv);
                   }
