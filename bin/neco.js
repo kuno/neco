@@ -55,7 +55,7 @@ if (argv.cmd === undefined) {
   log.emit('exit', message, suggestion, example);
 } else {
   parseGlobalConfig(function() { parseUserConfig(function() {
-    envReady(cmd, function() { rootReady(function() { 
+    envReady(argv.cmd, function() { rootReady(function() { 
       upgradeReady(function() {   
         // Subcommand create
         if (argv.cmd === 'create') {
