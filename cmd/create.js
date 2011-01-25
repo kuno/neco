@@ -155,9 +155,9 @@ function makeConfigFiles(argv, next) {
 }
 
 exports.run = function(argv) {
-  var config = process.neco.config, npmVer,
+  var config = process.neco.config,
   id = argv.id, target = argv.target || 'stable',
-  release = getRelease(target),
+  release = getRelease(target), npmVer = 'none',
   destDir = path.join(config.root, '.neco', id);
 
   if (!release) {
