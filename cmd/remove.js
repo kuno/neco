@@ -71,7 +71,9 @@ function editConfig(id) {
   });
 }
 
-exports.run = function(id) {
+exports.run = function(argv) {
+  var id = argv.id;
+
   removeDir(id, function(err) {
     if (err) {log.emit('error', err);}
     message = 'Target directory has been removeed sucessfully!';

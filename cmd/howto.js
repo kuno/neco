@@ -1,7 +1,7 @@
 var path = require('path');
 
-exports.run = function(cmd) {
-  if (cmd === undefined) {
+exports.run = function(argv) {
+  if (argv.cmd === undefined) {
     console.log('neco - Nodejs Ecosystem COordinator, like virtualenv for python.');
     console.log('');
     console.log('Usage:\n  neco <command>');

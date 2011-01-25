@@ -138,9 +138,9 @@ function makeRecord(id, release, npmVer) {
   });
 }
 
-exports.run = function(id, target) {
-  var npmVer,
-  config = process.neco.config,  
+exports.run = function(argv) {
+  var config = process.neco.config, npmVer,
+  id = argv.id, target = argv.target || 'stable',
   release = getRelease(target),
   destDir = path.join(config.root, '.neco', id);
 
