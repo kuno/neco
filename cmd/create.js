@@ -80,14 +80,12 @@ function installNPM(destDir, npmVer, next) {
 
 function makeAppDirectory(id, next) {
   var config = process.neco.config,
-  root = config.root, appDir = path.join(root, '.neco', id, 'application'),
+  root = config.root, 
+  appDir = path.join(root, '.neco', id, 'application'),
   appLink = path.join(root, id);
 
-  fs.mkdir(appDir, mode=0777, function(err) {
-    if (err) {log.emit('error', err);}
-    fs.symlink(appDir, appLink, function(err) {
-      next(err);
-    });
+  fs.symlink(appDir, appLink, function(err) {
+    next(err);
   });
 }
 
@@ -169,49 +167,29 @@ exports.run = function(argv) {
   } else {
     // If the version of release smaller and equal to 0.1,9,
     // add 'v' prefix to version laterial
-    //if (notSmaller(release.version, vStartsFrom) >= 0) {
-      //  release.realver = 'v'.concat(release.version);
-      // }
-      release.realver = (notSmaller(release.version, vStartsFrom) >= 0) ? 'v'.concat(release.version) : null;
-      installNode(release, destDir, function(err) {
-        if (err) {log.emit('error',err);}
-        message = 'Nodejs '+release.version+' has been installed sucessfully!';
-        log.emit('message', message);  
-        if ((config.installNPM || argv.npm) && getSuitedNPM(release)) {
-          npmVer = getSuitedNPM(release);
-          installNPM(destDir, npmVer, function(err) {
-            if (err) {log.emit('error', err);}
-            message = 'NPM '+npmVer+' has been installed sucessfully!';
-            log.emit('message', message);
-            if (argv.app) {
-              makeAppDirectory(id, function(err) {
-                if (err) {log.emit('error', err);}
-                message = 'The applicaton directory has been created sucessfully!';
-                log.emit('message', message);
-                installActivate(id, release, destDir, function(err) {
-                  if (err) {log.emit('error', err);}
-                  message = 'New activate file has been installed sucessfully!';
-                  log.emit('message', message);
-                  makeRecord(id, release, npmVer, function(err) {
-                    if (err) {log.emit('error', err);}
-                    message = 'New node ecosystem has been created sucessfully!';
-                    log.emit('message', message);
-                    makeConfigFiles(id, argv.m,  function(err) {
-                      if (err) {log.emit('error', err);}
-                      message = 'New node ecosystem has been created sucessfully!';
-                      log.emit('message', message);
-                    }); 
-                  });
-                });
-              });
-            } else {
+    release.realver = (notSmaller(release.version, vStartsFrom) >= 0) ? 'v'.concat(release.version) : null;
+    installNode(release, destDir, function(err) {
+      if (err) {log.emit('error',err);}
+      message = 'Nodejs '+release.version+' has been installed sucessfully!';
+      log.emit('message', message);  
+      if ((config.installNPM || argv.npm) && getSuitedNPM(release)) {
+        npmVer = getSuitedNPM(release);
+        installNPM(destDir, npmVer, function(err) {
+          if (err) {log.emit('error', err);}
+          message = 'NPM '+npmVer+' has been installed sucessfully!';
+          log.emit('message', message);
+          if (argv.app) {
+            makeAppDirectory(id, function(err) {
+              if (err) {log.emit('error', err);}
+              message = 'The applicaton directory has been created sucessfully!';
+              log.emit('message', message);
               installActivate(id, release, destDir, function(err) {
                 if (err) {log.emit('error', err);}
                 message = 'New activate file has been installed sucessfully!';
                 log.emit('message', message);
                 makeRecord(id, release, npmVer, function(err) {
                   if (err) {log.emit('error', err);}
-                  message = 'New node ecosystem has been created sucessfully!';
+                  message = 'Record file has been edited sucessfully!';
                   log.emit('message', message);
                   makeConfigFiles(id, argv.m,  function(err) {
                     if (err) {log.emit('error', err);}
@@ -219,26 +197,43 @@ exports.run = function(argv) {
                     log.emit('message', message);
                   }); 
                 });
-              });  
-            }
-          });
-        } else {
-          installActivate(id, release, destDir, function(err) {
-            message = 'New activate file has been created sucessfully!';
-            log.emit('message', message);  
-            if (err) {log.emit('error', err);}
-            makeRecord(id, release, npmVern, function(err) {
-              if (err) {log.emit('error', err);}
-              message = 'Record file has been edited sucessfully!';
-              log.emit('message', message);
-              makeConfigFiles(id, argv.m,  function(err) {
-                if (err) {log.emit('error', err);}
-                message = 'New node ecosystem has been created sucessfully!';
-                log.emit('message', message);
               });
             });
+          } else {
+            installActivate(id, release, destDir, function(err) {
+              if (err) {log.emit('error', err);}
+              message = 'New activate file has been installed sucessfully!';
+              log.emit('message', message);
+              makeRecord(id, release, npmVer, function(err) {
+                if (err) {log.emit('error', err);}
+                message = 'Record file  has been edited sucessfully!';
+                log.emit('message', message);
+                makeConfigFiles(id, argv.m,  function(err) {
+                  if (err) {log.emit('error', err);}
+                  message = 'New node ecosystem has been created sucessfully!';
+                  log.emit('message', message);
+                }); 
+              });
+            });  
+          }
+        });
+      } else {
+        installActivate(id, release, destDir, function(err) {
+          message = 'New activate file has been created sucessfully!';
+          log.emit('message', message);  
+          if (err) {log.emit('error', err);}
+          makeRecord(id, release, npmVern, function(err) {
+            if (err) {log.emit('error', err);}
+            message = 'Record file has been edited sucessfully!';
+            log.emit('message', message);
+            makeConfigFiles(id, argv.m,  function(err) {
+              if (err) {log.emit('error', err);}
+              message = 'New node ecosystem has been created sucessfully!';
+              log.emit('message', message);
+            });
           });
-        }
-      });
-    }
-  };
+        });
+      }
+    });
+  }
+};
