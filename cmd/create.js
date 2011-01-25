@@ -223,7 +223,7 @@ exports.run = function(argv) {
           message = 'New activate file has been created sucessfully!';
           log.emit('message', message);  
           if (err) {log.emit('error', err);}
-          makeRecord(id, release, npmVern, function(err) {
+          makeRecord(id, release, npmVer, function(err) {
             if (err) {log.emit('error', err);}
             message = 'Record file has been edited sucessfully!';
             log.emit('message', message);
