@@ -147,7 +147,7 @@ function makeConfigFiles(argv, next) {
   process.neco.ecosystemConfig = {};
   process.neco.ecosystemConfig.id = argv.id;
   process.neco.ecosystemConfig.app = argv.app;
-  process.neco.ecosystemConfig.message = argv.message;
+  process.neco.ecosystemConfig.description = argv.d;
   writeLocalConfigFile(argv.id, function(err) {
     if (err) {log.emit('error', err);}
     writeEcosystemConfigFile(argv, next);
