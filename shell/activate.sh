@@ -67,7 +67,7 @@ neco_activate () {
   fi
 
   neco_verify_root || return 1
-#  neco_verify_active_ecosystem || return 1
+  #  neco_verify_active_ecosystem || return 1
   neco_verify_ecosystem $neco_id || return 1
 
   activate="$NECO_ROOT/.neco/$neco_id/activate"
@@ -121,17 +121,17 @@ neco_activate () {
 }
 
 neco_workon() {
-   typeset neco_id="$1"
-   pwd=$(PWD)
-   dir=$(dirname $pwd)
-   name=$(basename $pwd)
+  typeset neco_id="$1"
+  pwd=$(PWD)
+  dir=$(dirname $pwd)
+  name=$(basename $pwd)
 
   if [ "$neco_id" = "" ]; then
     return 1
   elif [ -L $NECO_ROOT/"$neco_id" ] || [ -d $NECO_ROOT/"$neco_id" ]; then
+    export _old_neco_pwd=$dir/$name 
     neco_activate $neco_id || return 1
     cd $NECO_ROOT/"$neco_id" || return 1
-    export _old_neco_pwd=$dir/$name
   else
     neco_activate $neco_id || return 1
   fi
