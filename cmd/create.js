@@ -140,7 +140,7 @@ function makeRecord(id, release, npmVer, next) {
 
     // Write into records file
     fs.writeFile(recordFile, recordData, 'utf8', function(err) {
-      if (err) {log.on('error', err);}
+      //if (err) {log.on('error', err);}
       next(err);
     });
   });
