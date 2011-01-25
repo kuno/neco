@@ -81,10 +81,10 @@ function installNPM(destDir, npmVer, next) {
 function makeAppDirectory(id, next) {
   var config = process.neco.config,
   root = config.root, 
-  appDir = path.join(root, '.neco', id, 'application'),
-  appLink = path.join(root, id);
+ // appDir = path.join(root, '.neco', id, 'application'),
+  appDir = path.join(root, id);
 
-  fs.symlink(appDir, appLink, function(err) {
+  fs.mkdir(appDir, mode=0777, function(err) {
     next(err);
   });
 }
@@ -143,13 +143,14 @@ function makeRecord(id, release, npmVer, next) {
   });
 }
 
-function makeConfigFiles(id, message, next) {
+function makeConfigFiles(argv, next) {
   process.neco.ecosystemConfig = {};
-  process.neco.ecosystemConfig.id = id;
-  process.neco.ecosystemConfig.message = message;
-  writeLocalConfigFile(id, function(err) {
+  process.neco.ecosystemConfig.id = argv.id;
+  process.neco.ecosystemConfig.app = argv.app;
+  process.neco.ecosystemConfig.message = argv.message;
+  writeLocalConfigFile(argv.id, function(err) {
     if (err) {log.emit('error', err);}
-    writeEcosystemConfigFile(id, next);
+    writeEcosystemConfigFile(argv, next);
   });
 }
 
@@ -191,7 +192,7 @@ exports.run = function(argv) {
                   if (err) {log.emit('error', err);}
                   message = 'Record file has been edited sucessfully!';
                   log.emit('message', message);
-                  makeConfigFiles(id, argv.m,  function(err) {
+                  makeConfigFiles(argv,  function(err) {
                     if (err) {log.emit('error', err);}
                     message = 'New node ecosystem has been created sucessfully!';
                     log.emit('message', message);
@@ -208,7 +209,7 @@ exports.run = function(argv) {
                 if (err) {log.emit('error', err);}
                 message = 'Record file  has been edited sucessfully!';
                 log.emit('message', message);
-                makeConfigFiles(id, argv.m,  function(err) {
+                makeConfigFiles(argv,  function(err) {
                   if (err) {log.emit('error', err);}
                   message = 'New node ecosystem has been created sucessfully!';
                   log.emit('message', message);
@@ -226,7 +227,7 @@ exports.run = function(argv) {
             if (err) {log.emit('error', err);}
             message = 'Record file has been edited sucessfully!';
             log.emit('message', message);
-            makeConfigFiles(id, argv.m,  function(err) {
+            makeConfigFiles(argv,  function(err) {
               if (err) {log.emit('error', err);}
               message = 'New node ecosystem has been created sucessfully!';
               log.emit('message', message);
