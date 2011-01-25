@@ -45,7 +45,9 @@ neco_deactivate () {
     fi
 
     if [ -n "$_old_neco_pwd" ]; then
-    cd "$_old_neco_pwd" || return 1
+    dir=$(dirname $_old_neco_pwd)
+    name=$(basename $_old_neco_pwd)
+    cd $dir/$name || return 1
     unset _old_neco_pwd
     fi
 }
