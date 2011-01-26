@@ -16,6 +16,7 @@ parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
 parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig; 
 
 var envReady = require('../lib/inception.js').envReady,
+toolReady = require('../lib/inception.js').toolReady,
 rootReady = require('../lib/inception.js').rootReady,
 recordReady = require('../lib/inception.js').recordReady,
 upgradeReady = require('../lib/inception.js').upgradeReady;  
@@ -55,8 +56,8 @@ if (argv.cmd === undefined) {
   log.emit('exit', message, suggestion, example);
 } else {
   parseGlobalConfig(function() { parseUserConfig(function() {
-    envReady(argv.cmd, function() { rootReady(function() { 
-      upgradeReady(function() {   
+    envReady(argv.cmd, function() { toolReady(function() { 
+      rootReady(function() { upgradeReady(function() {   
         // Subcommand create
         if (argv.cmd === 'create') {
           if (!argv.id) {
