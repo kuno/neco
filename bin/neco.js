@@ -128,7 +128,7 @@ if (argv.cmd === undefined) {
           });
         }
 
-        // Subcommand help
+        // Subcommand howto
         else if (argv.cmd === 'howto') {
           filterConfig(function() {
             howto.run(argv);
