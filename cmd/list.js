@@ -9,7 +9,7 @@ exports.run = function(argv) {
   id = argv.id, ecosystem, ecosystems = [];
 
   fs.readFile(config.recordFile, 'utf8', function(err, data) {
-    if (err) {log.on('error', err);}
+    if (err) {log.emit('error', err);}
     if (argv.target) {
       ecosystem = getEcosystem(id);
       ecosystems[0] = ecosystem;

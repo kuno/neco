@@ -10,7 +10,7 @@ exports.run = function(argv) {
   config = process.neco.config;
 
   fs.readFile(config.localDistFile, 'utf8', function(err, data) {
-    if (err) {log.on('error', err);}
+    if (err) {log.emit('error', err);}
     if (target) {
       release = getRelease(target);
       releases[0] = release;
