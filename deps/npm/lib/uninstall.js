@@ -22,7 +22,6 @@ var rm = require("./utils/rm-rf")
   , chain = require("./utils/chain")
   , lifecycle = require("./utils/lifecycle")
   , semver = require("./utils/semver")
-  , mkdir = require("./utils/mkdir-p")
   , asyncMap = require("./utils/async-map")
   , loadPackageDefaults = require("./utils/load-package-defaults")
 
@@ -31,6 +30,7 @@ function uninstall (args, cb) {
   // unpack version ranges (empty version is like "*", remove all)
   // if in recursive mode, then also add dependents at this stage.
   // this way, it won't whine about not being able to remove anything, ever.
+  if (!args.length) return rmCwdPkg(cb)
   unpackArgs(args, function (er, args) {
     if (args.length) log.verbose(args, "removing")
     if (er) return cb(er)
@@ -48,6 +48,13 @@ function uninstall (args, cb) {
       // all of them exist and are safe to delete.
       secondPart(data, cb_)
     })
+  })
+}
+
+function rmCwdPkg (cb) {
+  readJson(path.join(process.cwd(), "package.json"), function (er, d) {
+    if (er) return cb(uninstall.usage)
+    return uninstall([d._id], cb)
   })
 }
 
@@ -252,21 +259,16 @@ function removeBins (data, cb) {
 }
 function removeDependentLinks (data, cb) {
   var dependsOn = path.join(npm.dir, data.name, data.version, "dependson")
-  // TODO: remove this mkdir kludge
-  // A workaround for the fact that this dir didn't exist prior to 0.1.20
-  mkdir(dependsOn, function (er) {
-    if (er) return cb() // meh
-    fs.readdir(dependsOn, function (er, deps) {
-      if (er) return cb(er)
-      asyncMap(deps, function (dep, cb) {
-        // <3 symlinks
-        var p = path.join(dependsOn, dep, "dependents", data.name)
-          , v = data.version
-        // todo: remove this kludge v0.1.28
-        // just do the "@" only.
-        asyncMap([p+"@"+v, p+"-"+v], rm, cb)
-      }, cb)
-    })
+  fs.readdir(dependsOn, function (er, deps) {
+    if (er) return cb() // no deps, or a fossil.
+    asyncMap(deps, function (dep, cb) {
+      // <3 symlinks
+      var p = path.join(dependsOn, dep, "dependents", data.name)
+        , v = data.version
+      // todo: remove this kludge v0.1.28
+      // just do the "@" only.
+      asyncMap([p+"@"+v, p+"-"+v], rm, cb)
+    }, cb)
   })
 }
 

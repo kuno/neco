@@ -183,14 +183,16 @@ function resolveDependencies (pkg, cb) {
       // see if we have this thing installed.
       fs.readdir(path.join(npm.dir, req.name), function (er, versions) {
         if (er) return cb(new Error(
-          "Required package: "+req.name+"("+req.version+") not found."))
+          "Required package: "+req.name+"("+req.version+") not found."+
+          "\n(required by: "+pkg._id+")"))
         // TODO: Get the "stable" version if there is one.
         // Look that up from the registry.
         var satis = semver.maxSatisfying(versions, req.version)
         if (satis) return cb(null, {name:req.name, version:satis})
         return cb(new Error(
           "Required package: "+req.name+"("+req.version+") not found. "+
-          "(Found: "+JSON.stringify(versions)+")"))
+          "(Found: "+JSON.stringify(versions)+")"+
+          "\n(required by: "+pkg._id+")"))
       })
     }, function (er, found) {
       // save the resolved dependencies on the pkg data for later
@@ -223,7 +225,6 @@ function dependentLink (pkg, cb) {
 
 // link each dep into this pkg's "node_modules" folder
 function dependencyLink (pkg, cb) {
-  pkg.link = pkg.link || {}
   var dependencies = path.join(npm.dir, pkg.name, pkg.version, "node_modules")
     , depBin = path.join(npm.dir, pkg.name, pkg.version, "dep-bin")
   asyncMap(pkg._resolvedDeps, function (dep, cb) {
@@ -245,13 +246,6 @@ function dependencyLink (pkg, cb) {
         }, function (dep, cb) {
           // link the bins to this pkg's "dep-bin" folder.
           linkBins(dep, depBin, false, cb)
-        }, function (dep, cb) {
-          var linkToLib = (pkg.link || {}).hasOwnProperty(dep.name)
-              ? path.join( npm.dir, pkg.name, pkg.version
-                         , "package", pkg.link[dep.name]
-                         )
-              : null
-          linkToLib ? linkModules(dep, linkToLib, cb) : cb()
         }, cb)
       })
     })

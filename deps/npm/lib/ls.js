@@ -180,14 +180,18 @@ function prettify (data, args) {
   // turn each line obj into a single line, only as much ws as necessary.
   try {
     var stdio = process.binding("stdio")
-      , cols = stdio.isatty(stdio.stdoutFD) ? stdio.getColumns() : Infinity
+      , cols = stdio.isatty(stdio.stdoutFD) ?
+        ( stdio.getColumns ? stdio.getColumns()
+        : stdio.getWindowSize ? stdio.getWindowSize()[1]
+        : Infinity )
+        : Infinity
   }
   catch (ex) { cols = Infinity }
   pretty = pretty.map(function (line) {
     var addSpace = maxNameLen - line.name.length
     return (line.name + (space.substr(0, addSpace) || "") + " "
+           + line.attrs + "   "
            + (line.description ? line.description + "    " : "")
-           + line.attrs
            + (line.keywords.length ? " " + line.keywords.join(" ") : ""))
            .substr(0, cols)
   })
@@ -224,8 +228,14 @@ function merge (installed, remote) {
       merged[p].versions[v] = merged[p].versions[v] || {}
       merged[p].versions[v].remote = true
       merged[p].versions[v].tags = []
+      var descs = remote[p].descriptions
+      if (descs && descs[v] && descs[v] !== remote[p].description) {
+        merged[p].versions[v].description = descs[v]
+      }
       Object.keys(remote[p]["dist-tags"]).forEach(function (tag) {
-        if (remote[p]["dist-tags"][tag] === v) merged[p].versions[v].tags.push(tag)
+        if (remote[p]["dist-tags"][tag] === v) {
+          merged[p].versions[v].tags.push(tag)
+        }
       })
     }
   }
