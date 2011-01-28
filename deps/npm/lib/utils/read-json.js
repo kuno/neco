@@ -19,13 +19,27 @@ function readJson (jsonFile, opts, cb) {
     log.verbose(jsonFile, "from cache")
     return cb(null, cache[jsonFile])
   }
+  opts.file = jsonFile
+  if (!opts.tag) {
+    var parsedPath = jsonFile.indexOf(npm.dir) === 0 && jsonFile.match(
+      /\/([^\/]+)\/([^\/]+)\/package\/package\.json$/)
+    if (parsedPath && semver.valid(parsedPath[2])) {
+      // this is a package.json in some installed package.
+      // infer the opts.tag so that linked packages behave right.
+      opts.tag = parsedPath[2]
+    }
+  }
+
   fs.readFile( path.join(path.dirname(jsonFile), "wscript")
              , function (er, data) {
-    opts.file = jsonFile
     if (er) opts.wscript = false
     else opts.wscript = data.toString().match(/(^|\n)def build\b/)
                       && data.toString().match(/(^|\n)def configure\b/)
     fs.readFile(jsonFile, processJson(opts, function (er, data) {
+      if (er) return cb(er)
+      var doLoad = !(jsonFile.indexOf(npm.cache) === 0 &&
+                     path.basename(path.dirname(jsonFile)) !== "package")
+      if (!doLoad) return cb(er, data)
       loadPackageDefaults(data, path.dirname(jsonFile), cb)
     }))
   })
@@ -128,7 +142,7 @@ function processObject (opts, cb) { return function (er, json) {
     var scripts = json.scripts = json.scripts || {}
     if (!scripts.install && !scripts.preinstall) {
       // don't fail if it was unexpected, just try.
-      scripts.preinstall = "node-waf configure build"
+      scripts.preinstall = "node-waf clean configure build"
     }
   }
 

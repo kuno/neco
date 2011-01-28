@@ -48,7 +48,3 @@ if [ -e tools/waf-light ]; then
 elif [ -e tools/waf ]; then
   tools/waf install --destdir=$destDir
 fi
-
-cp LICENSE $destDir/ecosystem/share/licenses/node/LICENSE
-cp ChangeLog $destDir/ecosystem/share/node/ChangeLog
-cp README $destDir/ecosystem/share/node/README

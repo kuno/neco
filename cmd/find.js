@@ -1,19 +1,22 @@
 var fs = require('fs'),
 path = require('path'),
-show = require('../lib/display.js').showReleases,
+log = require('../lib/display.js').lo9,
+show = require('../lib/display.js').show,
 getRelease = require('../lib/assistant.js').getRelease;
 
-exports.run = function(config) {
-  var release;
-  config.releases = [];
-  fs.readFile(config.distFile, 'utf8', function(err, data) {
-    if (err) {throw err;}
-    if (config.target) {
-      release = getRelease(config);
-      config.releases[0] = release;
+exports.run = function(argv) {
+  var target = argv.target, 
+  release, releases = [],
+  config = process.neco.config;
+
+  fs.readFile(config.localDistFile, 'utf8', function(err, data) {
+    if (err) {log.emit('error', err);}
+    if (target) {
+      release = getRelease(target);
+      releases[0] = release;
     } else {
-      config.releases = JSON.parse(data).history;
+      releases = JSON.parse(data).history;
     }
-    show(config);
+    show.emit('releases', releases);
   });
 };

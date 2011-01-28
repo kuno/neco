@@ -34,7 +34,6 @@ var fs = require("./graceful-fs")
   , crypto = require("crypto")
 
   , privateKey = null
-  , mkdir = require("./mkdir-p")
   , chain = require("./chain")
   , log = require("./log")
   , ini = require("./ini-parser")
@@ -73,20 +72,8 @@ function resolveConfigs (cli, cb) {
       if (er) return cb(er)
       cl.push(conf)
       cl.push(dc)
-      // make sure that the root folder exists
-      // This is a bit of a kludge, but until we can abstract out
-      // file read/write in a clean way, this is the only single
-      // gateway where we can ensure that these folders exist.
-      var npmdir = path.join(cl.get("root"), ".npm")
-      chain
-        ( cl.get("binroot") && [mkdir, cl.get("binroot")]
-        , [mkdir, path.join(npmdir, ".tmp")]
-        , [mkdir, path.join(npmdir, ".cache")]
-        , function (er) {
-            exports.resolved = true
-            cb(er)
-          }
-        )
+      exports.resolved = true
+      cb()
     })
   })
 }
@@ -240,26 +227,27 @@ function saveConfig (which, cb) {
   saveConfigfile
     ( configList.get(which + "config")
     , configList.list[TRANS[which]]
-    , cb
-    )
+    , which === "user" ? 0600 : 0644
+    , cb )
 }
-function saveConfigfile (file, config, cb) {
+function saveConfigfile (file, config, mode, cb) {
   encryptAuth(config, function () { // ignore errors
     var data = {}
     Object.keys(config).forEach(function (k) {
       data[k] = unParseField(config[k], k)
     })
     data = ini.stringify({"-":data}).trim()
-    return (data) ? writeConfigfile(file, data+"\n", cb)
+    return (data) ? writeConfigfile(file, data+"\n", mode, cb)
                   : rmConfigfile(file, cb)
   })
 }
-function writeConfigfile (configfile, data, cb) {
+function writeConfigfile (configfile, data, mode, cb) {
   fs.writeFile
     ( configfile, data, "utf8"
     , function (er) {
-        if (er) log(er, "Failed saving "+configfile)
-        cb()
+        if (er) log(er, "Failed saving "+configfile, cb)
+        else if (mode) fs.chmod(configfile, mode, cb)
+        else cb()
       }
     )
 }

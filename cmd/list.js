@@ -1,19 +1,21 @@
 var fs = require('fs'),
 path = require('path'),
+log = require('../lib/display.js').log,
 getEcosystem = require('../lib/assistant.js').getEcosystem,
-show = require('../lib/display.js').showEcosystems;
+show = require('../lib/display.js').show;
 
-exports.run = function(config) {
-  var ecosystem;
-  config.ecosystems = [];
+exports.run = function(argv) {
+  var config = process.neco.config,
+      ecosystem, ecosystems = [];
+
   fs.readFile(config.recordFile, 'utf8', function(err, data) {
-    if (err) {throw err;}
-    if (config.target) {
-      ecosystem = getEcosystem(config);
-      config.ecosystems[0] = ecosystem;
+    if (err) {log.emit('error', err);}
+    if (argv.id) {
+      ecosystem = getEcosystem(argv.id);
+      ecosystems[0] = ecosystem;
     } else {
-      config.ecosystems = JSON.parse(data).ecosystems;
+      ecosystems = JSON.parse(data).ecosystems;
     }
-    show(config);
+    show.emit('ecosystems', ecosystems);
   });
 };

@@ -1,16 +1,17 @@
 var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
+log = require('../lib/display.js').log,
 removeEcosystem = require('../lib/utils.js').removeEcosystem,
 getEcosystem = require('../lib/assistant.js').getEcosystem,    
-writeGlobalConfigFile = require('../lib/assistant.js').writeGlobalConfigFile;
+writeLocalConfigFile = require('../lib/assistant.js').writeLocalConfigFile;
 
 var log = require('../lib/display.js').log;
 var message ,warning, error, suggestion, example;
 
-function removeDir(config, next) {
-  var error, remove, targetDir;
-  targetDir = path.join(config.root, '.neco', config.id);
+function removeDir(id, next) {
+  var error, remove, config = process.neco.config,
+  root = config.root, targetDir = path.join(root, '.neco', id);
 
   path.exists(targetDir, function(exists) {
     if (!exists) {
@@ -19,60 +20,69 @@ function removeDir(config, next) {
     } else {
       remove = spawn('rm', ['-rf', targetDir]);
       remove.stdout.on('data', function(data) {
-        log('stdout', data);
+        log.emit('stdout', data);
       });
       remove.stderr.on('data', function(data) {
-        log('stdout', data);
+        log.emit('stdout', data);
       });
       remove.on('exit', function(code) {
         if (code !== 0) {
           err = new Error('Remove exit with code '+code);
-          next(error, config);
+          next(error);
         } else {
-          next(error, config);
+          next(error);
         }
       });
     }
   });
 }
 
-function editRecord(config, next) {
-  var error, index, record, ecosystem, recordData, 
-  id = config.id, recordFile = config.recordFile;
+function editRecord(id, next) {
+  var error, index, record, 
+  ecosystem, recordData, 
+  config = process.neco.config, 
+  recordFile = config.recordFile;
+
   path.exists(recordFile, function(exists) {
     if (!exists) {
       error = new Error('Record file dose not exists.');
       next(error, config);
     } else {
       fs.readFile(recordFile, 'utf8', function(err, data) {
-        if (err) {throw err;}
+        if (err) {log.emit('error', err);}
         record = JSON.parse(data);
         record.ecosystems = removeEcosystem(record.ecosystems, id);
         recordData = JSON.stringify(record);
         fs.writeFile(recordFile, recordData, 'utf8', function(err) {
           error = err;
-          next(error, config);
+          next(error);
         });
       });
     }
   });
 }
 
-function editConfig(config) {
-  var id = config.id;
-  writeGlobalConfigFile(config, function(err, config) {
-    if (err) {throw err;}
-    message = 'ecosystem '+id+' has been removed sucessfully.';
-    log('message', message);
+function editConfig(id) {
+  var config = process.neco.config;
+  writeLocalConfigFile(id, function(err, id) {
+    if (err) {log.emit('error', err);}
+    message = 'Ecosystem '+id+' has been removed sucessfully!';
+    log.emit('exit', message);
   });
 }
 
-exports.run = function(config) {
-  removeDir(config, function(err) {
-    if (err) {throw err;}
-    editRecord(config, function(err, config) {
-      if (err) {throw err;}
-      editConfig(config);
+exports.run = function(argv) {
+  var id = argv.id;
+
+  removeDir(id, function(err) {
+    if (err) {log.emit('error', err);}
+    message = 'Target directory has been removeed sucessfully!';
+    log.emit('message', message);  
+    editRecord(id, function(err) {
+      if (err) {log.emit('error', err);}
+      message = 'Ecosystems record file has been edited sucessfully!';
+      log.emit('message', message);  
+      editConfig(id);
     });
   });
 };

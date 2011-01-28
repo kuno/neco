@@ -2,7 +2,6 @@
 # syntax: glob
 
 # python virtual env default dir
-include/*
 
 # vi/vim temprary files
 *~
