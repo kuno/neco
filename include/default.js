@@ -19,3 +19,7 @@ exports.seps = exports.sgps.concat(['version', 'localConfigFile', 'localDistFile
                                     'recordFile', 'installNPM']);
 
 exports.issues = 'http://github.com/kuno/neco/issues';
+
+exports.validFlags = ['--app', '--npm'];
+exports.validOptions = ['-d'];
+
