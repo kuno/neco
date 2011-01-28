@@ -36,3 +36,10 @@ python virtualenv and virtualenvwrapper package)
 2, fixed local testing bug
 3, parse global config file before package config file
 4, only clean config object after command excution
+
+###0.0.4###
+1, update to nodejs 0.3.7, npm 0.2.16
+2, set global config object
+3, add neco_workon shell function
+4, add buiding tools checkging
+5, add upgrade checking
