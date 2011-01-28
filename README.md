@@ -27,10 +27,6 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
 
         npm install neco (note: neco needs latest version of nodejs, right now it's 0.3.7)
 
-  __Through shell script__
-
-        curl https://github.com/kuno/neco/blob/master/install.sh || install.sh
-
   __Through aur(if you are arch user)__
 
         yaourt -S nodejs-neco
