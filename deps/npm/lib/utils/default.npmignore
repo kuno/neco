@@ -6,3 +6,6 @@ build/
 .hg/
 .git/
 CVS/
+*~
+*.bak
+.DS_Store

@@ -18,7 +18,6 @@ var EventEmitter = require("events").EventEmitter
   , log = require("./lib/utils/log")
   , fs = require("./lib/utils/graceful-fs")
   , path = require("path")
-  , mkdir = require("./lib/utils/mkdir-p")
   , abbrev = require("./lib/utils/abbrev")
   , which = require("./lib/utils/which")
 
@@ -46,6 +45,8 @@ var commandCache = {}
               , "rb" : "rebuild"
               , "bn" : "bundle"
               , "list" : "ls"
+              , "search" : "ls"
+              , "find" : "ls"
               , "ln" : "link"
               , "i" : "install"
               , "up" : "update"
@@ -128,7 +129,7 @@ npm.load = function (conf, cb_) {
   function cb (er) {
     loaded = true
     loadListeners.forEach(function (cb) {
-      cb(er, npm)
+      process.nextTick(function () { cb(er, npm) })
     })
     loadListeners.length = 0
   }
@@ -138,10 +139,7 @@ npm.load = function (conf, cb_) {
       log.verbose("node symlink", node)
       process.execPath = node
     }
-    ini.resolveConfigs(conf, function (er) {
-      if (er) return cb(er)
-      mkdir(npm.tmp, cb)
-    })
+    ini.resolveConfigs(conf, cb)
   })
 }
 

@@ -2,7 +2,7 @@
   "name":"neco",
     "description":"Nodejs Ecosystem COordinator, like virtualenv for python",
     "keywords":["virtualenv", "ecosystem", "install", "npm"],
-    "version": "0.0.3-alpha2",
+    "version": "0.0.4",
     "homepage":"",
     "author":"Guan 'kuno' Qing <neokuno AT gmail DOT com>",
     "contributors":[],
@@ -23,13 +23,21 @@
     },
     "directories": 
     {
-      "bin":"./bin","docs":"/.docs","man":"./man", "lib":"./lib", 
-      "cmd":"./cmd","data":"./data","deps":"./deps","include":"./include",
-      "sample":"./sample","shell":"./shell", "test":"./test"
+      "bin":"./bin",
+      "docs":"/.docs",
+      "man":"./man", 
+      "lib":"./lib", 
+      "cmd":"./cmd",
+      "data":"./data",
+      "deps":"./deps",
+      "include":"./include",
+      "sample":"./sample",
+      "shell":"./shell",
+      "test":"./test"
     },
     "bin":{"neco":"./bin/neco.js"},
     "main":"neco",
-    "engines": {"node":">=0.3.6"},
+    "engines": {"node":">=0.3.7"},
     "scripts":{},
     "licenses":
       [

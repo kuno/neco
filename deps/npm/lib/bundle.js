@@ -10,6 +10,7 @@ var npm = require("../npm")
   , fs = require("./utils/graceful-fs")
   , conf = require("./utils/ini").configList
   , rm = require("./utils/rm-rf")
+  , url = require("url")
   , notAllowed = [ "adduser", "build", "bundle", "config", "init", "link"
                  , "owner", "publish", "restart", "start", "stop", "tag"
                  , "unpublish", "update-dependents", "view", "bn" ]
@@ -71,19 +72,16 @@ function bundle (args, dir, cb_) {
       log.info(location, "destroyed", cb)
     })
 
-    mkdir(npm.dir, function(er) {
-      if (er) return log.er(cb, "Error creating "+npm.dir+" for bundling")(er)
-      if (typeof cmd === "function") {
-        return cmd(args, cb)
-      }
+    if (typeof cmd === "function") {
+      return cmd(args, cb)
+    }
 
-      // no command given, just install the local deps.
-      // just read the package.json from the directory to
-      // avoid adding the whole package to the cache
-      readJson(path.join(pkg, "package.json"), function (er, data) {
-        if (er) return log.er(cb, "Error reading "+pkg+"/package.json")(er)
-        install(data, location, cb)
-      })
+    // no command given, just install the local deps.
+    // just read the package.json from the directory to
+    // avoid adding the whole package to the cache
+    readJson(path.join(pkg, "package.json"), function (er, data) {
+      if (er) return log.er(cb, "Error reading "+pkg+"/package.json")(er)
+      install(data, location, cb)
     })
   })
 }
@@ -96,6 +94,10 @@ function install (data, location, cb) {
     , deps = depNames.map(function (d) {
         var v = data.dependencies[d]
         if (v === "*") v = ""
+        var u = url.parse(v)
+        if (u && u.protocol && u.host) {
+          return u.href
+        }
         return v ? d + "@" + v : d
       })
   log.verbose(deps, "bundle deps")

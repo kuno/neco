@@ -37,10 +37,10 @@ function installNode(release, destDir, next) {
 
       install = spawn('sh', [script, version, link, destDir]);
       install.stdout.on('data', function(data) {
-        log('stdout',data);
+        log.emit('stdout',data);
       });
       install.stderr.on('data', function(data) {
-        log('stdout',data);
+        log.emit('stdout',data);
       });
 
       install.on('exit', function(code) {
@@ -63,10 +63,10 @@ function installNPM(destDir, npmVer, next) {
   install = spawn('sh', [script, pkgDir, destDir, npmVer]);
 
   install.stdout.on('data', function(data) {
-    log('stdout', data);
+    log.emit('stdout', data);
   });
   install.stderr.on('data', function(data) {
-    log('stdout', data);
+    log.emit('stdout', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {
@@ -75,6 +75,17 @@ function installNPM(destDir, npmVer, next) {
     } else {
       next(error);
     }
+  });
+}
+
+function makeAppDirectory(id, next) {
+  var config = process.neco.config,
+  root = config.root, 
+ // appDir = path.join(root, '.neco', id, 'application'),
+  appDir = path.join(root, id);
+
+  fs.mkdir(appDir, mode=0777, function(err) {
+    next(err);
   });
 }
 
@@ -87,10 +98,10 @@ function installActivate(id, release, destDir, next) {
   install = spawn('sh', [script, id, pkgDir, destDir, version]);
 
   install.stdout.on('data', function(data) {
-    log('stdout', data);
+    log.emit('stdout', data);
   });
   install.stderr.on('data', function(data) {
-    log('stdout', data);
+    log.emit('stdout', data);
   });
   install.on('exit', function(code) {
     if (code !== 0) {
@@ -102,7 +113,7 @@ function installActivate(id, release, destDir, next) {
   });
 }
 
-function makeRecord(id, release, npmVer) {
+function makeRecord(id, release, npmVer, next) {
   var error,
   config  = process.neco.config,
   date    = getDateTime(),
@@ -127,58 +138,101 @@ function makeRecord(id, release, npmVer) {
 
     // Write into records file
     fs.writeFile(recordFile, recordData, 'utf8', function(err) {
-      if (err) {throw err;}
-      message = 'New node ecosystem has been created sucessfully!';
-      log('message', message);
-      writeLocalConfigFile(id, function(err) {
-        if (err) {throw err;}
-        writeEcosystemConfigFile(id);
-      });
+      next(err);
     });
   });
 }
 
-exports.run = function(id, target) {
-  var npmVer,
-  config = process.neco.config,  
-  release = getRelease(target),
+function makeConfigFiles(argv, next) {
+  process.neco.ecosystemConfig = {};
+  process.neco.ecosystemConfig.id = argv.id;
+  process.neco.ecosystemConfig.app = argv.app;
+  process.neco.ecosystemConfig.description = argv.d;
+  writeLocalConfigFile(argv.id, function(err) {
+    if (err) {log.emit('error', err);}
+    writeEcosystemConfigFile(argv, next);
+  });
+}
+
+exports.run = function(argv) {
+  var config = process.neco.config,
+  id = argv.id, target = argv.target || 'stable',
+  release = getRelease(target), npmVer = 'none',
   destDir = path.join(config.root, '.neco', id);
 
   if (!release) {
-    error = 'The desired release '+target+' not found or neco can\'t handle it.';
+    message = 'The desired release '+target+' not found or neco can\'t handle it.';
     suggestion = 'Try a newer version.';
     example = 'neco create <id> stable OR neco create <id> latest';
-    log('error', error, suggestion, example);
+    log.emit('message', message, suggestion, example);
   } else {
     // If the version of release smaller and equal to 0.1,9,
     // add 'v' prefix to version laterial
-    if (notSmaller(release.version, vStartsFrom) >= 0) {
-      release.realver = 'v'.concat(release.version);
-    }
-
+    release.realver = (notSmaller(release.version, vStartsFrom) >= 0) ? 'v'.concat(release.version) : null;
     installNode(release, destDir, function(err) {
-      if (err) {throw err;}
+      if (err) {log.emit('error',err);}
       message = 'Nodejs '+release.version+' has been installed sucessfully!';
-      log('message', message);  
-      if (config.installNPM && getSuitedNPM(release)) {
+      log.emit('message', message);  
+      if ((config.installNPM || argv.npm) && getSuitedNPM(release)) {
         npmVer = getSuitedNPM(release);
         installNPM(destDir, npmVer, function(err) {
-          if (err) {throw err;}
+          if (err) {log.emit('error', err);}
           message = 'NPM '+npmVer+' has been installed sucessfully!';
-          log('message', message);  
-          installActivate(id, release, destDir, function(err) {
-            if (err) {throw err;}
-            message = 'New activate file has been installed sucessfully!';
-            log('message', message);  
-            makeRecord(id, release, npmVer);
-          });
+          log.emit('message', message);
+          if (argv.app) {
+            makeAppDirectory(id, function(err) {
+              if (err) {log.emit('error', err);}
+              message = 'The applicaton directory has been created sucessfully!';
+              log.emit('message', message);
+              installActivate(id, release, destDir, function(err) {
+                if (err) {log.emit('error', err);}
+                message = 'New activate file has been installed sucessfully!';
+                log.emit('message', message);
+                makeRecord(id, release, npmVer, function(err) {
+                  if (err) {log.emit('error', err);}
+                  message = 'Record file has been edited sucessfully!';
+                  log.emit('message', message);
+                  makeConfigFiles(argv,  function(err) {
+                    if (err) {log.emit('error', err);}
+                    message = 'New node ecosystem has been created sucessfully!';
+                    log.emit('message', message);
+                  }); 
+                });
+              });
+            });
+          } else {
+            installActivate(id, release, destDir, function(err) {
+              if (err) {log.emit('error', err);}
+              message = 'New activate file has been installed sucessfully!';
+              log.emit('message', message);
+              makeRecord(id, release, npmVer, function(err) {
+                if (err) {log.emit('error', err);}
+                message = 'Record file  has been edited sucessfully!';
+                log.emit('message', message);
+                makeConfigFiles(argv,  function(err) {
+                  if (err) {log.emit('error', err);}
+                  message = 'New node ecosystem has been created sucessfully!';
+                  log.emit('message', message);
+                }); 
+              });
+            });  
+          }
         });
       } else {
         installActivate(id, release, destDir, function(err) {
           message = 'New activate file has been created sucessfully!';
-          log('message', message);  
-          if (err) {throw err;}
-          makeRecord(id, release, npmVer);
+          log.emit('message', message);  
+          if (err) {log.emit('error', err);}
+          makeRecord(id, release, npmVer, function(err) {
+            if (err) {log.emit('error', err);}
+            message = 'Record file has been edited sucessfully!';
+            log.emit('message', message);
+            makeConfigFiles(argv,  function(err) {
+              if (err) {log.emit('error', err);}
+              message = 'New node ecosystem has been created sucessfully!';
+              log.emit('message', message);
+            });
+          });
         });
       }
     });

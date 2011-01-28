@@ -1,6 +1,7 @@
 var fs = require('fs'),
 path = require('path'),
 spawn = require('child_process').spawn,
+log = require('../lib/display.js').log,
 removeEcosystem = require('../lib/utils.js').removeEcosystem,
 getEcosystem = require('../lib/assistant.js').getEcosystem,    
 writeLocalConfigFile = require('../lib/assistant.js').writeLocalConfigFile;
@@ -19,10 +20,10 @@ function removeDir(id, next) {
     } else {
       remove = spawn('rm', ['-rf', targetDir]);
       remove.stdout.on('data', function(data) {
-        log('stdout', data);
+        log.emit('stdout', data);
       });
       remove.stderr.on('data', function(data) {
-        log('stdout', data);
+        log.emit('stdout', data);
       });
       remove.on('exit', function(code) {
         if (code !== 0) {
@@ -48,7 +49,7 @@ function editRecord(id, next) {
       next(error, config);
     } else {
       fs.readFile(recordFile, 'utf8', function(err, data) {
-        if (err) {throw err;}
+        if (err) {log.emit('error', err);}
         record = JSON.parse(data);
         record.ecosystems = removeEcosystem(record.ecosystems, id);
         recordData = JSON.stringify(record);
@@ -64,21 +65,23 @@ function editRecord(id, next) {
 function editConfig(id) {
   var config = process.neco.config;
   writeLocalConfigFile(id, function(err, id) {
-    if (err) {throw err;}
+    if (err) {log.emit('error', err);}
     message = 'Ecosystem '+id+' has been removed sucessfully!';
-    log('message', message);
+    log.emit('exit', message);
   });
 }
 
-exports.run = function(id) {
+exports.run = function(argv) {
+  var id = argv.id;
+
   removeDir(id, function(err) {
-    if (err) {throw err;}
+    if (err) {log.emit('error', err);}
     message = 'Target directory has been removeed sucessfully!';
-    log('message', message);  
+    log.emit('message', message);  
     editRecord(id, function(err) {
-      if (err) {throw err;}
+      if (err) {log.emit('error', err);}
       message = 'Ecosystems record file has been edited sucessfully!';
-      log('message', message);  
+      log.emit('message', message);  
       editConfig(id);
     });
   });
