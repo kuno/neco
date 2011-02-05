@@ -36,7 +36,7 @@
       "test":"./test"
     },
     "bin":{"neco":"./bin/neco.js"},
-    "main":"neco",
+    "main":"./bin/neco.js",
     "engines": {"node":">=0.3.7"},
     "scripts":{},
     "licenses":
