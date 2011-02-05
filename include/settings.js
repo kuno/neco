@@ -20,9 +20,10 @@ exports.sgps = ['cmd', 'target', 'release', 'releases', 'ecosystems',
                 'pkgDistFile', 'pkgFullDistFile', 'idLenStandard',
                 'globalConfig', 'globalDistFile', 'globalActivateFile'];
 // spare Ecosystem Properties 
-exports.seps = exports.sgps.concat(['version', 'localConfigFile', 'localDistFile',
-                                    'localActivateFile', 'timeFormat', 'root',
-                                    'recordFile', 'installNPM']);
+exports.seps = exports.sgps.concat(['version', 'localConfigFile', 
+                                    'localDistFile', 'localActivateFile', 
+                                    'timeFormat', 'root', 'recordFile', 
+                                    'installNPM']);
 
 exports.issues       = 'http://github.com/kuno/neco/issues';
 exports.validFlags   = ['--app', '--npm'];
