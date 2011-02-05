@@ -13,7 +13,7 @@
     },
     "dependencies":
     {
-      "npm":">=0.2.12-1",
+      "npm":">=0.2.17",
       "ansi-color":"0.2.1"
     },
     "bugs":
