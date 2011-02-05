@@ -24,7 +24,7 @@ fi
 
 cd node-$ver || return 1
 
-if [ -e /usr/bin/python2 ] || [ -e /usr/local/bin/python2 ]; then
+if echo `python --version 2>&1` | grep -q "Python 3"; then
   # python2 fix
   for file in $(find . -name '*.py' -print) wscript tools/waf-light tools/node-waf tools/waf; do
     sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
