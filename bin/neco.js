@@ -2,13 +2,13 @@
 
 require.paths.shift('../deps');
 
-var list = require('../cmd/list.js'),
-find = require('../cmd/find.js'),
-howto = require('../cmd/howto.js'),
-create = require('../cmd/create.js'),
-remove = require('../cmd/remove.js'),
-activate = require('../cmd/activate.js'),
-deactivate = require('../cmd/deactivate.js');
+var list = require('../lib/command/list.js'),
+find = require('../lib/command/find.js'),
+howto = require('../lib/command/howto.js'),
+create = require('../lib/command/create.js'),
+remove = require('../lib/command/remove.js'),
+activate = require('../lib/command/activate.js'),
+deactivate = require('../lib/command/deactivate.js');
 
 var filterConfig = require('../lib/config.js').filterConfig,
 parseUserConfig = require('../lib/config.js').parseUserConfig,

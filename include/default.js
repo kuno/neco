@@ -1,3 +1,5 @@
+exports.config = {version:"0.0.5", "installNPM":true, "timeFormat":"GMT",
+                  idLenStandard:8};
 exports.npmCouples = [{node:"0.2.3", npm:"0.2.17"}];
 exports.vStartsFrom = '0.1.14';
 exports.cmdList = ['howto', 'create', 'remove', 'list', 'find', 'activate', 
