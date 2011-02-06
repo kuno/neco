@@ -2,6 +2,9 @@
 
 require.paths.shift('../deps');
 
+// Set global varialbles namae space;
+process.neco = {};
+
 var list             = require('../lib/command/list.js'),
 find                 = require('../lib/command/find.js'),
 howto                = require('../lib/command/howto.js'),
@@ -9,6 +12,10 @@ create               = require('../lib/command/create.js'),
 remove               = require('../lib/command/remove.js'),
 activate             = require('../lib/command/activate.js'),
 deactivate           = require('../lib/command/deactivate.js');
+
+var exit = require('../lib/exit.js').exit;
+
+var handle = require('../lib/exception.js').handle;
 
 var filterConfig     = require('../lib/config.js').filterConfig,
 parseUserConfig      = require('../lib/config.js').parseUserConfig,
@@ -36,12 +43,10 @@ var message, warning, error, suggestion, example;
 
 var argv = parseArgv();
 
-// Set global varialbles namae space;
-process.neco = {};
 // Try catch all errors
 process.on('uncaughtException', function(err) {
-  log.emit('error', err);
-});
+  handle.emit('error', err);
+});   
 
 if (argv.cmd === undefined) {
   message = 'Missing command';
