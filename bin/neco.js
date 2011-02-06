@@ -29,18 +29,17 @@ idValid              = require('../lib/validation.js').idValid,
 cmdValid             = require('../lib/validation.js').cmdValid,
 releaseExist         = require('../lib/assistant.js').getRelease,
 ecosystemExist       = require('../lib/assistant.js').getEcosystem,
-ecosystemActive      = require('../lib/validation.js').ecosystemActive; 
+ecosystemActive      = require('../lib/validation.js').ecosystemActive;
 
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;
 
 var argv = parseArgv();
-//var argv = process.argv, id, target, cmd = argv[2];
 
 // Set global varialbles namae space;
 process.neco = {};
 // Try catch all errors
-process.on('uncaughException', function(err) {
+process.on('uncaughtException', function(err) {
   log.emit('error', err);
 });
 
@@ -55,9 +54,9 @@ if (argv.cmd === undefined) {
   example = 'neco hwoto, neco create <id>, neco list';
   log.emit('exit', message, suggestion, example);
 } else {
-  parseGlobalConfig(function() { parseUserConfig(function() {
-    envReady(argv.cmd, function() { toolReady(function() { 
-      rootReady(function() { upgradeReady(function() {   
+  parseGlobalConfig(function() {parseUserConfig(function() {
+    envReady(argv.cmd, function() {toolReady(function() { 
+      rootReady(function() {upgradeReady(function() {   
         // Subcommand create
         if (argv.cmd === 'create') {
           if (!argv.id) {
