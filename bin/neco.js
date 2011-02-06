@@ -40,7 +40,7 @@ var argv = parseArgv();
 // Set global varialbles namae space;
 process.neco = {};
 // Try catch all errors
-process.on('uncaughException', function(err) {
+process.on('uncaughtException', function(err) {
   log.emit('error', err);
 });
 
