@@ -2,34 +2,34 @@
 
 require.paths.shift('../deps');
 
-var list = require('../lib/command/list.js'),
-find = require('../lib/command/find.js'),
-howto = require('../lib/command/howto.js'),
-create = require('../lib/command/create.js'),
-remove = require('../lib/command/remove.js'),
-activate = require('../lib/command/activate.js'),
-deactivate = require('../lib/command/deactivate.js');
+var list             = require('../lib/command/list.js'),
+find                 = require('../lib/command/find.js'),
+howto                = require('../lib/command/howto.js'),
+create               = require('../lib/command/create.js'),
+remove               = require('../lib/command/remove.js'),
+activate             = require('../lib/command/activate.js'),
+deactivate           = require('../lib/command/deactivate.js');
 
-var filterConfig = require('../lib/config.js').filterConfig,
-parseUserConfig = require('../lib/config.js').parseUserConfig,
-parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
-parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig; 
+var filterConfig     = require('../lib/config.js').filterConfig,
+parseUserConfig      = require('../lib/config.js').parseUserConfig,
+parseGlobalConfig    = require('../lib/config.js').parseGlobalConfig,
+parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
 
-var envReady = require('../lib/inception.js').envReady,
-toolReady = require('../lib/inception.js').toolReady,
-rootReady = require('../lib/inception.js').rootReady,
-recordReady = require('../lib/inception.js').recordReady,
-upgradeReady = require('../lib/inception.js').upgradeReady;  
+var envReady         = require('../lib/inception.js').envReady,
+toolReady            = require('../lib/inception.js').toolReady,
+rootReady            = require('../lib/inception.js').rootReady,
+recordReady          = require('../lib/inception.js').recordReady,
+upgradeReady         = require('../lib/inception.js').upgradeReady;
 
-var parseArgv = require('../lib/parser.js').parseArgv;
+var parseArgv        = require('../lib/parser.js').parseArgv;
 
-var idUnique = require('../lib/validation.js').idUnique,
-idExsit = require('../lib/validation.js').idExsit,
-idValid = require('../lib/validation.js').idValid,
-cmdValid = require('../lib/validation.js').cmdValid,
-ecosystemActive = require('../lib/validation.js').ecosystemActive,
-releaseExist = require('../lib/assistant.js').getRelease,
-ecosystemExist = require('../lib/assistant.js').getEcosystem;
+var idUnique         = require('../lib/validation.js').idUnique,
+idExsit              = require('../lib/validation.js').idExsit,
+idValid              = require('../lib/validation.js').idValid,
+cmdValid             = require('../lib/validation.js').cmdValid,
+releaseExist         = require('../lib/assistant.js').getRelease,
+ecosystemExist       = require('../lib/assistant.js').getEcosystem,
+ecosystemActive      = require('../lib/validation.js').ecosystemActive; 
 
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;
