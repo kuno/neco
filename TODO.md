@@ -50,4 +50,5 @@
 2, support to nodejs 0.4.0,
 3, re-factory the package direcoty;
 4, more neco more robust
-5, add support for bash and zsh completion?
+5, add rollback functionality
+6, add support for bash and zsh completion?
