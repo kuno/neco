@@ -23,9 +23,8 @@
     },
   "directories": 
     {
-      "bin":"./bin","doc":"/.doc",
-      "man":"./man", "lib":"./lib", 
-      "deps":"./deps", "include":"./include",
+      "bin":"./bin","doc":"/.doc","man":"./man", "lib":"./lib", 
+      "deps":"./deps", "include":"./include", "share":"./share",
       "sample":"./sample", "test":"./test"
     },
   "bin":{"neco":"./bin/neco.js"},
