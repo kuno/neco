@@ -8,6 +8,7 @@ process.neco = {};
 var list             = require('../lib/command/list.js'),
 find                 = require('../lib/command/find.js'),
 howto                = require('../lib/command/howto.js'),
+update               = require('../lib/command/update.js'),
 create               = require('../lib/command/create.js'),
 remove               = require('../lib/command/remove.js'),
 activate             = require('../lib/command/activate.js'),
@@ -50,7 +51,7 @@ process.on('uncaughtException', function(err) {
 
 if (argv.cmd === undefined) {
   message = 'Missing command';
-  suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
+  suggestion = 'Available commands: howto, create, remove, list, update, find, activate, deactivate';
   example = 'neco howto, neco create <id>, neco list';
   log.emit('exit', message, suggestion, example);
 } else if (!cmdValid(argv.cmd)) {
@@ -109,6 +110,14 @@ if (argv.cmd === undefined) {
                 list.run(argv)
               }
             });
+          });
+        }
+
+
+        // Subcommand update
+        else if (argv.cmd === 'updaet') {
+          filterConfig(function() {
+            update.run(argv);
           });
         }
 
