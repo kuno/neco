@@ -115,7 +115,7 @@ if (argv.cmd === undefined) {
 
 
         // Subcommand update
-        else if (argv.cmd === 'updaet') {
+        else if (argv.cmd === 'update') {
           filterConfig(function() {
             update.run(argv);
           });
