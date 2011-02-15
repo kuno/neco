@@ -9,7 +9,7 @@
   "repository":
     {
       "type":"git",
-      "url":"http://github.com/kuno/neco"
+      "url":"git://github.com/kuno/neco"
     },
   "dependencies":
     {
@@ -28,7 +28,7 @@
       "sample":"./sample", "test":"./test"
     },
   "bin":{"neco":"./bin/neco.js"},
-  "main":"./index.js",
+  "main":"index.js",
   "engines": {"node":">=0.4.0"},
   "scripts":{},
   "licenses":
