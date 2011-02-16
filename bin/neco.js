@@ -47,13 +47,8 @@ var argv = parseArgv();
 
 // Try catch all errors
 process.on('uncaughtException', function(err) {
-<<<<<<< HEAD
-  log.emit('error', err);
-});
-=======
   handle.emit('error', err);
 });   
->>>>>>> master
 
 if (argv.cmd === undefined) {
   message = 'Missing command';
