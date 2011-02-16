@@ -69,7 +69,7 @@ if (argv.cmd === undefined) {
           if (!argv.id) {
             message = 'Missing ID';
             suggestion = 'Please specific at least one ID( and the version of node, if you will).';
-            example = 'neco create <id> [stable, latest, node-version]';
+            example = 'neco create <id> [stable, unstable, node-version]';
             log.emit('exit', message, suggestion, example);
           } else {
             filterConfig(function() {
@@ -132,7 +132,7 @@ if (argv.cmd === undefined) {
                 } else {
                   message = 'The desired release '+argv.target+' is not available.';
                   suggestion = 'Find out all the available releases.';
-                  example = 'neco find [stable, latest, node-version]';
+                  example = 'neco find [stable, unstable, node-version]';
                   log.emit('exit', message, suggestion, example);
                 }
               } else {
