@@ -1,49 +1,41 @@
 {
   "name":"neco",
-    "description":"Nodejs Ecosystem COordinator, like virtualenv for python",
-    "keywords":["virtualenv", "ecosystem", "install", "npm"],
-    "version": "0.0.4-1",
-    "homepage":"",
-    "author":"Guan 'kuno' Qing <neokuno AT gmail DOT com>",
-    "contributors":[],
-    "repository":
+  "description":"Nodejs Ecosystem COordinator, like virtualenv for python",
+  "keywords":["virtualenv", "ecosystem", "install", "npm"],
+  "version": "0.0.5pre",
+  "homepage":"",
+  "author":"Guan 'kuno' Qing <neokuno AT gmail DOT com>",
+  "contributors":[],
+  "repository":
     {
       "type":"git",
-      "url":"http://github.com/kuno/neco"
+      "url":"git://github.com/kuno/neco"
     },
-    "dependencies":
+  "dependencies":
     {
-      "npm":">=0.2.12-1",
+      "npm":">=0.2.18",
       "ansi-color":"0.2.1"
     },
-    "bugs":
+  "bugs":
     {
       "mail":"neokuno@gmail.com",
       "web":"http://github.com/kuno/neco/issues"
     },
-    "directories": 
+  "directories": 
     {
-      "bin":"./bin",
-      "docs":"/.docs",
-      "man":"./man", 
-      "lib":"./lib", 
-      "cmd":"./cmd",
-      "data":"./data",
-      "deps":"./deps",
-      "include":"./include",
-      "sample":"./sample",
-      "shell":"./shell",
-      "test":"./test"
+      "bin":"./bin","doc":"/.doc","man":"./man", "lib":"./lib", 
+      "deps":"./deps", "include":"./include", "share":"./share",
+      "sample":"./sample", "test":"./test"
     },
-    "bin":{"neco":"./bin/neco.js"},
-    "main":"neco",
-    "engines": {"node":">=0.3.7"},
-    "scripts":{},
-    "licenses":
-      [
+  "bin":{"neco":"./bin/neco.js"},
+  "main":"index.js",
+  "engines": {"node":">=0.4.0"},
+  "scripts":{},
+  "licenses":
+    [
       {
         "type":"MIT",
         "url":"http://github.com/kuno/neco/blob/master/LICENCE"
       }
-  ]
+    ] 
 }

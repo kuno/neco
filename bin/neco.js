@@ -2,68 +2,79 @@
 
 require.paths.shift('../deps');
 
-var list = require('../cmd/list.js'),
-find = require('../cmd/find.js'),
-howto = require('../cmd/howto.js'),
-create = require('../cmd/create.js'),
-remove = require('../cmd/remove.js'),
-activate = require('../cmd/activate.js'),
-deactivate = require('../cmd/deactivate.js');
+// Set global varialbles namae space;
+process.neco = {};
 
-var filterConfig = require('../lib/config.js').filterConfig,
-parseUserConfig = require('../lib/config.js').parseUserConfig,
-parseGlobalConfig = require('../lib/config.js').parseGlobalConfig,
-parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig; 
+var list             = require('../lib/command/list.js'),
+find                 = require('../lib/command/find.js'),
+howto                = require('../lib/command/howto.js'),
+update               = require('../lib/command/update.js'),
+create               = require('../lib/command/create.js'),
+remove               = require('../lib/command/remove.js'),
+activate             = require('../lib/command/activate.js'),
+deactivate           = require('../lib/command/deactivate.js');
 
-var envReady = require('../lib/inception.js').envReady,
-toolReady = require('../lib/inception.js').toolReady,
-rootReady = require('../lib/inception.js').rootReady,
-recordReady = require('../lib/inception.js').recordReady,
-upgradeReady = require('../lib/inception.js').upgradeReady;  
+var exit = require('../lib/exit.js').exit;
 
-var parseArgv = require('../lib/parser.js').parseArgv;
+var handle = require('../lib/exception.js').handle;
 
-var idUnique = require('../lib/validation.js').idUnique,
-idExsit = require('../lib/validation.js').idExsit,
-idValid = require('../lib/validation.js').idValid,
-cmdValid = require('../lib/validation.js').cmdValid,
-ecosystemActive = require('../lib/validation.js').ecosystemActive,
-releaseExist = require('../lib/assistant.js').getRelease,
-ecosystemExist = require('../lib/assistant.js').getEcosystem;
+var filterConfig     = require('../lib/config.js').filterConfig,
+parseUserConfig      = require('../lib/config.js').parseUserConfig,
+parseGlobalConfig    = require('../lib/config.js').parseGlobalConfig,
+parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
+
+var envReady         = require('../lib/inception.js').envReady,
+toolReady            = require('../lib/inception.js').toolReady,
+rootReady            = require('../lib/inception.js').rootReady,
+recordReady          = require('../lib/inception.js').recordReady,
+upgradeReady         = require('../lib/inception.js').upgradeReady;
+
+var parseArgv        = require('../lib/parser.js').parseArgv;
+
+var idUnique         = require('../lib/validation.js').idUnique,
+idExsit              = require('../lib/validation.js').idExsit,
+idValid              = require('../lib/validation.js').idValid,
+cmdValid             = require('../lib/validation.js').cmdValid,
+getAllCmd            = require('../lib/assistant.js').getAllCmd,
+releaseExist         = require('../lib/assistant.js').getRelease,
+ecosystemExist       = require('../lib/assistant.js').getEcosystem,
+ecosystemActive      = require('../lib/validation.js').ecosystemActive;
 
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;
 
 var argv = parseArgv();
-//var argv = process.argv, id, target, cmd = argv[2];
 
-// Set global varialbles namae space;
-process.neco = {};
 // Try catch all errors
 process.on('uncaughtException', function(err) {
+<<<<<<< HEAD
   log.emit('error', err);
 });
+=======
+  handle.emit('error', err);
+});   
+>>>>>>> master
 
 if (argv.cmd === undefined) {
   message = 'Missing command';
-  suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
+  suggestion = 'Available commands: ' + getAllCmd();
   example = 'neco howto, neco create <id>, neco list';
   log.emit('exit', message, suggestion, example);
 } else if (!cmdValid(argv.cmd)) {
   message = 'Not a valid command';
-  suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
+  suggestion = 'Available commands: ' + getAllCmd();
   example = 'neco hwoto, neco create <id>, neco list';
   log.emit('exit', message, suggestion, example);
 } else {
-  parseGlobalConfig(function() { parseUserConfig(function() {
-    envReady(argv.cmd, function() { toolReady(function() { 
-      rootReady(function() { upgradeReady(function() {   
+  parseGlobalConfig(function() {parseUserConfig(function() {
+    envReady(argv.cmd, function() {toolReady(function() { 
+      rootReady(function() {upgradeReady(function() {   
         // Subcommand create
         if (argv.cmd === 'create') {
           if (!argv.id) {
             message = 'Missing ID';
             suggestion = 'Please specific at least one ID( and the version of node, if you will).';
-            example = 'neco create <id> [stable, latest, node-version]';
+            example = 'neco create <id> [stable, unstable, node-version]';
             log.emit('exit', message, suggestion, example);
           } else {
             filterConfig(function() {
@@ -108,6 +119,14 @@ if (argv.cmd === undefined) {
           });
         }
 
+
+        // Subcommand update
+        else if (argv.cmd === 'update') {
+          filterConfig(function() {
+            update.run(argv);
+          });
+        }
+
         // Subcommand find
         else if (argv.cmd === 'find') {
           filterConfig(function() {
@@ -118,7 +137,7 @@ if (argv.cmd === undefined) {
                 } else {
                   message = 'The desired release '+argv.target+' is not available.';
                   suggestion = 'Find out all the available releases.';
-                  example = 'neco find [stable, latest, node-version]';
+                  example = 'neco find [stable, unstable, node-version]';
                   log.emit('exit', message, suggestion, example);
                 }
               } else {

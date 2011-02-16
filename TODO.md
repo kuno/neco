@@ -44,3 +44,16 @@
 * add config command
 * add customize Error object
 * add neco_workon shell function
+
+###0.0.5###
+1, add command alias suppoort(e.g. list -> ls);? (delay to 0.0.6)
+2, support to nodejs 0.4.0,
+3, re-factory the package direcoty;
+4, more neco more robust?
+5, add rollback functionality
+6, add support for bash and zsh completion?     (delay to 0.0.6)
+
+###0.0.6###
+1, add /tmp dir?
+2, support command alias
+3, add zsh completion script

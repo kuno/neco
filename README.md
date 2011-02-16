@@ -25,14 +25,7 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
 
   __Through node package mamanger__
 
-        npm install neco (note: neco needs latest version of nodejs, right now it's 0.3.7)
-
-
-##Roadmap##
-
-Becuase neco heavily depends on the new os module from nodejs 0.3.x, which is an unstalbe branch.
-
-So, neco will always in *unstalble state*, until nodejs 0.4.x series was been released. Please use it carefully.
+        npm install neco
 
 
 ##Usage:##
@@ -49,6 +42,9 @@ So, neco will always in *unstalble state*, until nodejs 0.4.x series was been re
 
     list        -  list all installed node ecosystems
         Usage:  neco list
+
+    updaet      - update local dist file to latest
+        Usage:  neco update
 
     find        -  find out the available node release(s)
         Usage:  neco find [stable, latest, <version>]

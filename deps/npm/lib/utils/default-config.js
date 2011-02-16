@@ -29,6 +29,7 @@ module.exports =
   , color : true
   , description : true
   , dev : false
+  , dotnpm : ".npm"
   , editor : process.env.EDITOR
   , force : false
   , globalconfig : path.join(process.execPath, "..", "..", "etc", "npmrc")
@@ -38,6 +39,8 @@ module.exports =
   , loglevel : "info"
   , manroot : path.join(process.execPath, "..", "..", "share", "man")
   , "must-install" : true
+  , "node-version" : process.version
+  , "onload-script" : false
   , outfd : stdio.stdoutFD
   , proxy : process.env.http_proxy || null
   , prune : undefined // if set to boolean false, then that means "never"

@@ -109,6 +109,11 @@ function read (name, ver, cb) {
     if (data) deprCheck(data)
     return cb(er, data)
   }
+  if (npm.config.get("force")) {
+    log.verbose(true, "force found, skipping cache")
+    return addNameVersion(name, ver, c)
+  }
+
   if (name+"@"+ver in cacheSeen) {
     return cb(null, cacheSeen[name+"@"+ver])
   }
@@ -216,7 +221,7 @@ function addNameVersion (name, ver, cb) {
     if (!data.dist || !data.dist.tarball) return cb(new Error(
       "No dist.tarball in package data"))
     //TODO: put the shasum in the data, and pass to addRemoteTarball
-    if (response.statusCode !== 304) return fetchit()
+    if (response.statusCode !== 304 || npm.config.get("force")) return fetchit()
     // we got cached data, so let's see if we have a tarball.
     fs.stat(path.join(npm.cache, name, ver, "package.tgz"), function (er, s) {
       if (!er) return cb(null, data)
@@ -417,7 +422,7 @@ function packTar (targetTarball, folder, pkg, cb) {
         , args = [ "-cvf", "-", "--exclude", ".git", "-X", ignore]
         , tarEnv = {}
       for (var i in process.env) {
-        tarEnv = process.env
+        tarEnv[i] = process.env[i]
       }
       tarEnv.COPY_EXTENDED_ATTRIBUTES_DISABLE = 1
       if (!pkg.files
