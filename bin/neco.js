@@ -35,6 +35,7 @@ var idUnique         = require('../lib/validation.js').idUnique,
 idExsit              = require('../lib/validation.js').idExsit,
 idValid              = require('../lib/validation.js').idValid,
 cmdValid             = require('../lib/validation.js').cmdValid,
+getAllCmd            = require('../lib/assistant.js').getAllCmd,
 releaseExist         = require('../lib/assistant.js').getRelease,
 ecosystemExist       = require('../lib/assistant.js').getEcosystem,
 ecosystemActive      = require('../lib/validation.js').ecosystemActive;
@@ -51,12 +52,12 @@ process.on('uncaughtException', function(err) {
 
 if (argv.cmd === undefined) {
   message = 'Missing command';
-  suggestion = 'Available commands: howto, create, remove, list, update, find, activate, deactivate';
+  suggestion = 'Available commands: ' + getAllCmd();
   example = 'neco howto, neco create <id>, neco list';
   log.emit('exit', message, suggestion, example);
 } else if (!cmdValid(argv.cmd)) {
   message = 'Not a valid command';
-  suggestion = 'Available commands: howto, create, remove, list, find, activate, deactivate';
+  suggestion = 'Available commands: ' + getAllCmd();
   example = 'neco hwoto, neco create <id>, neco list';
   log.emit('exit', message, suggestion, example);
 } else {
