@@ -43,3 +43,7 @@ python virtualenv and virtualenvwrapper package)
 3, add neco_workon shell function
 4, add buiding tools checkging
 5, add upgrade checking
+
+###0.0.5###
+1, update to nodejs 0.4.0, npm 0.2.18
+2, added rollback functionality
