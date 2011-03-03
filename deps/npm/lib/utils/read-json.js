@@ -104,7 +104,13 @@ function processObject (opts, cb) { return function (er, json) {
     if (cb) return cb(e)
     throw e
   }
-  if (json.name === "favicon.ico") {
+  if (json.name.toLowerCase() === "node_modules") {
+    var msg = "Invalid package name: node_modules"
+      , e = new Error(msg)
+    if (cb) return cb(e)
+    throw e
+  }
+  if (json.name.toLowerCase() === "favicon.ico") {
     var msg = "Sorry, favicon.ico is a picture, not a package."
       , e = new Error(msg)
     if (cb) return cb(e)
@@ -142,7 +148,7 @@ function processObject (opts, cb) { return function (er, json) {
     var scripts = json.scripts = json.scripts || {}
     if (!scripts.install && !scripts.preinstall) {
       // don't fail if it was unexpected, just try.
-      scripts.preinstall = "node-waf clean configure build"
+      scripts.preinstall = "node-waf clean || true; node-waf configure build"
     }
   }
 
@@ -218,8 +224,9 @@ function testEngine (json) {
     } else json.engines = [ json.engines ]
   }
 
-  var nodeVer = process.version.replace(/\+$/, '')
+  var nodeVer = npm.config.get("node-version")
     , ok = false
+  if (nodeVer) nodeVer = nodeVer.replace(/\+$/, '')
   if (Array.isArray(json.engines)) {
     // Packages/1.0 commonjs style, with an array.
     // hack it to just hang a "node" member with the version range,
@@ -236,10 +243,13 @@ function testEngine (json) {
   if (json.engines.node === "") json.engines.node = "*"
   if (json.engines.node && null === semver.validRange(json.engines.node)) {
     log.warn( json.engines.node
-            , "not a valid range.  Please see `npm help json`" )
+            , "Invalid range in engines.node.  Please see `npm help json`" )
   }
 
-  json._engineSupported = semver.satisfies(nodeVer, json.engines.node||"null")
+  if (nodeVer) {
+    json._engineSupported = semver.satisfies( nodeVer
+                                            , json.engines.node || "null" )
+  }
   if (json.engines.hasOwnProperty("npm") && json._engineSupported) {
     json._engineSupported = semver.satisfies(npm.version, json.engines.npm)
   }

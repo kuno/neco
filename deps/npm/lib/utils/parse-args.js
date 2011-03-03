@@ -33,7 +33,9 @@ exports.types =
   , loglevel : ["silent","win","error","warn","info","verbose","silly"]
   , manroot : path
   , "must-install" : Boolean
+  , "node-version" : String
   , outfd : [Number, Stream]
+  , "onload-script" : [false, String]
   , proxy : url
   , prune : Boolean
   , "rebuild-bundle" : Boolean
@@ -71,6 +73,8 @@ exports.shorthands =
   , "no-rb" : ["--no-rebuild-bundle"]
   , desc : ["--description"]
   , "no-desc" : ["--no-description"]
+  , "nv" : ["--node-version"]
+  , "local" : ["--no-global"]
   }
 
 

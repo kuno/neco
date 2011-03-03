@@ -2,7 +2,7 @@
   "name":"neco",
   "description":"Nodejs Ecosystem COordinator, like virtualenv for python",
   "keywords":["virtualenv", "ecosystem", "install", "npm"],
-  "version": "0.0.5pre",
+  "version": "0.0.5",
   "homepage":"",
   "author":"Guan 'kuno' Qing <neokuno AT gmail DOT com>",
   "contributors":[],
@@ -13,7 +13,7 @@
     },
   "dependencies":
     {
-      "npm":">=0.2.17",
+      "npm":">=0.2.18",
       "ansi-color":"0.2.1"
     },
   "bugs":
