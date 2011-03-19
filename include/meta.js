@@ -1,7 +1,7 @@
-exports.config       = {version:"0.0.5", "installNPM":true, "timeFormat":"GMT",
+exports.config       = {version:"0.0.5-1", "installNPM":true, "timeFormat":"GMT",
 idLenStandard:8};
 exports.tools        = ['python','wget','tar','sed','make','install'];  
-exports.npmCouples   = [{node:"0.2.3", npm:"0.2.18"}];
+exports.npmCouples   = [{node:"0.4.0",npm:"0.3.12"},{node:"0.2.3",npm:"0.2.18"}];
 exports.vStartsFrom  = '0.1.14';
 exports.cmdList      = ['howto', 'create', 'remove', 'list', 'update', 'find', 
 'activate', 'deactivate'];
