@@ -139,7 +139,7 @@ neco_workon() {
 #List the available ecosystem list
 neco_show_options() {
   neco_verify_root || return 1
-  (cd "$NECO_ROOT"/.neco; find -L -type d -maxdepth 1) | sed 's|^\.\/||' | sed 's|source||' | sed 's|tmp||' | sort
+  (cd "$NECO_ROOT"/.neco; find -L -maxdepth 1 -type d) | sed 's|^\.$||' | sed 's|^\.\/||' | sed 's|source||' | sed 's|tmp||' | sort
 }
 
 if [ -n "$BASH" ] ; then
