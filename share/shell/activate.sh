@@ -127,20 +127,22 @@ neco_workon() {
 
   if [ "$neco_id" = "" ]; then
     return 1
-  elif [ -L $NECO_ROOT/"$neco_id" ] || [ -d $NECO_ROOT/"$neco_id" ]; then
+  elif [ -L "$NECO_ROOT"/"$neco_id" ] || [ -d "$NECO_ROOT"/"$neco_id" ]; then
     neco_activate "$neco_id" || return 1
-    cd $NECO_ROOT/"$neco_id" || return 1
+    cd "$NECO_ROOT"/"$neco_id" || return 1
     export _old_neco_pwd="$dir"/"$name" 
   else
     neco_activate "$neco_id" || return 1
   fi
 }
-#
-# Set up tab completion.  (Adapted from Arthur Koziel's version at 
-# http://arthurkoziel.com/2008/10/11/virtualenvwrapper-bash-completion/)
-# 
 
-#if [ -n "$BASH" ] ; then
+#List the available ecosystem list
+neco_show_options() {
+  neco_verify_root || return 1
+  (cd "$NECO_ROOT"/.neco; find -L -type d -maxdepth 1) | sed 's|^\.\/||' | sed 's|source||' | sed 's|tmp||' | sort
+}
+
+if [ -n "$BASH" ] ; then
 #    _virtualenvs ()
 #    {
 #        local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -163,6 +165,6 @@ neco_workon() {
 #    complete -o default -o nospace -F _virtualenvs workon
 #    complete -o default -o nospace -F _virtualenvs rmvirtualenv
 #    complete -o default -o nospace -F _virtualenvs cpvirtualenv
-#elif [ -n "$ZSH_VERSION" ] ; then
-#    compctl -g "`virtualenvwrapper_show_workon_options`" workon rmvirtualenv cpvirtualenv
-#fi
+elif [ -n "$ZSH_VERSION" ] ; then
+    compctl -g "`neco_show_options`" neco_activate neco_deactivate neco_workon
+fi
