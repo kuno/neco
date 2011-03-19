@@ -1,4 +1,4 @@
-exports.config       = {version:"0.0.5-1", "installNPM":true, "timeFormat":"GMT",
+exports.config       = {version:"0.0.5-2", "installNPM":true, "timeFormat":"GMT",
 idLenStandard:8};
 exports.tools        = ['python','wget','tar','sed','make','install'];  
 exports.npmCouples   = [{node:"0.4.0",npm:"0.3.15"},{node:"0.2.3",npm:"0.2.18"}];

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-VERSION=0.0.5
+VERSION="0.0.5-2"
 
 cd /tmp || return 1
 wget http://registry.npmjs.org/neco/-/neco-$VERSION.tgz || return 1
