@@ -57,3 +57,4 @@
 1, add /tmp dir?
 2, support command alias
 3, add zsh completion script
+4, add completion command
