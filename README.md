@@ -35,7 +35,7 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
     Currently where <command> should be one of the below commands:
 
     create      -  create a new node ecosystem
-        Usage:  neco create <id> [node-version]
+        Usage:  neco create <id> [version]
 
     remove      -  remove an existing ecosystem
         Usage:  neco remove <id>
@@ -47,13 +47,16 @@ An nodejs ecosystem = nodejs (+ npm (+ modules (+ Your applications))).
         Usage:  neco update
 
     find        -  find out the available node release(s)
-        Usage:  neco find [stable, latest, <version>]
+        Usage:  neco find [stable, unstable, latest, <version>]
 
     activate    -  show how to activate an existing node ecosystem
         Usage:  neco activate <id>
 
     deactivate  -  show how to deactivate an active node ecosystem
         Usage:  neco deactivate <id>
+
+    completion  -  prints all commands
+        Usage:  neco completion
 
     howto       -  show usage information
         Usage:  neco howto
