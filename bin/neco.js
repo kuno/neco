@@ -12,7 +12,8 @@ update               = require('../lib/command/update.js'),
 create               = require('../lib/command/create.js'),
 remove               = require('../lib/command/remove.js'),
 activate             = require('../lib/command/activate.js'),
-deactivate           = require('../lib/command/deactivate.js');
+deactivate           = require('../lib/command/deactivate.js'),
+completion           = require('../lib/command/completion.js');
 
 var exit = require('../lib/exit.js').exit;
 
@@ -146,6 +147,13 @@ if (argv.cmd === undefined) {
         else if (argv.cmd === 'howto') {
           filterConfig(function() {
             howto.run(argv);
+          });
+        }
+
+        // Subcommand completion
+        else if (argv.cmd === 'completion') {
+          filterConfig(function() {
+              completion.run(argv);
           });
         }
 
