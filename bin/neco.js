@@ -27,6 +27,7 @@ parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
 var envReady         = require('../lib/inception.js').envReady,
 toolReady            = require('../lib/inception.js').toolReady,
 rootReady            = require('../lib/inception.js').rootReady,
+configReady          = require('../lib/inception.js').recordReady,
 recordReady          = require('../lib/inception.js').recordReady,
 updateReady          = require('../lib/inception.js').updateReady,
 upgradeReady         = require('../lib/inception.js').upgradeReady;
@@ -65,8 +66,8 @@ if (argv.cmd === undefined) {
 } else {
   parseGlobalConfig(function() {parseUserConfig(function() {
     envReady(argv.cmd, function() {toolReady(function() { 
-      rootReady(function() {upgradeReady(function() {
-        updateReady(function() {
+      rootReady(function() {configReady(function() {
+        upgradeReady(function() {updateReady(function() {
         // Subcommand create
         if (argv.cmd === 'create') {
           if (!argv.id) {
@@ -75,7 +76,6 @@ if (argv.cmd === undefined) {
             example = 'neco create <id> [stable, unstable, version]';
             log.emit('exit', message, suggestion, example);
           } else {
-            filterConfig(function() {
               recordReady(argv.cmd, function(exists) {
                 if (!exists) {
                   create.run(argv);
@@ -93,13 +93,11 @@ if (argv.cmd === undefined) {
                   }
                 }
               });
-            });
           }
         }
 
         // Subcommand list
         else if (argv.cmd === 'list') {
-          filterConfig(function() {
             recordReady(argv.cmd, function(exists) {
               if (argv.id) {
                 if (ecosystemExist(argv.id)) {
@@ -114,20 +112,16 @@ if (argv.cmd === undefined) {
                 list.run(argv)
               }
             });
-          });
         }
 
 
         // Subcommand update
         else if (argv.cmd === 'update') {
-          filterConfig(function() {
             update.run(argv);
-          });
         }
 
         // Subcommand find
         else if (argv.cmd === 'find') {
-          filterConfig(function() {
             recordReady(argv.cmd, function(exists) {    
               if (argv.target) {
                 if (releaseExist(argv.target)) {
@@ -142,21 +136,16 @@ if (argv.cmd === undefined) {
                 find.run(argv);
               }
             });
-          });
         }
 
         // Subcommand howto
         else if (argv.cmd === 'howto') {
-          filterConfig(function() {
             howto.run(argv);
-          });
         }
 
         // Subcommand completion
         else if (argv.cmd === 'completion') {
-          filterConfig(function() {
               completion.run(argv);
-          });
         }
 
         // Subcommand activate
@@ -248,7 +237,7 @@ if (argv.cmd === undefined) {
           }
         }
 
-      });
+        });});
       });});
     });});
   });});
