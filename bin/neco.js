@@ -66,7 +66,7 @@ if (argv.cmd === undefined) {
   parseGlobalConfig(function() {parseUserConfig(function() {
     envReady(argv.cmd, function() {toolReady(function() { 
       rootReady(function() {upgradeReady(function() {
-        autoUpdate();   
+        console.log(typeof autoUpdate);   
         // Subcommand create
         if (argv.cmd === 'create') {
           if (!argv.id) {
