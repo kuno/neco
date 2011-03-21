@@ -37,6 +37,7 @@ idExsit              = require('../lib/validation.js').idExsit,
 idValid              = require('../lib/validation.js').idValid,
 cmdValid             = require('../lib/validation.js').cmdValid,
 getAllCmd            = require('../lib/assistant.js').getAllCmd,
+autoUpdate           = require('../lib/assistant.js').autoUpdate,
 releaseExist         = require('../lib/assistant.js').getRelease,
 ecosystemExist       = require('../lib/assistant.js').getEcosystem,
 ecosystemActive      = require('../lib/validation.js').ecosystemActive;
@@ -64,7 +65,8 @@ if (argv.cmd === undefined) {
 } else {
   parseGlobalConfig(function() {parseUserConfig(function() {
     envReady(argv.cmd, function() {toolReady(function() { 
-      rootReady(function() {upgradeReady(function() {   
+      rootReady(function() {upgradeReady(function() {
+        autoUpdate();   
         // Subcommand create
         if (argv.cmd === 'create') {
           if (!argv.id) {
