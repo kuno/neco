@@ -48,7 +48,7 @@ var idUnique             = require('../lib/validation.js').idUnique,
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;
 
-var config, argv = parseArgv();
+var config, autoUpdate, argv = parseArgv();
 
 // Try catch all errors
 process.on('uncaughtException', function(err) {
@@ -74,8 +74,8 @@ if (argv.cmd === undefined) {
           // Automatic update local dist file
           config = process.neco.config,
           script = path.join(config.pkgJSDir, 'update.js'),
-          update = spawn('node', [script]);
-          update.on('exit', function(code) {
+          autoUpdate = spawn('node', [script]);
+          autoUpdate.on('exit', function(code) {
            // Do nothing
           });
           // End of update
