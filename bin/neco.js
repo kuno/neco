@@ -5,48 +5,50 @@ require.paths.shift('../deps');
 // Set global varialbles namae space;
 process.neco = {};
 
-var list             = require('../lib/command/list.js'),
-find                 = require('../lib/command/find.js'),
-howto                = require('../lib/command/howto.js'),
-update               = require('../lib/command/update.js'),
-create               = require('../lib/command/create.js'),
-remove               = require('../lib/command/remove.js'),
-activate             = require('../lib/command/activate.js'),
-deactivate           = require('../lib/command/deactivate.js'),
-completion           = require('../lib/command/completion.js');
+var path                 = require('path'),
+    spawn                = require('child_process').spawn;
 
-var exit = require('../lib/exit.js').exit;
+var list                 = require('../lib/command/list.js'),
+    find                 = require('../lib/command/find.js'),
+    howto                = require('../lib/command/howto.js'),
+    update               = require('../lib/command/update.js'),
+    create               = require('../lib/command/create.js'),
+    remove               = require('../lib/command/remove.js'),
+    activate             = require('../lib/command/activate.js'),
+    deactivate           = require('../lib/command/deactivate.js'),
+    completion           = require('../lib/command/completion.js');
 
-var handle = require('../lib/exception.js').handle;
+var exit                 = require('../lib/exit.js').exit;
 
-var filterConfig     = require('../lib/config.js').filterConfig,
-parseUserConfig      = require('../lib/config.js').parseUserConfig,
-parseGlobalConfig    = require('../lib/config.js').parseGlobalConfig,
-parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
+var handle               = require('../lib/exception.js').handle;
 
-var envReady         = require('../lib/inception.js').envReady,
-toolReady            = require('../lib/inception.js').toolReady,
-rootReady            = require('../lib/inception.js').rootReady,
-configReady          = require('../lib/inception.js').recordReady,
-recordReady          = require('../lib/inception.js').recordReady,
-updateReady          = require('../lib/inception.js').updateReady,
-upgradeReady         = require('../lib/inception.js').upgradeReady;
+var filterConfig         = require('../lib/config.js').filterConfig,
+    parseUserConfig      = require('../lib/config.js').parseUserConfig,
+    parseGlobalConfig    = require('../lib/config.js').parseGlobalConfig,
+    parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
 
-var parseArgv        = require('../lib/parser.js').parseArgv;
+var envReady             = require('../lib/inception.js').envReady,
+    toolReady            = require('../lib/inception.js').toolReady,
+    rootReady            = require('../lib/inception.js').rootReady,
+    configReady          = require('../lib/inception.js').configReady,
+    recordReady          = require('../lib/inception.js').recordReady,
+    upgradeReady         = require('../lib/inception.js').upgradeReady;
 
-var idUnique         = require('../lib/validation.js').idUnique,
-idExsit              = require('../lib/validation.js').idExsit,
-idValid              = require('../lib/validation.js').idValid,
-cmdValid             = require('../lib/validation.js').cmdValid,
-getAllCmd            = require('../lib/assistant.js').getAllCmd,
-releaseExist         = require('../lib/assistant.js').getRelease,
-ecosystemExist       = require('../lib/assistant.js').getEcosystem,
-ecosystemActive      = require('../lib/validation.js').ecosystemActive;
+var parseArgv            = require('../lib/parser.js').parseArgv;
+
+var idUnique             = require('../lib/validation.js').idUnique,
+    idExsit              = require('../lib/validation.js').idExsit,
+    idValid              = require('../lib/validation.js').idValid,
+    cmdValid             = require('../lib/validation.js').cmdValid,
+    getAllCmd            = require('../lib/assistant.js').getAllCmd,
+    releaseExist         = require('../lib/assistant.js').getRelease,
+    ecosystemExist       = require('../lib/assistant.js').getEcosystem,
+    ecosystemActive      = require('../lib/validation.js').ecosystemActive;
 
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;
 
-var argv = parseArgv();
+var config, argv = parseArgv();
 
 // Try catch all errors
 process.on('uncaughtException', function(err) {
@@ -67,7 +69,17 @@ if (argv.cmd === undefined) {
   parseGlobalConfig(function() {parseUserConfig(function() {
     envReady(argv.cmd, function() {toolReady(function() { 
       rootReady(function() {configReady(function() {
-        upgradeReady(function() {updateReady(function() {
+        upgradeReady(function() {
+
+          // Automatic update local dist file
+          config = process.neco.config,
+          script = path.join(config.pkgJSDir, 'update.js'),
+          update = spawn('node', [script]);
+          update.on('exit', function(code) {
+           // Do nothing
+          });
+          // End of update
+
         // Subcommand create
         if (argv.cmd === 'create') {
           if (!argv.id) {
@@ -237,7 +249,7 @@ if (argv.cmd === undefined) {
           }
         }
 
-        });});
+        });
       });});
     });});
   });});
