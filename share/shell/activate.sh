@@ -136,8 +136,14 @@ neco_workon() {
   fi
 }
 
-#List the available ecosystem list
-neco_show_options() {
+# List the available commands
+neco_show_command_options() {
+  neco_verify_root || return 1
+  (neco completion) | sort
+}
+
+# List the available ecosystem list
+neco_show_activate_options() {
   neco_verify_root || return 1
   (cd "$NECO_ROOT"/.neco; find -L -maxdepth 1 -type d) | sed 's|^\.$||' | sed 's|^\.\/||' | sed 's|source||' | sed 's|tmp||' | sort
 }
@@ -166,5 +172,6 @@ if [ -n "$BASH" ] ; then
 #    complete -o default -o nospace -F _virtualenvs rmvirtualenv
 #    complete -o default -o nospace -F _virtualenvs cpvirtualenv
 elif [ -n "$ZSH_VERSION" ] ; then
-    compctl -g "`neco_show_options`" neco_activate neco_deactivate neco_workon
+    compctl -g "`neco_show_command_options`" neco 
+    compctl -g "`neco_show_activate_options`" neco_activate neco_deactivate neco_workon
 fi
