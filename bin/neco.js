@@ -69,8 +69,8 @@ if (argv.cmd === undefined) {
         if (argv.cmd === 'create') {
           if (!argv.id) {
             message = 'Missing ID';
-            suggestion = 'Please specific at least one ID( and the version of node, if you will).';
-            example = 'neco create <id> [stable, unstable, node-version]';
+            suggestion = 'Please specific at least one ID (and the version of node, if you will).';
+            example = 'neco create <id> [stable, unstable, version]';
             log.emit('exit', message, suggestion, example);
           } else {
             filterConfig(function() {

@@ -4,7 +4,7 @@ exports.tools        = ['python','wget','tar','sed','make','install'];
 exports.npmCouples   = [{node:"0.4.0",npm:"0.3.15"},{node:"0.2.3",npm:"0.2.18"}];
 exports.vStartsFrom  = '0.1.14';
 exports.cmdList      = ['howto', 'create', 'remove', 'list', 'update', 'find', 
-'activate', 'deactivate'];
+'activate', 'deactivate', 'completion'];
 exports.reservedWords = exports.cmdList.concat(['new', 'all', 'stable', 
 'unstable', 'latest', 'test', 'source']);
 
