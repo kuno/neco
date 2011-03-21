@@ -28,6 +28,7 @@ var envReady         = require('../lib/inception.js').envReady,
 toolReady            = require('../lib/inception.js').toolReady,
 rootReady            = require('../lib/inception.js').rootReady,
 recordReady          = require('../lib/inception.js').recordReady,
+updateReady          = require('../lib/inception.js').updateReady,
 upgradeReady         = require('../lib/inception.js').upgradeReady;
 
 var parseArgv        = require('../lib/parser.js').parseArgv;
@@ -37,7 +38,6 @@ idExsit              = require('../lib/validation.js').idExsit,
 idValid              = require('../lib/validation.js').idValid,
 cmdValid             = require('../lib/validation.js').cmdValid,
 getAllCmd            = require('../lib/assistant.js').getAllCmd,
-autoUpdate           = require('../lib/assistant.js').autoUpdate,
 releaseExist         = require('../lib/assistant.js').getRelease,
 ecosystemExist       = require('../lib/assistant.js').getEcosystem,
 ecosystemActive      = require('../lib/validation.js').ecosystemActive;
@@ -66,7 +66,7 @@ if (argv.cmd === undefined) {
   parseGlobalConfig(function() {parseUserConfig(function() {
     envReady(argv.cmd, function() {toolReady(function() { 
       rootReady(function() {upgradeReady(function() {
-        console.log(typeof autoUpdate);   
+        updateReady(function() {
         // Subcommand create
         if (argv.cmd === 'create') {
           if (!argv.id) {
@@ -248,7 +248,7 @@ if (argv.cmd === undefined) {
           }
         }
 
-
+      });
       });});
     });});
   });});
