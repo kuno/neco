@@ -34,27 +34,28 @@
 ###0.0.3###
 * added md5sum check for every node achive?
 * automatialy switch between ecosystems
-* added command line arguments parse?
+* added command line arguments parse
 * update to nodejs 0.3.4, npm 0.2.14-x
 
 ###0.0.4###
 * rollback if creation is not successful
-* depends on nodejs v0.3.5?
+* depends on nodejs v0.3.5
 * add upgrade command
 * add config command
 * add customize Error object
 * add neco_workon shell function
 
 ###0.0.5###
-1, add command alias suppoort(e.g. list -> ls);? (delay to 0.0.6)
+1, add command alias suppoort(e.g. list -> ls); (delay to 0.0.6)
 2, support to nodejs 0.4.0,
 3, re-factory the package direcoty;
 4, more neco more robust?
 5, add rollback functionality
-6, add support for bash and zsh completion?     (delay to 0.0.6)
+6, add support for bash and zsh completion     (delay to 0.0.6)
 
 ###0.0.6###
-1, add /tmp dir?
+1, add /tmp dir
 2, support command alias
 3, add zsh completion script
 4, add completion command
+5, speed improvement

@@ -14,6 +14,7 @@ var list                 = require('../lib/command/list.js'),
     update               = require('../lib/command/update.js'),
     create               = require('../lib/command/create.js'),
     remove               = require('../lib/command/remove.js'),
+    option               = require('../lib/command/option.js'),
     activate             = require('../lib/command/activate.js'),
     deactivate           = require('../lib/command/deactivate.js'),
     completion           = require('../lib/command/completion.js');
@@ -28,18 +29,17 @@ var filterConfig         = require('../lib/config.js').filterConfig,
     parseEcosystemConfig = require('../lib/config.js').parseEcosystemConfig;
 
 var envReady             = require('../lib/inception.js').envReady,
+    argvReady            = require('../lib/inception.js').argvReady,
     toolReady            = require('../lib/inception.js').toolReady,
     rootReady            = require('../lib/inception.js').rootReady,
     configReady          = require('../lib/inception.js').configReady,
     recordReady          = require('../lib/inception.js').recordReady,
     upgradeReady         = require('../lib/inception.js').upgradeReady;
 
-var parseArgv            = require('../lib/parser.js').parseArgv;
-
 var idUnique             = require('../lib/validation.js').idUnique,
     idExsit              = require('../lib/validation.js').idExsit,
     idValid              = require('../lib/validation.js').idValid,
-    cmdValid             = require('../lib/validation.js').cmdValid,
+    cliValid             = require('../lib/validation.js').cliValid,
     getAllCmd            = require('../lib/assistant.js').getAllCmd,
     releaseExist         = require('../lib/assistant.js').getRelease,
     ecosystemExist       = require('../lib/assistant.js').getEcosystem,
@@ -48,19 +48,22 @@ var idUnique             = require('../lib/validation.js').idUnique,
 var log = require('../lib/display.js').log;  
 var message, warning, error, suggestion, example;
 
-var config, autoUpdate, argv = parseArgv();
+var config, autoUpdate, argv;
 
 // Try catch all errors
 process.on('uncaughtException', function(err) {
   handle.emit('error', err);
 });   
 
+argvReady(function() {
+    argv = process.neco.argv;
+
 if (argv.cmd === undefined) {
   message = 'Missing command';
   suggestion = 'Available commands: ' + getAllCmd();
   example = 'neco howto, neco create <id>, neco list';
   log.emit('exit', message, suggestion, example);
-} else if (!cmdValid(argv.cmd)) {
+} else if (!cliValid(argv.cmd)) {
   message = 'Not a valid command';
   suggestion = 'Available commands: ' + getAllCmd();
   example = 'neco hwoto, neco create <id>, neco list';
@@ -90,7 +93,7 @@ if (argv.cmd === undefined) {
           } else {
               recordReady(argv.cmd, function(exists) {
                 if (!exists) {
-                  create.run(argv);
+                  create.ru (argv);
                 } else {
                   if (!idValid(argv.id)) {
                     message = 'The given id '+argv.id+' is one of the reserved words in neco.';
@@ -106,6 +109,11 @@ if (argv.cmd === undefined) {
                 }
               });
           }
+        }
+
+        // Command line optioins
+        else if (argv.cmd[0] == '-') {
+          option.run(argv);
         }
 
         // Subcommand list
@@ -254,3 +262,4 @@ if (argv.cmd === undefined) {
     });});
   });});
 }
+});
