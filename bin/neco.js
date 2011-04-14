@@ -8,6 +8,7 @@ process.neco = {};
 var path                 = require('path'),
     spawn                = require('child_process').spawn;
 
+// commands
 var list                 = require('../lib/command/list.js'),
     find                 = require('../lib/command/find.js'),
     howto                = require('../lib/command/howto.js'),

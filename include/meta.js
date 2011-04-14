@@ -2,7 +2,7 @@ var version      = '0.0.6pre';
 
 var vStartsFrom  = '0.1.14';  
 var tools        = ['python','wget','tar','sed','make','install'];
-var npmCouples   = [{node:"0.4.0",npm:"0.3.15"},{node:"0.2.3",npm:"0.2.18"}];
+var npmCouples   = [{node:"0.4.0",npm:"0.3.18"},{node:"0.2.3",npm:"0.2.18"}];
 
 var idLenStandard     = 8;
 var verLenStandard    = 7;
@@ -34,6 +34,7 @@ var updateOptions = {  // remote dist list address
   method: 'GET'
 };  
 var site         = 'http://www.nodejs.org/';  // Official site
+var docs         = 'http://www.nodejs.org/docs/'; // official documents
 var issues       = 'http://github.com/kuno/neco/issues';  // Issues tracker 
 
 exports.version           = version;
