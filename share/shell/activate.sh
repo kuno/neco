@@ -173,5 +173,5 @@ if [ -n "$BASH" ] ; then
 #    complete -o default -o nospace -F _virtualenvs cpvirtualenv
 elif [ -n "$ZSH_VERSION" ] ; then
     compctl -g "`neco_show_command_options`" neco 
-    compctl -g "`neco_show_activate_options`" neco_activate neco_deactivate neco_workon
+    compctl -g "`neco_show_activate_options`" neco_activate neco_workon
 fi
