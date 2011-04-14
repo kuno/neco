@@ -1,0 +1,37 @@
+neco - Nodejs Ecosystem COordinator, like virtualenv for python.
+
+<red>Usage</red>:
+
+  neco <command>
+
+Currently where <command> should be one of the below commands:
+
+  <white>create</white>      -  create new node ecosystem
+      Useage: neco create <id> [version]
+
+  <white>remove<white>      -  removed installed ecosystem
+       Usage:  neco remove <id>
+
+  <white>list</white>        -  list all installed node ecosystem
+      Usage:  neco list <id>
+
+  <white>update<white>      -  update local dist date to latest
+      Usage   neco update
+
+  <white>find</white>        -  find out available node release(s)
+      Usage:  neco find [stable, unstable, latest, version]
+
+  <white>activate</white>    -  show how to activate an existing node ecosystem
+      Usage:  neco activate <id>
+
+  <white>deactivate</white>  -  show how to deactivate an active node ecosystem
+      Usage:  neco deactivate <id>
+
+  <white>completion<white>  -  prints all commands
+      Usage:  neco completion
+
+  <white>howto</white>       -  show usage information
+      Usage:  neco howto
+
+<magenta>Git repository: http://github.com/kuno/neco</magenta>
+
