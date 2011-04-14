@@ -1,37 +1,36 @@
 neco - Nodejs Ecosystem COordinator, like virtualenv for python.
 
-<yellow>Usage</yellow>:
+<red>Usage</red>:
 
   neco <command>
 
 Currently where <command> should be one of the below commands:
 
-  <red>create</red>      -  create new node ecosystem
-      Useage: neco create <id> [version]
+  <cyan>create</cyan>      -  create new node ecosystem
+      <red>Useage</red>: neco create <id> [version]
 
-  <red>remove<red>      -  removed installed ecosystem
-       Usage:  neco remove <id>
+  <cyan>remove</cyan>      -  removed installed ecosystem
+       <red>Usage</red>:  neco remove <id>
 
-  <red>list</red>        -  list all installed node ecosystem
-      Usage:  neco list <id>
+  <cyan>list</cyan>        -  list all installed node ecosystem
+      <red>Usage</red>:  neco list <id>
 
-  <red>update</red>      -  update local dist date to latest
-      Usage   neco update
+  <cyan>update</cyan>      -  update local dist date to latest
+      <red>Usage</red>   neco update
 
-  <red>find</red>        -  find out available node release(s)
-      Usage:  neco find [stable, unstable, latest, version]
+  <cyan>find</cyan>        -  find out available node release(s)
+      <red>Usage</red>:  neco find [stable, unstable, latest, version]
 
-  <red>activate</red>    -  show how to activate an existing node ecosystem
-      Usage:  neco activate <id>
+  <cyan>activate</cyan>    -  show how to activate an existing node ecosystem
+      <red>Usage</red>:  neco activate <id>
 
-  <red>deactivate</red>  -  show how to deactivate an active node ecosystem
-      Usage:  neco deactivate <id>
+  <cyan>deactivate</cyan>  -  show how to deactivate an active node ecosystem
+      <red>Usage</red>:  neco deactivate <id>
 
-  <red>completion</red>  -  prints all commands
-      Usage:  neco completion
+  <cyan>completion</cyan>  -  prints all commands
+      <red>Usage</red>:  neco completion
 
-  <red>howto</red>       -  show usage information
-      Usage:  neco howto
+  <cyan>howto</cyan>       -  show usage information
+      <red>Usage</red>:  neco howto
 
 <magenta>Git repository: http://github.com/kuno/neco</magenta>
-
