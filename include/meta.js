@@ -1,5 +1,3 @@
-var version      = '0.0.6pre';
-
 var vStartsFrom  = '0.1.14';  
 var tools        = ['python','wget','tar','sed','make','install'];
 var npmCouples   = [{node:"0.4.0",npm:"0.3.18"},{node:"0.2.3",npm:"0.2.18"}];
@@ -22,7 +20,7 @@ var seps = sgps.concat(['version', 'localConfigFile',
     'timeFormat', 'root', 'recordFile', 
     'installNPM']);
 
-var optList       = ['-v', '--version', '-h', '--help', '-d'];
+var optList       = ['-v', '--version', '-h', '--help'];
 var cmdList       = optList.concat(['howto', 'create', 'remove', 'list', 'update', 'find', 'activate', 'deactivate', 'completion']);
 var flagList      = cmdList.concat(['--app', '--npm']);
 var resWords      = flagList.concat(['new', 'all', 'stable', 'unstable', 'latest', 'test', 'source']);
@@ -37,7 +35,6 @@ var site         = 'http://www.nodejs.org/';  // Official site
 var docs         = 'http://www.nodejs.org/docs/'; // official documents
 var issues       = 'http://github.com/kuno/neco/issues';  // Issues tracker 
 
-exports.version           = version;
 exports.tools             = tools;
 exports.vStartsFrom       = vStartsFrom;
 exports.npmCouples        = npmCouples;
