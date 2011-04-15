@@ -51,3 +51,8 @@ python virtualenv and virtualenvwrapper package)
 ###v0.0.5-2, 2011-3-19###
 1, npm 0.3.15 for nodejs 0.4.0+, npm 0.2.18 for nodejs 0.2.3+
 2, added zsh completion functionality.
+
+
+###v0.0.6, 2011-04015###
+1, npm 0.3.18
+2, added consolemark as dependency.

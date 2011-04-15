@@ -59,3 +59,8 @@
 3, add zsh completion script
 4, add completion command
 5, speed improvement
+
+###0.0.7###
+1, speed improvement
+2, one color module
+3, add /tmp dir
